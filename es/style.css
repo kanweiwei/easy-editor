@@ -1,0 +1,62 @@
+.app-slate-editor {
+  position: relative;
+  border: 1px solid #ccc;
+  padding: 8px;
+}
+.app-slate-editor .editor {
+  border: 1px solid #ccc;
+}
+.app-slate-editor .resize-container {
+  position: relative;
+  display: inline-block;
+  cursor: move;
+  margin: 0 auto;
+}
+.app-slate-editor .resize-container img {
+  display: block;
+  height: 100%;
+}
+.app-slate-editor .resize-container:hover img {
+  outline: 1px dashed #4797f3;
+  cursor: move;
+}
+.app-slate-editor .resize-container .resize-handle-ne,
+.app-slate-editor .resize-container .resize-handle-se,
+.app-slate-editor .resize-container .resize-handle-nw,
+.app-slate-editor .resize-container .resize-handle-sw {
+  position: absolute;
+  display: block;
+  width: 10px;
+  height: 10px;
+  background: #4797f3;
+  cursor: not-allowed;
+  z-index: 10;
+}
+.app-slate-editor .resize-container .resize-handle-nw {
+  top: -5px;
+  left: -5px;
+}
+.app-slate-editor .resize-container .resize-handle-nw.active {
+  cursor: w-resize;
+}
+.app-slate-editor .resize-container .resize-handle-sw {
+  bottom: -5px;
+  left: -5px;
+}
+.app-slate-editor .resize-container .resize-handle-sw.active {
+  cursor: sw-resize;
+}
+.app-slate-editor .resize-container .resize-handle-ne {
+  top: -5px;
+  right: -5px;
+}
+.app-slate-editor .resize-container .resize-handle-ne.active {
+  cursor: e-resize;
+}
+.app-slate-editor .resize-container .resize-handle-se {
+  bottom: -5px;
+  right: -5px;
+}
+.app-slate-editor .resize-container .resize-handle-se.active {
+  cursor: se-resize;
+}

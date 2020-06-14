@@ -1,0 +1,71 @@
+.slate-editor__hover-menu {
+  padding: 8px 7px 6px;
+  position: absolute;
+  z-index: 999;
+  top: -10000px;
+  left: -10000px;
+  opacity: 0;
+  -webkit-transition: opacity 0.75s;
+  -o-transition: opacity 0.75s;
+  transition: opacity 0.75s;
+  box-shadow: 0 2px 4px 0;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #fff;
+  &.fixed {
+    opacity: 1;
+    position: relative;
+    top: 0;
+    left: 0;
+    border: none;
+    border-radius: 0;
+    box-shadow: unset;
+    border-bottom: 1px solid #ccc;
+    margin-bottom: 8px;
+  }
+
+  &.toolbar {
+    position: relative;
+    left: 0;
+    top: 0;
+    opacity: 1;
+  }
+
+  .tools {
+    ::after {
+      position: relative;
+      display: table;
+      content: "";
+      clear: both;
+    }
+    .mark-btn {
+      position: relative;
+      display: table;
+      float: left;
+      padding: 0 4px;
+      border-radius: 2px;
+      border: 1px solid transparent;
+      cursor: pointer;
+      &:hover {
+        background-color: #f5f5f5;
+      }
+    }
+
+    .jiacu {
+      background: url("./icons/jiacu.png") center center no-repeat;
+    }
+    .xieti {
+      background: url("./icons/xieti.png") center center no-repeat;
+    }
+    .xiahuaxian {
+      background: url("./icons/xiahuaxian.png") center center no-repeat;
+    }
+    .tool-icon {
+      position: relative;
+      display: table-cell;
+      width: 20px;
+      height: 20px;
+      background-size: 16px 16px;
+    }
+  }
+}
