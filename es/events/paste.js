@@ -37,10 +37,10 @@ function findDom(e, change, name) {
 
 export default (function (e, change, self, options) {
   return __awaiter(void 0, void 0, void 0, function () {
-    var maxImageHeight, maxImageWidth, onlyText, imgStyle, transfer, _a, file_1, url, html, reg, localeImgs, supportFileTypes, supportRtfTypes, result, ossConfig, client, _loop_1, i, rootDom, _getInvalidImgs_, invalidImgs, y, foundIndex, body, document, blocks, firstBlock;
+    var maxImageHeight, maxImageWidth, onlyText, imgStyle, transfer, _a, file_1, url, html, reg, localeImgs, supportFileTypes, supportRtfTypes, result, _loop_1, i, rootDom, _getInvalidImgs_, invalidImgs, y, foundIndex, body, document, blocks, firstBlock;
 
     return __generator(this, function (_b) {
-      var _context2, _context4;
+      var _context2;
 
       switch (_b.label) {
         case 0:
@@ -81,27 +81,27 @@ export default (function (e, change, self, options) {
             case "fragment":
               return [3
               /*break*/
-              , 7];
+              , 5];
 
             case "node":
               return [3
               /*break*/
-              , 7];
+              , 5];
 
             case "rich":
               return [3
               /*break*/
-              , 7];
+              , 5];
 
             case "text":
               return [3
               /*break*/
-              , 7];
+              , 5];
           }
 
           return [3
           /*break*/
-          , 8];
+          , 6];
 
         case 1:
           file_1 = transfer.files[0];
@@ -117,8 +117,8 @@ export default (function (e, change, self, options) {
               resolve(reader.result);
             };
 
-            reader.onerror = function (err) {
-              reject(err);
+            reader.onerror = function () {
+              reject(new Error("error"));
             };
 
             reader.readAsDataURL(file_1);
@@ -150,182 +150,178 @@ export default (function (e, change, self, options) {
           , false];
 
         case 4:
-          html = filterWord(transfer.html);
-          reg = /<(?=span|font|\/span|\/font).*?>/g;
-          html = html.replace(reg, "");
-          html = html.replace(/[．|．]/g, ".");
-          if (!/file:[\s\S]*.\.(png|jpg|jpeg)/.test(html)) return [3
-          /*break*/
-          , 6];
-          localeImgs = [];
-          supportFileTypes = [{
-            rtfType: "pngblip",
-            imgType: "png",
-            fileType: "image/png"
-          }, {
-            rtfType: "jpegblip",
-            imgType: "jpg",
-            fileType: "image/jpg"
-          }, {
-            rtfType: "jpgblip",
-            imgType: "jpg",
-            fileType: "image/jpg"
-          }];
-          supportRtfTypes = _mapInstanceProperty(supportFileTypes).call(supportFileTypes, function (n) {
-            return n.rtfType;
-          });
-          reg = new RegExp("(" + supportRtfTypes.join("|") + ")[^}]*}([^}]*)}", "gim");
-          result = transfer.rich.match(reg);
-          return [4
-          /*yield*/
-          , OssHelper.getOssConfig()];
+          {
+            html = filterWord(transfer.html);
+            reg = /<(?=span|font|\/span|\/font).*?>/g;
+            html = html.replace(reg, "");
+            html = html.replace(/[．|．]/g, ".");
 
-        case 5:
-          ossConfig = _b.sent();
-          client = ossClientCreator(ossConfig);
+            if (/file:[\s\S]*.\.(png|jpg|jpeg)/.test(html)) {
+              var _context4;
 
-          if (result && result.length > 0) {
-            _loop_1 = function _loop_1(i) {
-              var m = result[i].replace(/\s/gm, "");
-              reg = new RegExp("(" + supportRtfTypes.join("|") + ")[^}]*}([^}]*)}", "i"); // @ts-ignore
-
-              var _a = m.match(reg),
-                  str = _a[0],
-                  type = _a[1],
-                  hexData = _a[2];
-
-              var imgType = "jpg";
-              var fileType = "image/jpg";
-
-              var typeIndex = _findIndexInstanceProperty(supportFileTypes).call(supportFileTypes, function (n) {
-                return n.rtfType === type;
+              localeImgs = [];
+              supportFileTypes = [{
+                rtfType: "pngblip",
+                imgType: "png",
+                fileType: "image/png"
+              }, {
+                rtfType: "jpegblip",
+                imgType: "jpg",
+                fileType: "image/jpg"
+              }, {
+                rtfType: "jpgblip",
+                imgType: "jpg",
+                fileType: "image/jpg"
+              }];
+              supportRtfTypes = _mapInstanceProperty(supportFileTypes).call(supportFileTypes, function (n) {
+                return n.rtfType;
               });
+              reg = new RegExp("(" + supportRtfTypes.join("|") + ")[^}]*}([^}]*)}", "gim");
+              result = transfer.rich.match(reg);
 
-              if (typeIndex > -1) {
-                imgType = supportFileTypes[typeIndex].imgType;
-                fileType = supportFileTypes[typeIndex].fileType;
-              }
+              if (result && result.length > 0) {
+                _loop_1 = function _loop_1(i) {
+                  var m = result[i].replace(/\s/gm, "");
+                  reg = new RegExp("(" + supportRtfTypes.join("|") + ")[^}]*}([^}]*)}", "i"); // @ts-ignore
 
-              var base64Data = hexToBase64(hexData);
-              var dataURI = "data:" + fileType + ";base64," + base64Data;
-              var url = ""; // TODO
-              // const url = await uploadFile(path, getBlobByDataURI(dataURI, fileType))
+                  var _a = m.match(reg),
+                      str = _a[0],
+                      type = _a[1],
+                      hexData = _a[2];
 
-              localeImgs.push(url);
-            };
+                  var imgType = "jpg";
+                  var fileType = "image/jpg";
 
-            for (i = 0; i < result.length; i++) {
-              _loop_1(i);
-            }
-          }
+                  var typeIndex = _findIndexInstanceProperty(supportFileTypes).call(supportFileTypes, function (n) {
+                    return n.rtfType === type;
+                  });
 
-          rootDom = parseFragment(html);
+                  if (typeIndex > -1) {
+                    imgType = supportFileTypes[typeIndex].imgType;
+                    fileType = supportFileTypes[typeIndex].fileType;
+                  }
 
-          _getInvalidImgs_ = function getInvalidImgs_1(nodes, arr) {
-            _forEachInstanceProperty(nodes).call(nodes, function (node) {
-              if (node.childNodes && node.childNodes.length > 0) {
-                _getInvalidImgs_(node.childNodes, arr);
-              }
+                  var base64Data = hexToBase64(hexData);
+                  var dataURI = "data:" + fileType + ";base64," + base64Data;
+                  var url = dataURI; // TODO
+                  // const url = await uploadFile(path, getBlobByDataURI(dataURI, fileType))
 
-              if (node.nodeName.toLowerCase() === "img") {
-                var src = getAttr(node.attrs, "src");
+                  localeImgs.push(url);
+                };
 
-                if (/file:[\s\S]*.\.(png|jpg|jpeg)/.test(src)) {
-                  arr.push(node);
+                for (i = 0; i < result.length; i++) {
+                  _loop_1(i);
                 }
               }
-            });
-          };
 
-          invalidImgs = [];
+              rootDom = parseFragment(html);
 
-          _getInvalidImgs_(rootDom.childNodes, invalidImgs);
+              _getInvalidImgs_ = function getInvalidImgs_1(nodes, arr) {
+                _forEachInstanceProperty(nodes).call(nodes, function (node) {
+                  if (node.childNodes && node.childNodes.length > 0) {
+                    _getInvalidImgs_(node.childNodes, arr);
+                  }
 
-          if (invalidImgs.length > 0) {
-            for (y = 0; y < invalidImgs.length; y++) {
-              var _context3;
+                  if (node.nodeName.toLowerCase() === "img") {
+                    var src = getAttr(node.attrs, "src");
 
-              foundIndex = _findIndexInstanceProperty(_context3 = invalidImgs[y].attrs).call(_context3, function (n) {
-                return n.name === "src";
-              });
-
-              if (foundIndex > -1 && localeImgs[y]) {
-                invalidImgs[y].attrs[foundIndex].value = localeImgs[y];
-              }
-            }
-          }
-
-          html = serialize(rootDom);
-          body = window.document.createElement("body");
-          body.innerHTML = html;
-
-          if (_trimInstanceProperty(_context4 = body.innerText).call(_context4).length === 0 && invalidImgs.length > 0) {
-            _forEachInstanceProperty(invalidImgs).call(invalidImgs, function (n) {
-              var width = getAttr(n.attrs, "width");
-              var height = getAttr(n.attrs, "height");
-              var style = "";
-
-              if (width) {
-                style += "width: " + (Number(width) ? width + "px" : width) + ";";
-              }
-
-              if (height) {
-                style += "height: " + (Number(height) ? height + "px" : height) + ";";
-              }
-
-              var data = {};
-              data.src = getAttr(n.attrs, "src");
-
-              if (style) {
-                data.style = getStyleFromString(style);
-              }
-
-              if (!isEmpty(imgStyle)) {
-                var maxWidth = width / height * maxImageHeight;
-                data.style = __assign(__assign(__assign({}, data.style), imgStyle), {
-                  maxWidth: maxWidth
+                    if (/file:[\s\S]*.\.(png|jpg|jpeg)/.test(src)) {
+                      arr.push(node);
+                    }
+                  }
                 });
+              };
+
+              invalidImgs = [];
+
+              _getInvalidImgs_(rootDom.childNodes, invalidImgs);
+
+              if (invalidImgs.length > 0) {
+                for (y = 0; y < invalidImgs.length; y++) {
+                  var _context3;
+
+                  foundIndex = _findIndexInstanceProperty(_context3 = invalidImgs[y].attrs).call(_context3, function (n) {
+                    return n.name === "src";
+                  });
+
+                  if (foundIndex > -1 && localeImgs[y]) {
+                    invalidImgs[y].attrs[foundIndex].value = localeImgs[y];
+                  }
+                }
               }
 
-              change.insertInline({
-                object: "inline",
-                type: "image",
-                isVoid: true,
-                data: data
-              });
-            });
+              html = serialize(rootDom);
+              body = window.document.createElement("body");
+              body.innerHTML = html;
 
-            return [2
-            /*return*/
-            , self.onChange(change)];
+              if (_trimInstanceProperty(_context4 = body.innerText).call(_context4).length === 0 && invalidImgs.length > 0) {
+                _forEachInstanceProperty(invalidImgs).call(invalidImgs, function (n) {
+                  var width = getAttr(n.attrs, "width");
+                  var height = getAttr(n.attrs, "height");
+                  var style = "";
+
+                  if (width) {
+                    style += "width: " + (Number(width) ? width + "px" : width) + ";";
+                  }
+
+                  if (height) {
+                    style += "height: " + (Number(height) ? height + "px" : height) + ";";
+                  }
+
+                  var data = {};
+                  data.src = getAttr(n.attrs, "src");
+
+                  if (style) {
+                    data.style = getStyleFromString(style);
+                  }
+
+                  if (!isEmpty(imgStyle)) {
+                    var maxWidth = width / height * maxImageHeight;
+                    data.style = __assign(__assign(__assign({}, data.style), imgStyle), {
+                      maxWidth: maxWidth
+                    });
+                  }
+
+                  change.insertInline({
+                    object: "inline",
+                    type: "image",
+                    isVoid: true,
+                    data: data
+                  });
+                });
+
+                return [2
+                /*return*/
+                , self.onChange(change)];
+              }
+
+              change = change.insertFragment(htmlConvertor.deserialize(html).document);
+              return [2
+              /*return*/
+              , self.onChange(change)];
+            }
+
+            document = htmlConvertor.deserialize(html).document;
+            blocks = change.value.blocks;
+            firstBlock = blocks.first();
+
+            if (firstBlock.text.length > 0 || firstBlock.findDescendant(function (n) {
+              return n.type === "image";
+            })) {
+              change = change.insertBlock(Block.fromJSON({
+                type: "div",
+                object: "block",
+                nodes: []
+              }));
+            }
+
+            change = change.insertFragment(document); // return false;
           }
-
-          change = change.insertFragment(htmlConvertor.deserialize(html).document);
-          return [2
-          /*return*/
-          , self.onChange(change)];
-
-        case 6:
-          document = htmlConvertor.deserialize(html).document;
-          blocks = change.value.blocks;
-          firstBlock = blocks.first();
-
-          if (firstBlock.text.length > 0 || firstBlock.findDescendant(function (n) {
-            return n.type === "image";
-          })) {
-            change = change.insertBlock(Block.fromJSON({
-              type: "div",
-              object: "block",
-              nodes: []
-            }));
-          }
-
-          change = change.insertFragment(document);
           return [3
           /*break*/
-          , 9];
+          , 7];
 
-        case 7:
+        case 5:
           if (transfer.text) {
             try {
               change = change.insertText(transfer.text);
@@ -337,9 +333,9 @@ export default (function (e, change, self, options) {
 
           return [3
           /*break*/
-          , 9];
+          , 7];
 
-        case 8:
+        case 6:
           if (transfer.text) {
             try {
               change = change.insertText(transfer.text);
@@ -348,9 +344,9 @@ export default (function (e, change, self, options) {
             }
           }
 
-          _b.label = 9;
+          _b.label = 7;
 
-        case 9:
+        case 7:
           e.preventDefault();
 
           if (transfer.type !== "files") {

@@ -9,7 +9,7 @@ import { get } from "lodash-es";
 import raf from "raf";
 import * as React from "react";
 import handlePaste from "./events/paste";
-import HoverMenu from "./HoverMenu/index";
+import HoverMenu from "./hoverMenu";
 import htmlConvertor from "./htmlConvertor";
 import initValue from "./initValue";
 import basePlugins from "./plugins";
@@ -228,17 +228,13 @@ function (_super) {
         fixed = false;
       }
 
-      var _a = _this.props,
-          oneSubQst = _a.oneSubQst,
-          checkMode = _a.checkMode,
-          _b = _a.showMenu,
-          showMenu = _b === void 0 ? true : _b;
+      var _a = _this.props.showMenu,
+          showMenu = _a === void 0 ? true : _a;
 
       if (showMenu) {
         if (fixed) {
           return /*#__PURE__*/React.createElement(HoverMenu, {
             value: _this.state.value,
-            mode: _this.mode,
             onChange: _this.onChange,
             plugins: _this.plugins
           });
@@ -246,7 +242,6 @@ function (_super) {
           return /*#__PURE__*/React.createElement(HoverMenu, {
             menuRef: _this.menuRef,
             value: _this.state.value,
-            mode: _this.mode,
             onChange: _this.onChange,
             plugins: _this.plugins
           });
@@ -285,7 +280,7 @@ function (_super) {
         },
         onKeyDown: _this.props.onKeyDown,
         plugins: _this.plugins,
-        autoFocus: (_a = props.autoFocus) !== null && _a !== void 0 ? _a : true,
+        autoFocus: (_a = _this.props.autoFocus) !== null && _a !== void 0 ? _a : true,
         schema: schemas,
         spellCheck: false,
         readOnly: readOnly,
@@ -350,18 +345,17 @@ function (_super) {
 
   SlateEditor.prototype.render = function () {
     var _a = this.props,
-        style = _a.style,
+        _b = _a.style,
+        style = _b === void 0 ? {} : _b,
         className = _a.className,
-        _b = _a.minHeight,
-        minHeight = _b === void 0 ? 300 : _b;
-
-    var st = __assign({}, style);
-
-    var cls = classnames("app-slate-editor", className);
+        _c = _a.minHeight,
+        minHeight = _c === void 0 ? 300 : _c;
+    var cls = classnames("slate-editor", className);
     return /*#__PURE__*/React.createElement("div", {
       className: cls,
-      style: st
+      style: __assign({}, style)
     }, this.renderMenu(true), this.renderMenu(), /*#__PURE__*/React.createElement("div", {
+      className: "slate-editor-content",
       style: {
         minHeight: minHeight + "px"
       }

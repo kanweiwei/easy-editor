@@ -1,11 +1,10 @@
 import { __assign, __extends } from "tslib";
+import { Value } from "@zykj/slate";
+import classnames from "classnames";
+import { omit } from "lodash-es";
 import * as React from "react";
 import ReactDOM from "react-dom";
-import { Button, Icon } from "antd";
-import classnames from "classnames";
 import "./style.less";
-import { omit } from "lodash-es";
-import { Value } from "@zykj/slate";
 var Menu = /** @class */ (function (_super) {
     __extends(Menu, _super);
     function Menu() {
@@ -20,10 +19,9 @@ var Menu = /** @class */ (function (_super) {
         _this.onClickBlock = function (event, onClick, options) {
             if (options === void 0) { options = {}; }
             event.preventDefault();
-            var _a = _this.props, onChange = _a.onChange, value = _a.value, mode = _a.mode, oneSubQst = _a.oneSubQst, checkMode = _a.checkMode;
+            var _a = _this.props, onChange = _a.onChange, value = _a.value;
             var change = value.change();
             try {
-                var ancestors = change.value.document.getAncestors(value.blocks.first().key);
                 if (onClick) {
                     change = change.call(onClick(__assign({}, options)));
                     change = Value.fromJSON(change.value.toJSON()).change();
@@ -37,14 +35,17 @@ var Menu = /** @class */ (function (_super) {
         };
         // Render a mark-toggling toolbar button.
         _this.renderMarkButton = function (type, icon, title) {
-            // const isActive = this.hasMark(type);
+            var activeMarks = _this.props.value.activeMarks.toArray();
+            var isActive = activeMarks.some(function (m) { return m.type == type; });
             var onMouseDown = function (event) { return _this.onClickMark(event, type); };
             var btnClass = classnames({
-                // isActive,
-                "mark-btn": true,
+                "tool-btn": true,
+                isActive: isActive,
             });
-            return (<span className={btnClass} title={title} onMouseDown={onMouseDown}>
-        {icon}
+            return (<span>
+        <span className={btnClass} title={title} onMouseDown={onMouseDown}>
+          {icon}
+        </span>
       </span>);
         };
         _this.renderIndentButton = function (type, icon, title) {
@@ -75,30 +76,8 @@ var Menu = /** @class */ (function (_super) {
             var onMouseDown = function (event) { return clickIndentButton(event); };
             return (
             // eslint-disable-next-line react/jsx-no-bind
-            <Button size="small" onMouseDown={onMouseDown} title={title}>
+            <span onMouseDown={onMouseDown} title={title}>
         <img src={icon} alt=""/>
-      </Button>);
-        };
-        _this.renderBlockBtns = function () {
-            var _a = _this.props, mode = _a.mode, _b = _a.plugins, plugins = _b === void 0 ? [] : _b;
-            if (mode === "single") {
-                return null;
-            }
-            var btns = [];
-            plugins
-                .filter(function (plugin) {
-                return "objectType" in plugin &&
-                    plugin.objectType === "block" &&
-                    "registerBtn" in plugin &&
-                    plugin.showMenu;
-            })
-                .forEach(function (plugin) {
-                plugin.registerBtn(btns);
-            });
-            return (<span>
-        {btns.map(function (btn) {
-                return _this.renderBlockButton(btn.nodeType, btn.name, btn.title, btn.onClick);
-            })}
       </span>);
         };
         _this.setAlign = function (e, align) {
@@ -123,10 +102,16 @@ var Menu = /** @class */ (function (_super) {
             });
             onChange(change);
         };
-        _this.renderAlign = function (align, title) {
-            return (<Button size="small" onMouseDown={function (e) { return _this.setAlign(e, align); }} title={title}>
-        <Icon type={"align-" + align}/>
-      </Button>);
+        _this.renderAlign = function (align, icon, title) {
+            var isActive = _this.props.value.blocks.some(function (block) { var _a; return ((_a = block.data.get("style")) === null || _a === void 0 ? void 0 : _a["textAlign"]) === align; });
+            var cls = classnames("tool-btn", {
+                isActive: isActive,
+            });
+            return (<span>
+        <span className={cls} onMouseDown={function (e) { return _this.setAlign(e, align); }} title={title}>
+          {icon}
+        </span>
+      </span>);
         };
         _this.renderAlignJustify = function () {
             var setAlignJustify = function (e) {
@@ -152,22 +137,24 @@ var Menu = /** @class */ (function (_super) {
                 });
                 onChange(change);
             };
-            return (<Button size="small" onMouseDown={setAlignJustify} title="两端对齐">
-        <Icon type="menu"/>
-      </Button>);
+            return (<span>
+        <span className="tool-btn" title="两端对齐" onMouseDown={setAlignJustify}>
+          <i className="tool-icon ic-align-between"/>
+        </span>
+      </span>);
         };
         _this.renderMarkBtns = function () {
-            return (<div className="tools">
-        {_this.renderMarkButton("bold", <i className="tool-icon jiacu"/>, "加粗")}
-        {_this.renderMarkButton("italic", <i className="tool-icon xieti"/>, "斜体")}
+            return (<>
+        {_this.renderMarkButton("bold", <i className="tool-icon ic-jiacu"/>, "加粗")}
+        {_this.renderMarkButton("italic", <i className="tool-icon ic-xieti"/>, "斜体")}
         
-        {_this.renderMarkButton("u", <i className="tool-icon xiahuaxian"/>, "下划线")}
-        {_this.renderAlign("left", "居左")}
-        {_this.renderAlign("center", "居中")}
-        {_this.renderAlign("right", "居右")}
+        {_this.renderMarkButton("u", <i className="tool-icon ic-xiahuaxian"/>, "下划线")}
+        {_this.renderAlign("left", <i className="tool-icon ic-align-left"/>, "居左")}
+        {_this.renderAlign("center", <i className="tool-icon ic-align-center"/>, "居中")}
+        {_this.renderAlign("right", <i className="tool-icon ic-align-right"/>, "居右")}
         {_this.renderAlignJustify()}
         
-      </div>);
+      </>);
         };
         return _this;
     }
@@ -186,9 +173,9 @@ var Menu = /** @class */ (function (_super) {
         };
         return (
         // eslint-disable-next-line react/jsx-no-bind
-        <Button size="small" onMouseDown={onMouseDown} title={title} key={type}>
+        <span onMouseDown={onMouseDown} title={title} key={type}>
         {icon}
-      </Button>);
+      </span>);
     };
     Menu.prototype.render = function () {
         var root = window.document.getElementById("root");
@@ -197,8 +184,7 @@ var Menu = /** @class */ (function (_super) {
             fixed: !menuRef,
         });
         var childNode = (<div className={rootClass} ref={menuRef}>
-        {this.renderBlockBtns()}
-        {this.renderMarkBtns()}
+        <div className="tools">{this.renderMarkBtns()}</div>
       </div>);
         if (menuRef) {
             return ReactDOM.createPortal(childNode, root);

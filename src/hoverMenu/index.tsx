@@ -1,11 +1,9 @@
+import { Value, Mark } from "@zykj/slate";
+import classnames from "classnames";
+import { omit } from "lodash-es";
 import * as React from "react";
 import ReactDOM from "react-dom";
-import { Button, message, Icon } from "antd";
-
-import classnames from "classnames";
 import "./style.less";
-import { omit, difference } from "lodash-es";
-import { Value } from "@zykj/slate";
 
 class Menu extends React.Component<any, any> {
   // Check if the current selection has a mark with `type` in it.
@@ -31,13 +29,9 @@ class Menu extends React.Component<any, any> {
     options: any = {}
   ) => {
     event.preventDefault();
-    const { onChange, value, mode, oneSubQst, checkMode } = this.props;
+    const { onChange, value } = this.props;
     let change = value.change();
     try {
-      const ancestors = change.value.document.getAncestors(
-        value.blocks.first().key
-      );
-
       if (onClick) {
         change = change.call(onClick({ ...options }));
 
@@ -51,16 +45,20 @@ class Menu extends React.Component<any, any> {
   };
 
   // Render a mark-toggling toolbar button.
-  renderMarkButton = (type: string, icon: string, title: string) => {
-    // const isActive = this.hasMark(type);
+  renderMarkButton = (type: string, icon: JSX.Element, title: string) => {
+    const activeMarks = this.props.value.activeMarks.toArray();
+    const isActive = activeMarks.some((m: Mark) => m.type == type);
+
     const onMouseDown = (event: any) => this.onClickMark(event, type);
     const btnClass = classnames({
-      // isActive,
-      "mark-btn": true,
+      "tool-btn": true,
+      isActive,
     });
     return (
-      <span className={btnClass} title={title} onMouseDown={onMouseDown}>
-        {icon}
+      <span>
+        <span className={btnClass} title={title} onMouseDown={onMouseDown}>
+          {icon}
+        </span>
       </span>
     );
   };
@@ -75,9 +73,9 @@ class Menu extends React.Component<any, any> {
       this.onClickBlock(event, onClick, { type });
     return (
       // eslint-disable-next-line react/jsx-no-bind
-      <Button size="small" onMouseDown={onMouseDown} title={title} key={type}>
+      <span onMouseDown={onMouseDown} title={title} key={type}>
         {icon}
-      </Button>
+      </span>
     );
   }
 
@@ -111,40 +109,8 @@ class Menu extends React.Component<any, any> {
     const onMouseDown = (event: any) => clickIndentButton(event);
     return (
       // eslint-disable-next-line react/jsx-no-bind
-      <Button size="small" onMouseDown={onMouseDown} title={title}>
+      <span onMouseDown={onMouseDown} title={title}>
         <img src={icon} alt="" />
-      </Button>
-    );
-  };
-
-  renderBlockBtns = () => {
-    const { mode, plugins = [] } = this.props;
-    if (mode === "single") {
-      return null;
-    }
-    const btns: any[] = [];
-    plugins
-      .filter(
-        (plugin: any) =>
-          "objectType" in plugin &&
-          plugin.objectType === "block" &&
-          "registerBtn" in plugin &&
-          plugin.showMenu
-      )
-      .forEach((plugin: any) => {
-        plugin.registerBtn(btns);
-      });
-
-    return (
-      <span>
-        {btns.map((btn: any) => {
-          return this.renderBlockButton(
-            btn.nodeType,
-            btn.name,
-            btn.title,
-            btn.onClick
-          );
-        })}
       </span>
     );
   };
@@ -171,15 +137,23 @@ class Menu extends React.Component<any, any> {
     onChange(change);
   };
 
-  renderAlign = (align: string, title: string) => {
+  renderAlign = (align: string, icon: JSX.Element, title: string) => {
+    const isActive = this.props.value.blocks.some(
+      (block: any) => block.data.get("style")?.["textAlign"] === align
+    );
+    const cls = classnames("tool-btn", {
+      isActive,
+    });
     return (
-      <Button
-        size="small"
-        onMouseDown={(e) => this.setAlign(e, align)}
-        title={title}
-      >
-        <Icon type={`align-${align}`} />
-      </Button>
+      <span>
+        <span
+          className={cls}
+          onMouseDown={(e) => this.setAlign(e, align)}
+          title={title}
+        >
+          {icon}
+        </span>
+      </span>
     );
   };
 
@@ -207,38 +181,56 @@ class Menu extends React.Component<any, any> {
       onChange(change);
     };
     return (
-      <Button size="small" onMouseDown={setAlignJustify} title="两端对齐">
-        <Icon type="menu" />
-      </Button>
+      <span>
+        <span
+          className="tool-btn"
+          title="两端对齐"
+          onMouseDown={setAlignJustify}
+        >
+          <i className="tool-icon ic-align-between" />
+        </span>
+      </span>
     );
   };
 
   renderMarkBtns = () => {
     return (
-      <div className="tools">
+      <>
         {this.renderMarkButton(
           "bold",
-          <i className="tool-icon jiacu" />,
+          <i className="tool-icon ic-jiacu" />,
           "加粗"
         )}
         {this.renderMarkButton(
           "italic",
-          <i className="tool-icon xieti" />,
+          <i className="tool-icon ic-xieti" />,
           "斜体"
         )}
         {/* {this.renderMarkButton("sup", UpIcon, "上标")}
         {this.renderMarkButton("sub", DownIcon, "下标")} */}
         {this.renderMarkButton(
           "u",
-          <i className="tool-icon xiahuaxian" />,
+          <i className="tool-icon ic-xiahuaxian" />,
           "下划线"
         )}
-        {this.renderAlign("left", "居左")}
-        {this.renderAlign("center", "居中")}
-        {this.renderAlign("right", "居右")}
+        {this.renderAlign(
+          "left",
+          <i className="tool-icon ic-align-left" />,
+          "居左"
+        )}
+        {this.renderAlign(
+          "center",
+          <i className="tool-icon ic-align-center" />,
+          "居中"
+        )}
+        {this.renderAlign(
+          "right",
+          <i className="tool-icon ic-align-right" />,
+          "居右"
+        )}
         {this.renderAlignJustify()}
         {/* {this.renderIndentButton("indent", IndentIcon, "首行缩进")} */}
-      </div>
+      </>
     );
   };
 
@@ -254,8 +246,7 @@ class Menu extends React.Component<any, any> {
     );
     const childNode = (
       <div className={rootClass} ref={menuRef}>
-        {this.renderBlockBtns()}
-        {this.renderMarkBtns()}
+        <div className="tools">{this.renderMarkBtns()}</div>
       </div>
     );
     if (menuRef) {

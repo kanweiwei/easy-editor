@@ -5,7 +5,7 @@ import { get } from "lodash-es";
 import raf from "raf";
 import * as React from "react";
 import handlePaste from "./events/paste";
-import HoverMenu from "./HoverMenu/index";
+import HoverMenu from "./hoverMenu";
 import htmlConvertor from "./htmlConvertor";
 import initValue from "./initValue";
 import basePlugins from "./plugins";
@@ -18,6 +18,8 @@ interface IEditorProps {
   html?: string;
   value?: any;
   type?: any;
+  minHeight?: number;
+  autoFocus?: boolean;
   onUpdate?: (value: any, html?: string) => any;
   onBlur?: (e: any, change: any) => any;
   onChange?: (value: any) => any;
@@ -260,13 +262,12 @@ class SlateEditor extends React.Component<IEditorProps, any> {
   };
 
   renderMenu = (fixed = false) => {
-    const { oneSubQst, checkMode, showMenu = true } = this.props;
+    const { showMenu = true } = this.props;
     if (showMenu) {
       if (fixed) {
         return (
           <HoverMenu
             value={this.state.value}
-            mode={this.mode}
             onChange={this.onChange}
             plugins={this.plugins}
           />
@@ -276,7 +277,6 @@ class SlateEditor extends React.Component<IEditorProps, any> {
           <HoverMenu
             menuRef={this.menuRef}
             value={this.state.value}
-            mode={this.mode}
             onChange={this.onChange}
             plugins={this.plugins}
           />
@@ -305,7 +305,7 @@ class SlateEditor extends React.Component<IEditorProps, any> {
         renderNode={(props: any) => renderNode(props, this)}
         onKeyDown={this.props.onKeyDown}
         plugins={this.plugins}
-        autoFocus={props.autoFocus ?? true}
+        autoFocus={this.props.autoFocus ?? true}
         schema={schemas}
         spellCheck={false}
         readOnly={readOnly}
@@ -326,14 +326,18 @@ class SlateEditor extends React.Component<IEditorProps, any> {
   };
 
   render() {
-    const { style, className, minHeight = 300 } = this.props;
-    const st: any = { ...style };
-    const cls: any = classnames("app-slate-editor", className);
+    const { style = {}, className, minHeight = 300 } = this.props;
+    const cls: any = classnames("slate-editor", className);
     return (
-      <div className={cls} style={st}>
+      <div className={cls} style={{ ...style }}>
         {this.renderMenu(true)}
         {this.renderMenu()}
-        <div style={{ minHeight: `${minHeight}px` }}>{this.renderEditor()}</div>
+        <div
+          className="slate-editor-content"
+          style={{ minHeight: `${minHeight}px` }}
+        >
+          {this.renderEditor()}
+        </div>
         {this.renderMask()}
       </div>
     );

@@ -6,7 +6,7 @@ import { get } from "lodash-es";
 import raf from "raf";
 import * as React from "react";
 import handlePaste from "./events/paste";
-import HoverMenu from "./HoverMenu/index";
+import HoverMenu from "./hoverMenu";
 import htmlConvertor from "./htmlConvertor";
 import initValue from "./initValue";
 import basePlugins from "./plugins";
@@ -167,13 +167,13 @@ var SlateEditor = /** @class */ (function (_super) {
         };
         _this.renderMenu = function (fixed) {
             if (fixed === void 0) { fixed = false; }
-            var _a = _this.props, oneSubQst = _a.oneSubQst, checkMode = _a.checkMode, _b = _a.showMenu, showMenu = _b === void 0 ? true : _b;
+            var _a = _this.props.showMenu, showMenu = _a === void 0 ? true : _a;
             if (showMenu) {
                 if (fixed) {
-                    return (<HoverMenu value={_this.state.value} mode={_this.mode} onChange={_this.onChange} plugins={_this.plugins}/>);
+                    return (<HoverMenu value={_this.state.value} onChange={_this.onChange} plugins={_this.plugins}/>);
                 }
                 else {
-                    return (<HoverMenu menuRef={_this.menuRef} value={_this.state.value} mode={_this.mode} onChange={_this.onChange} plugins={_this.plugins}/>);
+                    return (<HoverMenu menuRef={_this.menuRef} value={_this.state.value} onChange={_this.onChange} plugins={_this.plugins}/>);
                 }
             }
             return null;
@@ -184,7 +184,7 @@ var SlateEditor = /** @class */ (function (_super) {
             var _b = _this.props, readOnly = _b.readOnly, placeholder = _b.placeholder, pasteOptions = _b.pasteOptions, _c = _b.minHeight, minHeight = _c === void 0 ? 300 : _c;
             return (<Editor placeholder={placeholder} value={value} onChange={_this.onChange} onCompositionStart={_this.onCompositionStart} onCompositionEnd={_this.onCompositionEnd} onBlur={_this.onBlur} onPaste={function (e, change) {
                 return handlePaste(e, change, _this, pasteOptions);
-            }} onContextMenu={function (e) { return e.preventDefault(); }} renderMark={renderMark} renderNode={function (props) { return renderNode(props, _this); }} onKeyDown={_this.props.onKeyDown} plugins={_this.plugins} autoFocus={(_a = props.autoFocus) !== null && _a !== void 0 ? _a : true} schema={schemas} spellCheck={false} readOnly={readOnly} style={{ minHeight: minHeight + "px" }}/>);
+            }} onContextMenu={function (e) { return e.preventDefault(); }} renderMark={renderMark} renderNode={function (props) { return renderNode(props, _this); }} onKeyDown={_this.props.onKeyDown} plugins={_this.plugins} autoFocus={(_a = _this.props.autoFocus) !== null && _a !== void 0 ? _a : true} schema={schemas} spellCheck={false} readOnly={readOnly} style={{ minHeight: minHeight + "px" }}/>);
         };
         _this.renderMask = function () {
             if (_this.props.readOnly) {
@@ -224,13 +224,14 @@ var SlateEditor = /** @class */ (function (_super) {
         return get(this.state, name);
     };
     SlateEditor.prototype.render = function () {
-        var _a = this.props, style = _a.style, className = _a.className, _b = _a.minHeight, minHeight = _b === void 0 ? 300 : _b;
-        var st = __assign({}, style);
-        var cls = classnames("app-slate-editor", className);
-        return (<div className={cls} style={st}>
+        var _a = this.props, _b = _a.style, style = _b === void 0 ? {} : _b, className = _a.className, _c = _a.minHeight, minHeight = _c === void 0 ? 300 : _c;
+        var cls = classnames("slate-editor", className);
+        return (<div className={cls} style={__assign({}, style)}>
         {this.renderMenu(true)}
         {this.renderMenu()}
-        <div style={{ minHeight: minHeight + "px" }}>{this.renderEditor()}</div>
+        <div className="slate-editor-content" style={{ minHeight: minHeight + "px" }}>
+          {this.renderEditor()}
+        </div>
         {this.renderMask()}
       </div>);
     };

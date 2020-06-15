@@ -46,8 +46,8 @@ export default async (e: any, change: Change, self: any, options?: any) => {
           reader.onload = () => {
             resolve(reader.result);
           };
-          reader.onerror = (err: Error) => {
-            reject(err);
+          reader.onerror = () => {
+            reject(new Error("error"));
           };
           reader.readAsDataURL(file);
         });
@@ -101,8 +101,6 @@ export default async (e: any, change: Change, self: any, options?: any) => {
             "gim"
           );
           const result = transfer.rich.match(reg);
-          const ossConfig: any = await OssHelper.getOssConfig();
-          const client = ossClientCreator(ossConfig);
 
           if (result && result.length > 0) {
             for (let i = 0; i < result.length; i++) {
@@ -125,7 +123,7 @@ export default async (e: any, change: Change, self: any, options?: any) => {
               const base64Data = hexToBase64(hexData);
               const dataURI = `data:${fileType};base64,${base64Data}`;
 
-              const url = "";
+              const url = dataURI;
               // TODO
               // const url = await uploadFile(path, getBlobByDataURI(dataURI, fileType))
               localeImgs.push(url);

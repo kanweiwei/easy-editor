@@ -1,15 +1,12 @@
-import _someInstanceProperty from "@babel/runtime-corejs3/core-js-stable/instance/some";
-import _mapInstanceProperty from "@babel/runtime-corejs3/core-js-stable/instance/map";
-import _filterInstanceProperty from "@babel/runtime-corejs3/core-js-stable/instance/filter";
 import _forEachInstanceProperty from "@babel/runtime-corejs3/core-js-stable/instance/for-each";
+import _someInstanceProperty from "@babel/runtime-corejs3/core-js-stable/instance/some";
 import { __assign, __extends } from "tslib";
+import { Value } from "@zykj/slate";
+import classnames from "classnames";
+import { omit } from "lodash-es";
 import * as React from "react";
 import ReactDOM from "react-dom";
-import { Button, Icon } from "antd";
-import classnames from "classnames";
 import "./style.css";
-import { omit } from "lodash-es";
-import { Value } from "@zykj/slate";
 
 var Menu =
 /** @class */
@@ -37,15 +34,10 @@ function (_super) {
       event.preventDefault();
       var _a = _this.props,
           onChange = _a.onChange,
-          value = _a.value,
-          mode = _a.mode,
-          oneSubQst = _a.oneSubQst,
-          checkMode = _a.checkMode;
+          value = _a.value;
       var change = value.change();
 
       try {
-        var ancestors = change.value.document.getAncestors(value.blocks.first().key);
-
         if (onClick) {
           change = change.call(onClick(__assign({}, options)));
           change = Value.fromJSON(change.value.toJSON()).change();
@@ -59,20 +51,25 @@ function (_super) {
 
 
     _this.renderMarkButton = function (type, icon, title) {
-      // const isActive = this.hasMark(type);
+      var activeMarks = _this.props.value.activeMarks.toArray();
+
+      var isActive = _someInstanceProperty(activeMarks).call(activeMarks, function (m) {
+        return m.type == type;
+      });
+
       var onMouseDown = function onMouseDown(event) {
         return _this.onClickMark(event, type);
       };
 
       var btnClass = classnames({
-        // isActive,
-        "mark-btn": true
+        "tool-btn": true,
+        isActive: isActive
       });
-      return /*#__PURE__*/React.createElement("span", {
+      return /*#__PURE__*/React.createElement("span", null, /*#__PURE__*/React.createElement("span", {
         className: btnClass,
         title: title,
         onMouseDown: onMouseDown
-      }, icon);
+      }, icon));
     };
 
     _this.renderIndentButton = function (type, icon, title) {
@@ -114,8 +111,7 @@ function (_super) {
       return (
         /*#__PURE__*/
         // eslint-disable-next-line react/jsx-no-bind
-        React.createElement(Button, {
-          size: "small",
+        React.createElement("span", {
           onMouseDown: onMouseDown,
           title: title
         }, /*#__PURE__*/React.createElement("img", {
@@ -123,31 +119,6 @@ function (_super) {
           alt: ""
         }))
       );
-    };
-
-    _this.renderBlockBtns = function () {
-      var _context;
-
-      var _a = _this.props,
-          mode = _a.mode,
-          _b = _a.plugins,
-          plugins = _b === void 0 ? [] : _b;
-
-      if (mode === "single") {
-        return null;
-      }
-
-      var btns = [];
-
-      _forEachInstanceProperty(_context = _filterInstanceProperty(plugins).call(plugins, function (plugin) {
-        return "objectType" in plugin && plugin.objectType === "block" && "registerBtn" in plugin && plugin.showMenu;
-      })).call(_context, function (plugin) {
-        plugin.registerBtn(btns);
-      });
-
-      return /*#__PURE__*/React.createElement("span", null, _mapInstanceProperty(btns).call(btns, function (btn) {
-        return _this.renderBlockButton(btn.nodeType, btn.name, btn.title, btn.onClick);
-      }));
     };
 
     _this.setAlign = function (e, align) {
@@ -178,16 +149,25 @@ function (_super) {
       onChange(change);
     };
 
-    _this.renderAlign = function (align, title) {
-      return /*#__PURE__*/React.createElement(Button, {
-        size: "small",
+    _this.renderAlign = function (align, icon, title) {
+      var _context;
+
+      var isActive = _someInstanceProperty(_context = _this.props.value.blocks).call(_context, function (block) {
+        var _a;
+
+        return ((_a = block.data.get("style")) === null || _a === void 0 ? void 0 : _a["textAlign"]) === align;
+      });
+
+      var cls = classnames("tool-btn", {
+        isActive: isActive
+      });
+      return /*#__PURE__*/React.createElement("span", null, /*#__PURE__*/React.createElement("span", {
+        className: cls,
         onMouseDown: function onMouseDown(e) {
           return _this.setAlign(e, align);
         },
         title: title
-      }, /*#__PURE__*/React.createElement(Icon, {
-        type: "align-" + align
-      }));
+      }, icon));
     };
 
     _this.renderAlignJustify = function () {
@@ -220,25 +200,29 @@ function (_super) {
         onChange(change);
       };
 
-      return /*#__PURE__*/React.createElement(Button, {
-        size: "small",
-        onMouseDown: setAlignJustify,
-        title: "\u4E24\u7AEF\u5BF9\u9F50"
-      }, /*#__PURE__*/React.createElement(Icon, {
-        type: "menu"
-      }));
+      return /*#__PURE__*/React.createElement("span", null, /*#__PURE__*/React.createElement("span", {
+        className: "tool-btn",
+        title: "\u4E24\u7AEF\u5BF9\u9F50",
+        onMouseDown: setAlignJustify
+      }, /*#__PURE__*/React.createElement("i", {
+        className: "tool-icon ic-align-between"
+      })));
     };
 
     _this.renderMarkBtns = function () {
-      return /*#__PURE__*/React.createElement("div", {
-        className: "tools"
-      }, _this.renderMarkButton("bold", /*#__PURE__*/React.createElement("i", {
-        className: "tool-icon jiacu"
+      return /*#__PURE__*/React.createElement(React.Fragment, null, _this.renderMarkButton("bold", /*#__PURE__*/React.createElement("i", {
+        className: "tool-icon ic-jiacu"
       }), "加粗"), _this.renderMarkButton("italic", /*#__PURE__*/React.createElement("i", {
-        className: "tool-icon xieti"
+        className: "tool-icon ic-xieti"
       }), "斜体"), _this.renderMarkButton("u", /*#__PURE__*/React.createElement("i", {
-        className: "tool-icon xiahuaxian"
-      }), "下划线"), _this.renderAlign("left", "居左"), _this.renderAlign("center", "居中"), _this.renderAlign("right", "居右"), _this.renderAlignJustify());
+        className: "tool-icon ic-xiahuaxian"
+      }), "下划线"), _this.renderAlign("left", /*#__PURE__*/React.createElement("i", {
+        className: "tool-icon ic-align-left"
+      }), "居左"), _this.renderAlign("center", /*#__PURE__*/React.createElement("i", {
+        className: "tool-icon ic-align-center"
+      }), "居中"), _this.renderAlign("right", /*#__PURE__*/React.createElement("i", {
+        className: "tool-icon ic-align-right"
+      }), "居右"), _this.renderAlignJustify());
     };
 
     return _this;
@@ -271,8 +255,7 @@ function (_super) {
     return (
       /*#__PURE__*/
       // eslint-disable-next-line react/jsx-no-bind
-      React.createElement(Button, {
-        size: "small",
+      React.createElement("span", {
         onMouseDown: onMouseDown,
         title: title,
         key: type
@@ -291,7 +274,9 @@ function (_super) {
     var childNode = /*#__PURE__*/React.createElement("div", {
       className: rootClass,
       ref: menuRef
-    }, this.renderBlockBtns(), this.renderMarkBtns());
+    }, /*#__PURE__*/React.createElement("div", {
+      className: "tools"
+    }, this.renderMarkBtns()));
 
     if (menuRef) {
       return /*#__PURE__*/ReactDOM.createPortal(childNode, root);

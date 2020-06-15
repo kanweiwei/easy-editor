@@ -1,3 +1,7 @@
+.bgUrl(@l) {
+  background: url("@{l}") center center no-repeat;
+}
+
 .slate-editor__hover-menu {
   padding: 8px 7px 6px;
   position: absolute;
@@ -32,13 +36,18 @@
   }
 
   .tools {
-    ::after {
+    &::after {
       position: relative;
       display: table;
       content: "";
       clear: both;
     }
-    .mark-btn {
+    > * {
+      display: inline-block;
+      margin-left: 8px;
+    }
+
+    .tool-btn {
       position: relative;
       display: table;
       float: left;
@@ -50,15 +59,32 @@
         background-color: #f5f5f5;
       }
     }
-
-    .jiacu {
-      background: url("./icons/jiacu.png") center center no-repeat;
+    .isActive {
+      background-color: #b3d4fc;
+      &:hover {
+        background-color: #b3d4fc;
+      }
     }
-    .xieti {
-      background: url("./icons/xieti.png") center center no-repeat;
+    .ic-jiacu {
+      .bgUrl("./icons/jiacu.png");
     }
-    .xiahuaxian {
-      background: url("./icons/xiahuaxian.png") center center no-repeat;
+    .ic-xieti {
+      .bgUrl("./icons/xieti.png");
+    }
+    .ic-xiahuaxian {
+      .bgUrl("./icons/xiahuaxian.png");
+    }
+    .ic-align-left {
+      .bgUrl("./icons/align-left.png");
+    }
+    .ic-align-center {
+      .bgUrl("./icons/align-center.png");
+    }
+    .ic-align-right {
+      .bgUrl("./icons/align-right.png");
+    }
+    .ic-align-between {
+      .bgUrl("./icons/align-between.png");
     }
     .tool-icon {
       position: relative;
