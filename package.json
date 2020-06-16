@@ -8,7 +8,8 @@
   "module": "es/index.js",
   "main": "lib/index.js",
   "scripts": {
-    "build": "gulp compile"
+    "build": "gulp compile",
+    "example": "cd example && webpack-dev-server"
   },
   "dependencies": {
     "@zykj/slate": "0.37.1",

@@ -3,12 +3,20 @@ import ReactDom from "react-dom";
 import SlateEditor from "slate-editor";
 
 class Editor extends React.Component {
+  editorRef = React.createRef();
+
   handleChange = (v) => {
     console.log(v);
   };
 
   render() {
-    return <SlateEditor onChange={this.handleChange} />;
+    return (
+      <SlateEditor
+        html="<p> <p>"
+        onChange={this.handleChange}
+        ref={this.editorRef}
+      />
+    );
   }
 }
 

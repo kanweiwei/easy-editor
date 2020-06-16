@@ -55,10 +55,8 @@ function (_super) {
     _this.isComposing = false;
 
     _this.onChange = function (change, type) {
-      var onChange = _this.props.onChange;
-
-      if (onChange) {
-        var res = onChange({
+      if (props.onChange) {
+        var res = props.onChange({
           change: change,
           type: type
         });
@@ -310,6 +308,11 @@ function (_super) {
     _this.plugins = __spreadArrays([_mapInstanceProperty(basePlugins).call(basePlugins, function (Plugin) {
       return new Plugin(_this);
     })], (_a = props === null || props === void 0 ? void 0 : props.plugins) !== null && _a !== void 0 ? _a : []);
+
+    if (props.html) {
+      value = _this.getValueByHtml(props.html);
+    }
+
     _this.state = {
       value: value || initValue()
     };

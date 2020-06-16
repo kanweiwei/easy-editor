@@ -80,11 +80,14 @@ class SlateEditor extends React.Component<IEditorProps, any> {
 
   constructor(props: any) {
     super(props);
-    const { value } = props;
+    let { value } = props;
     this.plugins = [
       basePlugins.map((Plugin) => new Plugin(this)),
       ...(props?.plugins ?? []),
     ];
+    if (props.html) {
+      value = this.getValueByHtml(props.html);
+    }
 
     this.state = {
       value: value || initValue(),
@@ -118,9 +121,8 @@ class SlateEditor extends React.Component<IEditorProps, any> {
   }
 
   onChange = (change: any, type?: string) => {
-    const { onChange } = this.props;
-    if (onChange) {
-      const res = onChange({ change, type });
+    if (this.props.onChange) {
+      const res = this.props.onChange({ change, type });
       if (typeof res === "boolean" && !res) {
         return;
       }

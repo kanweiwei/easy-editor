@@ -41,9 +41,8 @@ var SlateEditor = /** @class */ (function (_super) {
         var _this = _super.call(this, props) || this;
         _this.isComposing = false;
         _this.onChange = function (change, type) {
-            var onChange = _this.props.onChange;
-            if (onChange) {
-                var res = onChange({ change: change, type: type });
+            if (props.onChange) {
+                var res = props.onChange({ change: change, type: type });
                 if (typeof res === "boolean" && !res) {
                     return;
                 }
@@ -196,6 +195,9 @@ var SlateEditor = /** @class */ (function (_super) {
         _this.plugins = __spreadArrays([
             basePlugins.map(function (Plugin) { return new Plugin(_this); })
         ], ((_a = props === null || props === void 0 ? void 0 : props.plugins) !== null && _a !== void 0 ? _a : []));
+        if (props.html) {
+            value = _this.getValueByHtml(props.html);
+        }
         _this.state = {
             value: value || initValue(),
         };
