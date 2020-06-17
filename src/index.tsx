@@ -13,6 +13,8 @@ import renderMark from "./renderMark";
 import renderNode from "./renderNode";
 import schemas from "./schema";
 import "./style.less";
+import ToolBar from "./toolbar";
+import HtmlSerialize from "./htmlSerialize";
 
 interface IEditorProps {
   html?: string;
@@ -30,6 +32,8 @@ interface IEditorProps {
     file: File | Blob | Buffer | ArrayBuffer,
     dataURI: string
   ) => string | Promise<string>;
+  controls?: Array<string[]>;
+  showToolbar?: boolean;
   onUpdate?: (value: any, html?: string) => any;
   onBlur?: (e: any, change: any) => any;
   onChange?: (value: any) => any;
@@ -93,6 +97,7 @@ class SlateEditor extends React.Component<IEditorProps, any> {
     ];
     if (props.html) {
       value = this.getValueByHtml(props.html);
+      console.log(value);
     }
 
     this.state = {
@@ -334,12 +339,25 @@ class SlateEditor extends React.Component<IEditorProps, any> {
   };
 
   render() {
-    const { style = {}, className, minHeight = 300 } = this.props;
+    const {
+      style = {},
+      className,
+      minHeight = 300,
+      showToolbar = true,
+      controls,
+    } = this.props;
     const cls: any = classnames("slate-editor", className);
     return (
       <div className={cls} style={{ ...style }}>
-        {this.renderMenu(true)}
-        {this.renderMenu()}
+        {showToolbar && (
+          <ToolBar
+            controls={controls}
+            value={this.state.value}
+            onChange={this.onChange}
+            beforeUpload={this.props.beforeUpload}
+          />
+        )}
+        {/* {this.renderMenu()} */}
         <div
           className="slate-editor-content"
           style={{ minHeight: `${minHeight}px` }}
@@ -352,8 +370,8 @@ class SlateEditor extends React.Component<IEditorProps, any> {
   }
 }
 
-export function valueTohtml() {
-  return htmlConvertor;
+export function valueTohtml(value: any) {
+  return new HtmlSerialize().converter().serialize(value);
 }
 
 export default SlateEditor;

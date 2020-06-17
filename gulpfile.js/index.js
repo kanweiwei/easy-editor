@@ -40,7 +40,21 @@ function tsc() {
     "!node_modules/**/*.*",
     "typings/**/*.d.ts",
   ];
-  return merge2(compileTs(gulp.src(source)).pipe(gulp.dest(`dist`)));
+  return merge2(
+    compileTs(gulp.src(source))
+      .pipe(
+        through2.obj(function (file, encoding, next) {
+          let fileContent = file.contents.toString();
+          file.contents = Buffer.from(
+            fileContent.replace(/(\.less)(['"]{1}\;?)$/gm, ".css$2"),
+            "utf-8"
+          );
+          this.push(file);
+          next();
+        })
+      )
+      .pipe(gulp.dest(`dist`))
+  );
 }
 
 function babelify(js, modules) {
@@ -103,7 +117,6 @@ function compile(modules) {
 
   tsResult.on("finish", check);
   tsResult.on("end", check);
-  console.log(tsResult.dts);
   return merge2([
     babelify(tsResult.js, modules),
     tsResult.dts.pipe(gulp.dest(modules === false ? `es` : `lib`)),
@@ -123,7 +136,8 @@ function compileLess() {
       })
     )
     .pipe(base64())
-    .pipe(gulp.dest(`es`));
+    .pipe(gulp.dest(`es`))
+    .pipe(gulp.dest(`dist`));
 }
 
 function copyAssets() {
@@ -147,10 +161,4 @@ exports.compileWithEs = gulp.series(
   compileWithEs
 );
 
-exports.compile = gulp.series(
-  clean,
-  tsc,
-  copyAssets,
-  compileLess,
-  compileWithEs
-);
+exports.compile = gulp.series(clean, copyAssets, compileLess, compileWithEs);

@@ -1,0 +1,64 @@
+.slate-editor {
+  position: relative;
+  border: 1px solid #ccc;
+}
+.slate-editor .editor {
+  border: 1px solid #ccc;
+}
+.slate-editor .slate-editor-content {
+  padding: 0 8px;
+}
+.slate-editor .resize-container {
+  position: relative;
+  display: inline-block;
+  cursor: move;
+  margin: 0 auto;
+}
+.slate-editor .resize-container img {
+  display: block;
+  height: 100%;
+}
+.slate-editor .resize-container:hover img {
+  outline: 1px dashed #4797f3;
+  cursor: move;
+}
+.slate-editor .resize-container .resize-handle-ne,
+.slate-editor .resize-container .resize-handle-se,
+.slate-editor .resize-container .resize-handle-nw,
+.slate-editor .resize-container .resize-handle-sw {
+  position: absolute;
+  display: block;
+  width: 10px;
+  height: 10px;
+  background: #4797f3;
+  cursor: not-allowed;
+  z-index: 10;
+}
+.slate-editor .resize-container .resize-handle-nw {
+  top: -5px;
+  left: -5px;
+}
+.slate-editor .resize-container .resize-handle-nw.active {
+  cursor: w-resize;
+}
+.slate-editor .resize-container .resize-handle-sw {
+  bottom: -5px;
+  left: -5px;
+}
+.slate-editor .resize-container .resize-handle-sw.active {
+  cursor: sw-resize;
+}
+.slate-editor .resize-container .resize-handle-ne {
+  top: -5px;
+  right: -5px;
+}
+.slate-editor .resize-container .resize-handle-ne.active {
+  cursor: e-resize;
+}
+.slate-editor .resize-container .resize-handle-se {
+  bottom: -5px;
+  right: -5px;
+}
+.slate-editor .resize-container .resize-handle-se.active {
+  cursor: se-resize;
+}

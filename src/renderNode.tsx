@@ -184,6 +184,7 @@ class ResizeBox extends React.Component<any, any> {
 
 export default (props: any, self: any): any => {
   const { attributes, children, node, isSelected } = props;
+  console.log(node.type);
   switch (node.type) {
     case "div": {
       let { style, className, ...otherAttrs }: any = node.data.toJS();
@@ -447,6 +448,33 @@ export default (props: any, self: any): any => {
         <td {...attributes} {...otherAttrs} style={style} className={className}>
           {children}
         </td>
+      );
+    }
+    case "embed": {
+      let { style, className, ...otherAttrs } = node.data.toJS();
+      let src = node.data.get("src");
+      return (
+        <embed
+          {...attributes}
+          {...otherAttrs}
+          style={style}
+          src={src}
+          className={className}
+        />
+      );
+    }
+    case "object": {
+      let { style, className, ...otherAttrs } = node.data.toJS();
+      let data = node.data.get("data");
+      console.log(node, "object");
+      return (
+        <object
+          {...attributes}
+          {...otherAttrs}
+          style={style}
+          data={data}
+          className={className}
+        ></object>
       );
     }
     default:

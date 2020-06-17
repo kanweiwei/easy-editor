@@ -206,6 +206,7 @@ export default (function (props, self) {
       children = props.children,
       node = props.node,
       isSelected = props.isSelected;
+  console.log(node.type);
 
   switch (node.type) {
     case "div":
@@ -455,6 +456,37 @@ export default (function (props, self) {
           style: style,
           className: className
         }), children);
+      }
+
+    case "embed":
+      {
+        var _e = node.data.toJS(),
+            style = _e.style,
+            className = _e.className,
+            otherAttrs = __rest(_e, ["style", "className"]);
+
+        var src = node.data.get("src");
+        return /*#__PURE__*/React.createElement("embed", _extends({}, attributes, otherAttrs, {
+          style: style,
+          src: src,
+          className: className
+        }));
+      }
+
+    case "object":
+      {
+        var _f = node.data.toJS(),
+            style = _f.style,
+            className = _f.className,
+            otherAttrs = __rest(_f, ["style", "className"]);
+
+        var data = node.data.get("data");
+        console.log(node, "object");
+        return /*#__PURE__*/React.createElement("object", _extends({}, attributes, otherAttrs, {
+          style: style,
+          data: data,
+          className: className
+        }));
       }
 
     default:

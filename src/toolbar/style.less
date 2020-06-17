@@ -1,0 +1,77 @@
+.bgUrl(@l) {
+  background: url("@{l}") center center no-repeat;
+}
+
+.slate-editor__toolbar {
+  padding: 8px 7px 6px;
+  position: relative;
+  opacity: 1;
+  -webkit-transition: opacity 0.75s;
+  -o-transition: opacity 0.75s;
+  transition: opacity 0.75s;
+  box-shadow: 0 2px 4px #ccc;
+  border-bottom: 1px solid #ccc;
+  background-color: #fff;
+  margin-bottom: 8px;
+
+  .tools {
+    &::after {
+      position: relative;
+      display: table;
+      content: "";
+      clear: both;
+    }
+    > * {
+      display: inline-block;
+      margin-left: 8px;
+    }
+
+    .tool-btn {
+      position: relative;
+      display: table;
+      float: left;
+      padding: 0 4px;
+      border-radius: 2px;
+      line-height: 0px;
+      border: 1px solid transparent;
+      cursor: pointer;
+      &:hover {
+        background-color: #f5f5f5;
+      }
+    }
+    .isActive {
+      background-color: #b3d4fc;
+      &:hover {
+        background-color: #b3d4fc;
+      }
+    }
+    .ic-jiacu {
+      .bgUrl("../icons/jiacu.png");
+    }
+    .ic-xieti {
+      .bgUrl("../icons/xieti.png");
+    }
+    .ic-xiahuaxian {
+      .bgUrl("../icons/xiahuaxian.png");
+    }
+    .ic-align-left {
+      .bgUrl("../icons/align-left.png");
+    }
+    .ic-align-center {
+      .bgUrl("../icons/align-center.png");
+    }
+    .ic-align-right {
+      .bgUrl("../icons/align-right.png");
+    }
+    .ic-align-between {
+      .bgUrl("../icons/align-between.png");
+    }
+    .tool-icon {
+      position: relative;
+      display: table-cell;
+      width: 20px;
+      height: 20px;
+      background-size: 16px 16px;
+    }
+  }
+}

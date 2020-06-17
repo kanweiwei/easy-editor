@@ -2,17 +2,29 @@ declare const _default: {
     document: {
         nodes: {
             match: {
-                type: any;
-            }[];
+                object: string;
+            };
         }[];
         normalize: (change: any, error: any) => any;
     };
     blocks: {
-        "paper-description": {
-            parent: {
-                object: string;
-            };
-            normalize: (change: any, error: any) => any;
+        paragraph: {
+            nodes: {
+                match: {
+                    object: string;
+                }[];
+            }[];
+        };
+        object: {
+            next: {
+                match: string;
+            }[];
+            normalize: (change: any, error: any) => void;
+        };
+        embed: {
+            next: {
+                match: string;
+            }[];
         };
         table: {
             nodes: {

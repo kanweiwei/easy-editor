@@ -105,6 +105,20 @@ let rules = [
               </td>
             );
           }
+          case "embed": {
+            return (
+              <object {...otherAttrs} style={style} className={className}>
+                {children}
+              </object>
+            );
+          }
+          case "object": {
+            return (
+              <object {...otherAttrs} style={style} className={className}>
+                {children}
+              </object>
+            );
+          }
           default:
             break;
         }

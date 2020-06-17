@@ -35,6 +35,22 @@ class Editor extends React.Component {
 ReactDom.render(<Editor />, document.getElementById("root"));
 ```
 
+### Custom toolbar
+
+For convenience, some tools have been built in the toolbar.
+tool| instructions|
+-|-|-
+bold| 加粗|
+italic| 斜体|
+u| 下划线|
+left|文字居左
+right|文字居右
+center|文字居中
+justify|两端对齐
+image| 插入图片
+
+---
+
 ### License
 
 Apache 2.0

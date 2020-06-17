@@ -17,6 +17,8 @@ import renderMark from "./renderMark";
 import _renderNode from "./renderNode";
 import schemas from "./schema";
 import "./style.css";
+import ToolBar from "./toolbar";
+import HtmlSerialize from "./htmlSerialize";
 
 var findRealDoms = function findRealDoms(dom, realDom) {
   if (dom.childNodes && _Array$isArray(dom.childNodes)) {
@@ -310,6 +312,7 @@ function (_super) {
 
     if (props.html) {
       value = _this.getValueByHtml(props.html);
+      console.log(value);
     }
 
     _this.state = {
@@ -351,12 +354,20 @@ function (_super) {
         style = _b === void 0 ? {} : _b,
         className = _a.className,
         _c = _a.minHeight,
-        minHeight = _c === void 0 ? 300 : _c;
+        minHeight = _c === void 0 ? 300 : _c,
+        _d = _a.showToolbar,
+        showToolbar = _d === void 0 ? true : _d,
+        controls = _a.controls;
     var cls = classnames("slate-editor", className);
     return /*#__PURE__*/React.createElement("div", {
       className: cls,
       style: __assign({}, style)
-    }, this.renderMenu(true), this.renderMenu(), /*#__PURE__*/React.createElement("div", {
+    }, showToolbar && /*#__PURE__*/React.createElement(ToolBar, {
+      controls: controls,
+      value: this.state.value,
+      onChange: this.onChange,
+      beforeUpload: this.props.beforeUpload
+    }), /*#__PURE__*/React.createElement("div", {
       className: "slate-editor-content",
       style: {
         minHeight: minHeight + "px"
@@ -367,7 +378,7 @@ function (_super) {
   return SlateEditor;
 }(React.Component);
 
-export function valueTohtml() {
-  return htmlConvertor;
+export function valueTohtml(value) {
+  return new HtmlSerialize().converter().serialize(value);
 }
 export default SlateEditor;
