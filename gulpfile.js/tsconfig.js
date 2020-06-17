@@ -17,6 +17,6 @@ module.exports = function () {
     moduleResolution: "node",
     declaration: true,
     allowSyntheticDefaultImports: true,
-    isolatedModules: true,
+    // isolatedModules: true,
   });
 };

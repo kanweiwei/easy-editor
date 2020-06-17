@@ -1,15 +1,7 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable no-global-assign */
-/* eslint-disable no-unused-vars */
-/* eslint-disable no-cond-assign */
-/* eslint-disable prefer-const */
-// @ts-ignore
-import { Button, Col, Form, Input, Row } from "antd";
 import { assign, debounce } from "lodash-es";
 import * as React from "react";
 import { findDOMNode } from "react-dom";
 import ContextMenu from "./hoverMenu/contextMenu";
-// @ts-ignore
 import { getStyleFromData } from "./htmlSerialize";
 
 /**
@@ -56,54 +48,6 @@ export function renderPlaceholder(
   }
   return null;
 }
-
-// eslint-disable-next-line react/prefer-stateless-function
-class ImgForm extends React.Component<any, any> {
-  render() {
-    const { getFieldDecorator } = this.props.form;
-    const { node, onload } = this.props;
-    const img: any = document.querySelector(`img[data-key='${node.key}']`);
-    const formItemLayout = {
-      labelCol: { span: 8 },
-      wrapperCol: {
-        xs: { span: 16 },
-        sm: { span: 16 },
-      },
-    };
-    return (
-      <div>
-        <Row>
-          <Col span={12}>
-            <Form>
-              <Form.Item label="图片地址" {...formItemLayout}>
-                {getFieldDecorator("src", {
-                  initialValue: img.src,
-                })(<Input disabled />)}
-              </Form.Item>
-              <Form.Item label="宽度" {...formItemLayout}>
-                {getFieldDecorator("width", {
-                  initialValue: img.width,
-                })(<Input />)}
-              </Form.Item>
-              <Form.Item label="高度" {...formItemLayout}>
-                {getFieldDecorator("height", {
-                  initialValue: img.height,
-                })(<Input />)}
-              </Form.Item>
-            </Form>
-          </Col>
-          <Col span={12}>
-            <div style={{ marginLeft: "20px" }}>
-              <img src={img.src} onLoad={onload} alt="" />
-            </div>
-          </Col>
-        </Row>
-      </div>
-    );
-  }
-}
-// @ts-ignore
-const ImgAttrsForm: any = Form.create()(ImgForm);
 
 class ResizeBox extends React.Component<any, any> {
   public rootDom: any;
@@ -328,7 +272,7 @@ export default (props: any, self: any): any => {
         setTimeout(() => {
           const menu: any = document.querySelector("#context-menu");
           // todo 菜单显示位置
-          if (menu && img) {
+          if (menu && image) {
             menu.style.opacity = 1;
             menu.style.top = `${
               e.clientY + (document as any).documentElement.scrollTop
@@ -405,10 +349,10 @@ export default (props: any, self: any): any => {
           <ContextMenu {...props}>
             <ul>
               <li>
-                <Button onMouseDown={setFloatRight}>靠右环绕</Button>
+                <span onMouseDown={setFloatRight}>靠右环绕</span>
               </li>
               <li>
-                <Button onMouseDown={setNoFloat}>清除环绕</Button>
+                <span onMouseDown={setNoFloat}>清除环绕</span>
               </li>
               {/* <li>
                 <ButtonModal

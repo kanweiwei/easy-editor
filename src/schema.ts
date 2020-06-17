@@ -1,6 +1,3 @@
-/* eslint-disable no-console */
-import { message } from "antd";
-
 import { Block } from "@zykj/slate";
 import * as violations from "@zykj/slate-schema-violations";
 
@@ -22,7 +19,7 @@ export default {
           case violations.CHILD_TYPE_INVALID:
             change = change.replaceNodeByKey(
               error.child.key,
-              new Block({
+              Block.create({
                 ...error.child,
                 nodes: error.child.nodes,
                 object: "block",
@@ -36,7 +33,6 @@ export default {
         }
       } catch (err) {
         console.log(err);
-        message.error(err.message);
       }
       return change;
     },
@@ -58,7 +54,6 @@ export default {
           }
         } catch (err) {
           console.log(err);
-          message.error(err.message);
         }
         return change;
       },
@@ -82,7 +77,6 @@ export default {
           }
         } catch (err) {
           console.log(err);
-          message.error(err.message);
         }
         return change;
       },
@@ -116,7 +110,6 @@ export default {
           }
         } catch (err) {
           console.log(err);
-          message.error(err.message);
         }
         return change;
       },
@@ -140,7 +133,6 @@ export default {
           }
         } catch (err) {
           console.log(err);
-          message.error(err.message);
         }
         return change;
       },
@@ -177,7 +169,6 @@ export default {
           }
         } catch (err) {
           console.log(err);
-          message.error(err.message);
         }
         return change;
       },

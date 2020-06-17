@@ -40,9 +40,9 @@ var SlateEditor = /** @class */ (function (_super) {
         var _a;
         var _this = _super.call(this, props) || this;
         _this.isComposing = false;
-        _this.onChange = function (change, type) {
-            if (props.onChange) {
-                var res = props.onChange({ change: change, type: type });
+        _this.onChange = function (change) {
+            if (_this.props.onChange) {
+                var res = _this.props.onChange({ change: change });
                 if (typeof res === "boolean" && !res) {
                     return;
                 }
@@ -57,8 +57,8 @@ var SlateEditor = /** @class */ (function (_super) {
                 value: change.value,
             });
         };
-        _this.update = function (change, type) {
-            return _this.onChange(change, type);
+        _this.update = function (change) {
+            return _this.onChange(change);
         };
         _this.onCompositionStart = function (e, change) {
             _this.isComposing = true;
@@ -182,7 +182,7 @@ var SlateEditor = /** @class */ (function (_super) {
             var value = _this.state.value;
             var _b = _this.props, readOnly = _b.readOnly, placeholder = _b.placeholder, pasteOptions = _b.pasteOptions, _c = _b.minHeight, minHeight = _c === void 0 ? 300 : _c;
             return (<Editor placeholder={placeholder} value={value} onChange={_this.onChange} onCompositionStart={_this.onCompositionStart} onCompositionEnd={_this.onCompositionEnd} onBlur={_this.onBlur} onPaste={function (e, change) {
-                return handlePaste(e, change, _this, pasteOptions);
+                return handlePaste(e, change, _this, pasteOptions, _this.props.beforeUpload);
             }} onContextMenu={function (e) { return e.preventDefault(); }} renderMark={renderMark} renderNode={function (props) { return renderNode(props, _this); }} onKeyDown={_this.props.onKeyDown} plugins={_this.plugins} autoFocus={(_a = _this.props.autoFocus) !== null && _a !== void 0 ? _a : true} schema={schemas} spellCheck={false} readOnly={readOnly} style={{ minHeight: minHeight + "px" }}/>);
         };
         _this.renderMask = function () {

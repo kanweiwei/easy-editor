@@ -5,15 +5,21 @@ import SlateEditor from "slate-editor";
 class Editor extends React.Component {
   editorRef = React.createRef();
 
-  handleChange = (v) => {
+  handleChange = (v: any) => {
     console.log(v);
+  };
+
+  handleBeforeUpload = (file: any, dataURI: any) => {
+    console.log(file, dataURI);
+    return dataURI;
   };
 
   render() {
     return (
       <SlateEditor
-        html="<p> <p>"
+        html="<p> </p>"
         onChange={this.handleChange}
+        beforeUpload={this.handleBeforeUpload}
         ref={this.editorRef}
       />
     );

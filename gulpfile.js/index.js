@@ -103,6 +103,7 @@ function compile(modules) {
 
   tsResult.on("finish", check);
   tsResult.on("end", check);
+  console.log(tsResult.dts);
   return merge2([
     babelify(tsResult.js, modules),
     tsResult.dts.pipe(gulp.dest(modules === false ? `es` : `lib`)),
@@ -140,16 +141,16 @@ exports.tsc = gulp.series(clean, tsc);
 
 exports.compileWithEs = gulp.series(
   clean,
-  copyAssets,
   tsc,
+  copyAssets,
   compileLess,
   compileWithEs
 );
 
 exports.compile = gulp.series(
   clean,
-  copyAssets,
   tsc,
+  copyAssets,
   compileLess,
   compileWithEs
 );

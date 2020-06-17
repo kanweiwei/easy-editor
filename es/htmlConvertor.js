@@ -310,8 +310,6 @@ var rules = [{
         nodes: next(el.childNodes),
         data: {}
       };
-      var dataType = getAttr(el.attrs, "data-type");
-      var dataLabel = getAttr(el.attrs, "data-label");
       var tempStyle = getAttr(el.attrs, "style");
       var className = getAttr(el.attrs, "class");
       var markType = null;
@@ -377,10 +375,20 @@ var rules = [{
           };
         }
 
-        return null;
+        return {
+          object: "text",
+          leaves: [{
+            text: el.value
+          }]
+        };
       }
 
-      return null;
+      return {
+        object: "text",
+        leaves: [{
+          text: el.value
+        }]
+      };
     }
   }
 }, {

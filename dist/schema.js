@@ -1,6 +1,4 @@
 import { __assign } from "tslib";
-/* eslint-disable no-console */
-import { message } from "antd";
 import { Block } from "@zykj/slate";
 import * as violations from "@zykj/slate-schema-violations";
 export default {
@@ -19,7 +17,7 @@ export default {
             try {
                 switch (error.code) {
                     case violations.CHILD_TYPE_INVALID:
-                        change = change.replaceNodeByKey(error.child.key, new Block(__assign(__assign({}, error.child), { nodes: error.child.nodes, object: "block", key: error.child.key, type: "div" })));
+                        change = change.replaceNodeByKey(error.child.key, Block.create(__assign(__assign({}, error.child), { nodes: error.child.nodes, object: "block", key: error.child.key, type: "div" })));
                         return change;
                     default:
                         return null;
@@ -27,7 +25,6 @@ export default {
             }
             catch (err) {
                 console.log(err);
-                message.error(err.message);
             }
             return change;
         },
@@ -50,7 +47,6 @@ export default {
                 }
                 catch (err) {
                     console.log(err);
-                    message.error(err.message);
                 }
                 return change;
             },
@@ -74,7 +70,6 @@ export default {
                 }
                 catch (err) {
                     console.log(err);
-                    message.error(err.message);
                 }
                 return change;
             },
@@ -109,7 +104,6 @@ export default {
                 }
                 catch (err) {
                     console.log(err);
-                    message.error(err.message);
                 }
                 return change;
             },
@@ -133,7 +127,6 @@ export default {
                 }
                 catch (err) {
                     console.log(err);
-                    message.error(err.message);
                 }
                 return change;
             },
@@ -171,7 +164,6 @@ export default {
                 }
                 catch (err) {
                     console.log(err);
-                    message.error(err.message);
                 }
                 return change;
             },

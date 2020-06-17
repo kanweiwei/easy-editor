@@ -2,23 +2,10 @@ import _setTimeout from "@babel/runtime-corejs3/core-js-stable/set-timeout";
 import _indexOfInstanceProperty from "@babel/runtime-corejs3/core-js-stable/instance/index-of";
 import _extends from "@babel/runtime-corejs3/helpers/extends";
 import { __assign, __extends, __rest } from "tslib";
-/* eslint-disable @typescript-eslint/no-unused-vars */
-
-/* eslint-disable no-global-assign */
-
-/* eslint-disable no-unused-vars */
-
-/* eslint-disable no-cond-assign */
-
-/* eslint-disable prefer-const */
-// @ts-ignore
-
-import { Button, Col, Form, Input, Row } from "antd";
 import { assign, debounce } from "lodash-es";
 import * as React from "react";
 import { findDOMNode } from "react-dom";
-import ContextMenu from "./hoverMenu/contextMenu"; // @ts-ignore
-
+import ContextMenu from "./hoverMenu/contextMenu";
 import { getStyleFromData } from "./htmlSerialize";
 /**
  * nodes
@@ -60,70 +47,7 @@ export function renderPlaceholder(text, tips, _a) {
   }
 
   return null;
-} // eslint-disable-next-line react/prefer-stateless-function
-
-var ImgForm =
-/** @class */
-function (_super) {
-  __extends(ImgForm, _super);
-
-  function ImgForm() {
-    return _super !== null && _super.apply(this, arguments) || this;
-  }
-
-  ImgForm.prototype.render = function () {
-    var getFieldDecorator = this.props.form.getFieldDecorator;
-    var _a = this.props,
-        node = _a.node,
-        onload = _a.onload;
-    var img = document.querySelector("img[data-key='" + node.key + "']");
-    var formItemLayout = {
-      labelCol: {
-        span: 8
-      },
-      wrapperCol: {
-        xs: {
-          span: 16
-        },
-        sm: {
-          span: 16
-        }
-      }
-    };
-    return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(Row, null, /*#__PURE__*/React.createElement(Col, {
-      span: 12
-    }, /*#__PURE__*/React.createElement(Form, null, /*#__PURE__*/React.createElement(Form.Item, _extends({
-      label: "\u56FE\u7247\u5730\u5740"
-    }, formItemLayout), getFieldDecorator("src", {
-      initialValue: img.src
-    })( /*#__PURE__*/React.createElement(Input, {
-      disabled: true
-    }))), /*#__PURE__*/React.createElement(Form.Item, _extends({
-      label: "\u5BBD\u5EA6"
-    }, formItemLayout), getFieldDecorator("width", {
-      initialValue: img.width
-    })( /*#__PURE__*/React.createElement(Input, null))), /*#__PURE__*/React.createElement(Form.Item, _extends({
-      label: "\u9AD8\u5EA6"
-    }, formItemLayout), getFieldDecorator("height", {
-      initialValue: img.height
-    })( /*#__PURE__*/React.createElement(Input, null))))), /*#__PURE__*/React.createElement(Col, {
-      span: 12
-    }, /*#__PURE__*/React.createElement("div", {
-      style: {
-        marginLeft: "20px"
-      }
-    }, /*#__PURE__*/React.createElement("img", {
-      src: img.src,
-      onLoad: onload,
-      alt: ""
-    })))));
-  };
-
-  return ImgForm;
-}(React.Component); // @ts-ignore
-
-
-var ImgAttrsForm = Form.create()(ImgForm);
+}
 
 var ResizeBox =
 /** @class */
@@ -327,10 +251,10 @@ export default (function (props, self) {
         var src = node.data.get("src");
         var isformula = node.data.get("data-isformula");
         var maxHeight_1 = node.data.get("data-max-height");
-        var onload = void 0;
+        var onload_1;
 
         if (isformula) {
-          onload = function onload(e) {
+          onload_1 = function onload_1(e) {
             e.target.style.display = "inline-block";
 
             if (maxHeight_1) {
@@ -396,7 +320,7 @@ export default (function (props, self) {
           _setTimeout(function () {
             var menu = document.querySelector("#context-menu"); // todo 菜单显示位置
 
-            if (menu && img) {
+            if (menu && image_1) {
               menu.style.opacity = 1;
               menu.style.top = e.clientY + document.documentElement.scrollTop + "px";
               var left = e.clientX + document.documentElement.scrollLeft + 20;
@@ -469,9 +393,9 @@ export default (function (props, self) {
         var imgForm = void 0;
         return /*#__PURE__*/React.createElement("span", {
           contentEditable: false
-        }, /*#__PURE__*/React.createElement(ContextMenu, props, /*#__PURE__*/React.createElement("ul", null, /*#__PURE__*/React.createElement("li", null, /*#__PURE__*/React.createElement(Button, {
+        }, /*#__PURE__*/React.createElement(ContextMenu, props, /*#__PURE__*/React.createElement("ul", null, /*#__PURE__*/React.createElement("li", null, /*#__PURE__*/React.createElement("span", {
           onMouseDown: setFloatRight
-        }, "\u9760\u53F3\u73AF\u7ED5")), /*#__PURE__*/React.createElement("li", null, /*#__PURE__*/React.createElement(Button, {
+        }, "\u9760\u53F3\u73AF\u7ED5")), /*#__PURE__*/React.createElement("li", null, /*#__PURE__*/React.createElement("span", {
           onMouseDown: setNoFloat
         }, "\u6E05\u9664\u73AF\u7ED5")))), /*#__PURE__*/React.createElement(ResizeBox, _extends({
           isSelected: isSelected
@@ -486,7 +410,7 @@ export default (function (props, self) {
         }, {
           style: style
         }, attributes, {
-          onLoad: onload,
+          onLoad: onload_1,
           alt: ""
         }))));
       }

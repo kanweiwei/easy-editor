@@ -1,6 +1,5 @@
 import { Block, Change } from "@zykj/slate";
 import { getEventTransfer } from "@zykj/slate-react";
-import { message } from "antd";
 import { get, isEmpty } from "lodash-es";
 import { parseFragment, serialize } from "parse5";
 import hexToBase64 from "../utils/hexToBase64";
@@ -8,23 +7,21 @@ import htmlConvertor, { getAttr } from "../htmlConvertor";
 import { getStyleFromString } from "../htmlSerialize";
 // eslint-disable-next-line import/extensions
 import filterWord from "../utils/filterWord.js";
+import getBlobByDataURI from "../utils/getBlobByDataURI";
 
-function findDom(e: any, change: any, name: string) {
-  const selection = change.value.selection;
-  const { anchor } = selection;
-  const anchors = change.value.document
-    .getAncestors(anchor.key)
-    .concat(change.value.blocks);
-  if (anchors.some((a: any) => a.type === name)) {
-    return true;
-  }
-  return false;
-}
-
-export default async (e: any, change: Change, self: any, options?: any) => {
+export default async (
+  e: any,
+  change: Change,
+  self: any,
+  options?: any,
+  beforeUpload?: (
+    file: File | Blob | Buffer | ArrayBuffer,
+    dataURI: string
+  ) => string | Promise<string>
+) => {
   const maxImageHeight = get(options, "maxImageHeight");
   const maxImageWidth = get(options, "maxImageWidth");
-  const onlyText = get(options, "onlyText");
+  // const onlyText = get(options, "onlyText");
   const imgStyle: any = {};
   if (maxImageHeight) {
     imgStyle.maxHeight = maxImageHeight;
@@ -52,8 +49,9 @@ export default async (e: any, change: Change, self: any, options?: any) => {
           reader.readAsDataURL(file);
         });
         if (typeof url === "string") {
-          // TODO
-          // const url = await uploadFile(path, file)
+          if (beforeUpload) {
+            url = await beforeUpload(file, url);
+          }
           change = change.insertInline({
             object: "inline",
             type: "image",
@@ -111,21 +109,26 @@ export default async (e: any, change: Change, self: any, options?: any) => {
               );
               // @ts-ignore
               const [str, type, hexData] = m.match(reg);
-              let imgType = "jpg";
+              // let imgType = "jpg";
               let fileType = "image/jpg";
               const typeIndex = supportFileTypes.findIndex(
                 (n: any) => n.rtfType === type
               );
               if (typeIndex > -1) {
-                imgType = supportFileTypes[typeIndex].imgType;
+                // imgType = supportFileTypes[typeIndex].imgType;
                 fileType = supportFileTypes[typeIndex].fileType;
               }
               const base64Data = hexToBase64(hexData);
               const dataURI = `data:${fileType};base64,${base64Data}`;
 
-              const url = dataURI;
-              // TODO
-              // const url = await uploadFile(path, getBlobByDataURI(dataURI, fileType))
+              let url = dataURI;
+              if (beforeUpload) {
+                url = await beforeUpload(
+                  getBlobByDataURI(dataURI, fileType),
+                  dataURI
+                );
+              }
+
               localeImgs.push(url);
             }
           }
@@ -225,7 +228,7 @@ export default async (e: any, change: Change, self: any, options?: any) => {
         try {
           change = change.insertText(transfer.text);
         } catch (err) {
-          message.error(err.message);
+          console.error(err.message);
         }
       }
       // return false;
@@ -235,7 +238,7 @@ export default async (e: any, change: Change, self: any, options?: any) => {
         try {
           change = change.insertText(transfer.text);
         } catch (err) {
-          message.error(err.message);
+          console.error(err.message);
         }
       }
     // return false;

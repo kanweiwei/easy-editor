@@ -170,7 +170,7 @@ let rules = [
   },
 ];
 
-rules.push(tableSerialize);
+rules.push(tableSerialize as any);
 
 class HtmlSerialize {
   public _converter: Html;

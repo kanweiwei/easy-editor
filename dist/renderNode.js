@@ -1,16 +1,8 @@
 import { __assign, __extends, __rest } from "tslib";
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable no-global-assign */
-/* eslint-disable no-unused-vars */
-/* eslint-disable no-cond-assign */
-/* eslint-disable prefer-const */
-// @ts-ignore
-import { Button, Col, Form, Input, Row } from "antd";
 import { assign, debounce } from "lodash-es";
 import * as React from "react";
 import { findDOMNode } from "react-dom";
 import ContextMenu from "./hoverMenu/contextMenu";
-// @ts-ignore
 import { getStyleFromData } from "./htmlSerialize";
 /**
  * nodes
@@ -40,56 +32,6 @@ export function renderPlaceholder(text, tips, _a) {
     }
     return null;
 }
-// eslint-disable-next-line react/prefer-stateless-function
-var ImgForm = /** @class */ (function (_super) {
-    __extends(ImgForm, _super);
-    function ImgForm() {
-        return _super !== null && _super.apply(this, arguments) || this;
-    }
-    ImgForm.prototype.render = function () {
-        var getFieldDecorator = this.props.form.getFieldDecorator;
-        var _a = this.props, node = _a.node, onload = _a.onload;
-        var img = document.querySelector("img[data-key='" + node.key + "']");
-        var formItemLayout = {
-            labelCol: { span: 8 },
-            wrapperCol: {
-                xs: { span: 16 },
-                sm: { span: 16 },
-            },
-        };
-        return (<div>
-        <Row>
-          <Col span={12}>
-            <Form>
-              <Form.Item label="图片地址" {...formItemLayout}>
-                {getFieldDecorator("src", {
-            initialValue: img.src,
-        })(<Input disabled/>)}
-              </Form.Item>
-              <Form.Item label="宽度" {...formItemLayout}>
-                {getFieldDecorator("width", {
-            initialValue: img.width,
-        })(<Input />)}
-              </Form.Item>
-              <Form.Item label="高度" {...formItemLayout}>
-                {getFieldDecorator("height", {
-            initialValue: img.height,
-        })(<Input />)}
-              </Form.Item>
-            </Form>
-          </Col>
-          <Col span={12}>
-            <div style={{ marginLeft: "20px" }}>
-              <img src={img.src} onLoad={onload} alt=""/>
-            </div>
-          </Col>
-        </Row>
-      </div>);
-    };
-    return ImgForm;
-}(React.Component));
-// @ts-ignore
-var ImgAttrsForm = Form.create()(ImgForm);
 var ResizeBox = /** @class */ (function (_super) {
     __extends(ResizeBox, _super);
     function ResizeBox() {
@@ -224,9 +166,9 @@ export default (function (props, self) {
             var src = node.data.get("src");
             var isformula = node.data.get("data-isformula");
             var maxHeight_1 = node.data.get("data-max-height");
-            var onload = void 0;
+            var onload_1;
             if (isformula) {
-                onload = function (e) {
+                onload_1 = function (e) {
                     e.target.style.display = "inline-block";
                     if (maxHeight_1) {
                         e.target.style.height = maxHeight_1 + "px";
@@ -270,7 +212,7 @@ export default (function (props, self) {
                 setTimeout(function () {
                     var menu = document.querySelector("#context-menu");
                     // todo 菜单显示位置
-                    if (menu && img) {
+                    if (menu && image_1) {
                         menu.style.opacity = 1;
                         menu.style.top = e.clientY + document.documentElement.scrollTop + "px";
                         var left = e.clientX + document.documentElement.scrollLeft + 20;
@@ -327,16 +269,16 @@ export default (function (props, self) {
           <ContextMenu {...props}>
             <ul>
               <li>
-                <Button onMouseDown={setFloatRight}>靠右环绕</Button>
+                <span onMouseDown={setFloatRight}>靠右环绕</span>
               </li>
               <li>
-                <Button onMouseDown={setNoFloat}>清除环绕</Button>
+                <span onMouseDown={setNoFloat}>清除环绕</span>
               </li>
               
             </ul>
           </ContextMenu>
           <ResizeBox isSelected={isSelected} {...{ style: style }} onChange={changeImg}>
-            <img onContextMenu={handleClickImg} src={src} className={className} {...{ style: style }} {...attributes} onLoad={onload} alt=""/>
+            <img onContextMenu={handleClickImg} src={src} className={className} {...{ style: style }} {...attributes} onLoad={onload_1} alt=""/>
           </ResizeBox>
         </span>);
         }

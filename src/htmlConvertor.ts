@@ -290,8 +290,6 @@ const rules = [
           nodes: next(el.childNodes),
           data: {},
         };
-        const dataType = getAttr(el.attrs, "data-type");
-        const dataLabel = getAttr(el.attrs, "data-label");
         const tempStyle = getAttr(el.attrs, "style");
         const className = getAttr(el.attrs, "class");
         let markType = null;
@@ -353,9 +351,23 @@ const rules = [
               ],
             };
           }
-          return null;
+          return {
+            object: "text",
+            leaves: [
+              {
+                text: el.value,
+              },
+            ],
+          };
         }
-        return null;
+        return {
+          object: "text",
+          leaves: [
+            {
+              text: el.value,
+            },
+          ],
+        };
       }
     },
   },

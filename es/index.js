@@ -54,11 +54,10 @@ function (_super) {
 
     _this.isComposing = false;
 
-    _this.onChange = function (change, type) {
-      if (props.onChange) {
-        var res = props.onChange({
-          change: change,
-          type: type
+    _this.onChange = function (change) {
+      if (_this.props.onChange) {
+        var res = _this.props.onChange({
+          change: change
         });
 
         if (typeof res === "boolean" && !res) {
@@ -79,8 +78,8 @@ function (_super) {
       });
     };
 
-    _this.update = function (change, type) {
-      return _this.onChange(change, type);
+    _this.update = function (change) {
+      return _this.onChange(change);
     };
 
     _this.onCompositionStart = function (e, change) {
@@ -267,7 +266,7 @@ function (_super) {
         onCompositionEnd: _this.onCompositionEnd,
         onBlur: _this.onBlur,
         onPaste: function onPaste(e, change) {
-          return handlePaste(e, change, _this, pasteOptions);
+          return handlePaste(e, change, _this, pasteOptions, _this.props.beforeUpload);
         },
         onContextMenu: function onContextMenu(e) {
           return e.preventDefault();

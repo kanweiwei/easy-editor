@@ -16,10 +16,20 @@ import "./style.less";
 
 interface IEditorProps {
   html?: string;
+  /**
+   * slate value
+   */
   value?: any;
-  type?: any;
   minHeight?: number;
+  plugins?: any[];
   autoFocus?: boolean;
+  placeholder?: string;
+  showMenu?: boolean;
+  pasteOptions?: any;
+  beforeUpload?: (
+    file: File | Blob | Buffer | ArrayBuffer,
+    dataURI: string
+  ) => string | Promise<string>;
   onUpdate?: (value: any, html?: string) => any;
   onBlur?: (e: any, change: any) => any;
   onChange?: (value: any) => any;
@@ -36,10 +46,6 @@ interface IEditorProps {
   disableKeyDown?: boolean;
   disableComposition?: boolean;
   disableSelect?: boolean;
-  plugins?: any[];
-  placeholder?: string;
-  showMenu?: boolean;
-  pasteOptions?: any;
 }
 
 const findRealDoms = (dom: any, realDom: any): any => {
@@ -120,9 +126,9 @@ class SlateEditor extends React.Component<IEditorProps, any> {
     return get(this.state, name);
   }
 
-  onChange = (change: any, type?: string) => {
+  onChange = (change: any) => {
     if (this.props.onChange) {
-      const res = this.props.onChange({ change, type });
+      const res = this.props.onChange({ change });
       if (typeof res === "boolean" && !res) {
         return;
       }
@@ -138,8 +144,8 @@ class SlateEditor extends React.Component<IEditorProps, any> {
     });
   };
 
-  update = (change: any, type?: string) => {
-    return this.onChange(change, type);
+  update = (change: any) => {
+    return this.onChange(change);
   };
 
   onCompositionStart = (e: any, change: any): any => {
@@ -300,7 +306,7 @@ class SlateEditor extends React.Component<IEditorProps, any> {
         onCompositionEnd={this.onCompositionEnd}
         onBlur={this.onBlur}
         onPaste={(e: any, change: any) =>
-          handlePaste(e, change, this, pasteOptions)
+          handlePaste(e, change, this, pasteOptions, this.props.beforeUpload)
         }
         onContextMenu={(e: any) => e.preventDefault()}
         renderMark={renderMark}
