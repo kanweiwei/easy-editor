@@ -40,6 +40,7 @@ interface IEditorProps {
   forbidIME?: boolean;
   originalContent?: any;
   style?: any;
+  contentStyle?: any;
   className?: string;
   readOnly?: boolean;
   disableMenu?: boolean;
@@ -334,7 +335,7 @@ class SlateEditor extends React.Component<IEditorProps, any> {
   };
 
   render() {
-    const { style = {}, className, minHeight = 300 } = this.props;
+    const { style = {}, contentStyle = {}, className, minHeight = 300 } = this.props;
     const cls: any = classnames("slate-editor", className);
     return (
       <div className={cls} style={{ ...style }}>
@@ -342,7 +343,7 @@ class SlateEditor extends React.Component<IEditorProps, any> {
         {this.renderMenu()}
         <div
           className="slate-editor-content"
-          style={{ minHeight: `${minHeight}px` }}
+          style={{ minHeight: `${minHeight}px`, ...contentStyle }}
         >
           {this.renderEditor()}
         </div>
