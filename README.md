@@ -27,7 +27,6 @@ class Editor extends React.Component {
 
   handleChange = (v: any) => {
     console.log("change=>>>", v);
-    console.log("change=>>>", v);
     if (this.editorRef.current) {
       // value to html
       console.log(this.editorRef.current.convertor.serialize(v.change.value));
