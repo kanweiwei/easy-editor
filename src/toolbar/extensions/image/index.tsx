@@ -59,7 +59,7 @@ class ImageExtension extends React.Component<any> {
         <span className="tool-insert-image" />
         <input
           type="file"
-          style={{ width: 0, height: 0, opacity: 0 }}
+          style={{ width: 0, height: 0, opacity: 0, position: "absolute" }}
           ref={this.inputRef}
           onChange={this.handleChange}
         />
