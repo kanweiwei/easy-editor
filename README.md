@@ -27,8 +27,11 @@ class Editor extends React.Component {
 
   handleChange = (v: any) => {
     console.log("change=>>>", v);
-    console.log(valueTohtml(v.change.value));
-    this.html = valueTohtml(v.change.value);
+    console.log("change=>>>", v);
+    if (this.editorRef.current) {
+      // value to html
+      console.log(this.editorRef.current.convertor.serialize(v.change.value));
+    }
   };
 
   render() {
@@ -112,8 +115,10 @@ class Editor extends React.Component {
 
   handleChange = (v: any) => {
     console.log("change=>>>", v);
-    console.log(valueTohtml(v.change.value));
-    this.html = valueTohtml(v.change.value);
+    if (this.editorRef.current) {
+      // value to html
+      console.log(this.editorRef.current.convertor.serialize(v.change.value));
+    }
   };
 
   render() {
