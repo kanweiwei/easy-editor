@@ -95,8 +95,8 @@ class SlateEditor extends React.Component<IEditorProps, any> {
       basePlugins.map((Plugin) => new Plugin(this)),
       ...(props?.plugins ?? []),
     ];
-    if (props.html) {
-      value = this.getValueByHtml(props.html);
+    if (typeof props.value === "string") {
+      value = this.getValueByHtml(props.value);
       console.log(value);
     }
 
@@ -107,12 +107,6 @@ class SlateEditor extends React.Component<IEditorProps, any> {
 
   componentDidMount() {
     this.updateMenu();
-    const { value } = this.props;
-    if (value) {
-      this.setState({
-        value,
-      });
-    }
   }
 
   componentDidUpdate() {

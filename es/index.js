@@ -310,8 +310,8 @@ function (_super) {
       return new Plugin(_this);
     })], (_a = props === null || props === void 0 ? void 0 : props.plugins) !== null && _a !== void 0 ? _a : []);
 
-    if (props.html) {
-      value = _this.getValueByHtml(props.html);
+    if (typeof props.value === "string") {
+      value = _this.getValueByHtml(props.value);
       console.log(value);
     }
 
@@ -323,13 +323,6 @@ function (_super) {
 
   SlateEditor.prototype.componentDidMount = function () {
     this.updateMenu();
-    var value = this.props.value;
-
-    if (value) {
-      this.setState({
-        value: value
-      });
-    }
   };
 
   SlateEditor.prototype.componentDidUpdate = function () {

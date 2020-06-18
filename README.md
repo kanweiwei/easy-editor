@@ -23,12 +23,16 @@ import ReactDom from "react-dom";
 import SlateEditor from "slate-editor";
 
 class Editor extends React.Component {
-  handleChange = (change) => {
-    console.log(change);
+  html = "";
+
+  handleChange = (v: any) => {
+    console.log("change=>>>", v);
+    console.log(valueTohtml(v.change.value));
+    this.html = valueTohtml(v.change.value);
   };
 
   render() {
-    return <SlateEditor onChange={this.handleChange} />;
+    return <SlateEditor value={"<p>123</p>"} onChange={this.handleChange} />;
   }
 }
 
@@ -43,12 +47,12 @@ tool| instructions|
 bold| 加粗|
 italic| 斜体|
 u| 下划线|
-left|文字居左
-right|文字居右
-center|文字居中
-justify|两端对齐
-image| 插入图片
-video | 插入音频（mp4、webm）
+left|文字居左|
+right|文字居右|
+center|文字居中|
+justify|两端对齐|
+image| 插入图片|
+video | 插入音频（mp4、webm）||
 
 ---
 
