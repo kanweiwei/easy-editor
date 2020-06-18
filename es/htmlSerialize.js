@@ -137,6 +137,22 @@ var rules = [{
             }), children);
           }
 
+        case "embed":
+          {
+            return /*#__PURE__*/React.createElement("object", _extends({}, otherAttrs, {
+              style: style,
+              className: className
+            }), children);
+          }
+
+        case "object":
+          {
+            return /*#__PURE__*/React.createElement("object", _extends({}, otherAttrs, {
+              style: style,
+              className: className
+            }), children);
+          }
+
         default:
           break;
       }

@@ -7,9 +7,9 @@ module.exports = function (modules) {
   ];
   return {
     presets: [
-      require.resolve("@babel/preset-react"),
+      "@babel/preset-react",
       [
-        require.resolve("@babel/preset-env"),
+        "@babel/preset-env",
         {
           modules,
           targets: {
@@ -24,6 +24,7 @@ module.exports = function (modules) {
           },
         },
       ],
+      "@babel/preset-typescript",
     ],
     plugins,
   };

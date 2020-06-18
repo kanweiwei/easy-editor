@@ -15,6 +15,8 @@ interface IEditorProps {
     showMenu?: boolean;
     pasteOptions?: any;
     beforeUpload?: (file: File | Blob | Buffer | ArrayBuffer, dataURI: string) => string | Promise<string>;
+    controls?: Array<string[]>;
+    showToolbar?: boolean;
     onUpdate?: (value: any, html?: string) => any;
     onBlur?: (e: any, change: any) => any;
     onChange?: (value: any) => any;
@@ -32,7 +34,7 @@ interface IEditorProps {
     disableComposition?: boolean;
     disableSelect?: boolean;
 }
-declare class SlateEditor extends React.Component<IEditorProps, any> {
+declare class EasyEditor extends React.Component<IEditorProps, any> {
     plugins: any[];
     isComposing: boolean;
     rafHandle: any;
@@ -67,5 +69,5 @@ declare class SlateEditor extends React.Component<IEditorProps, any> {
     renderMask: () => JSX.Element | null;
     render(): JSX.Element;
 }
-export declare function valueTohtml(): import("@zykj/slate-html-serializer").default;
-export default SlateEditor;
+export declare function valueTohtml(value: any): any;
+export default EasyEditor;

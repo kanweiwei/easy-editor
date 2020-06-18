@@ -39,6 +39,8 @@ export const blockTags = {
   tfoot: "tfoot",
   ul: "ul",
   video: "video",
+  embed: "embed",
+  object: "object",
 };
 
 export const inlineTags = {
@@ -204,6 +206,18 @@ const rules = [
                 className: getAttr(el.attrs, "class"),
               },
             };
+          case "object": {
+            console.log("block", getAttr(el.attrs, "data"), el);
+            return {
+              object: "block",
+              type: "object",
+              isVoid: true,
+              nodes: next(el.childNodes),
+              data: {
+                data: getAttr(el.attrs, "data"),
+              },
+            };
+          }
           default: {
             const attrs: any = {};
             el.attrs.forEach((attr: any) => {
@@ -226,7 +240,9 @@ const rules = [
               content,
               props,
               "qst-type": qstType,
+              data: getAttr(el.attrs, "data"),
             });
+            console.log(dataType || blockType);
             return {
               object: "block",
               type: dataType || blockType,

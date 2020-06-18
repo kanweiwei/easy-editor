@@ -5,15 +5,15 @@ export default {
   document: {
     nodes: [
       {
-        match: ["div", "table", "paragraph"].map((item: any) => {
-          return {
-            type: item,
-          };
-        }),
+        match: {
+          object: "block",
+        },
       },
     ],
+    last: {
+      type: "paragraph",
+    },
     normalize: (change: any, error: any) => {
-      console.dir(error);
       try {
         switch (error.code) {
           case violations.CHILD_TYPE_INVALID:
@@ -28,6 +28,16 @@ export default {
               })
             );
             return change;
+          case violations.LAST_CHILD_TYPE_INVALID:
+            let document = change.value.document;
+            change.insertNodeByKey(
+              document.key,
+              document.nodes.size,
+              Block.create({
+                type: "paragraph",
+              })
+            );
+            return change;
           default:
             return null;
         }
@@ -38,27 +48,41 @@ export default {
     },
   },
   blocks: {
-    "paper-description": {
-      parent: {
-        object: "document",
-      },
+    paragraph: {
+      nodes: [
+        {
+          match: [
+            {
+              object: "block",
+            },
+
+            {
+              object: "inline",
+            },
+            {
+              object: "text",
+            },
+          ],
+        },
+      ],
+    },
+    object: {
+      next: [
+        {
+          match: "paragraph",
+        },
+      ],
       normalize: (change: any, error: any) => {
-        console.dir(error);
-        try {
-          switch (error.code) {
-            case violations.PARENT_OBJECT_INVALID:
-              change = change.unwrapNodeByKey(error.parent.key);
-              return change;
-            default:
-              return null;
-          }
-        } catch (err) {
-          console.log(err);
-        }
-        return change;
+        console.log(error);
       },
     },
-
+    embed: {
+      next: [
+        {
+          match: "paragraph",
+        },
+      ],
+    },
     table: {
       nodes: [
         {

@@ -36,6 +36,8 @@ export declare const blockTags: {
     tfoot: string;
     ul: string;
     video: string;
+    embed: string;
+    object: string;
 };
 export declare const inlineTags: {
     span: string;

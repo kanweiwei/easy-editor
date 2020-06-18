@@ -13,6 +13,8 @@ import renderMark from "./renderMark";
 import renderNode from "./renderNode";
 import schemas from "./schema";
 import "./style.less";
+import ToolBar from "./toolbar";
+import HtmlSerialize from "./htmlSerialize";
 
 interface IEditorProps {
   html?: string;
@@ -30,6 +32,8 @@ interface IEditorProps {
     file: File | Blob | Buffer | ArrayBuffer,
     dataURI: string
   ) => string | Promise<string>;
+  controls?: Array<string[]>;
+  showToolbar?: boolean;
   onUpdate?: (value: any, html?: string) => any;
   onBlur?: (e: any, change: any) => any;
   onChange?: (value: any) => any;
@@ -70,7 +74,7 @@ const getValueByHtml = (html: any) => {
 };
 
 // 定义编辑器
-class SlateEditor extends React.Component<IEditorProps, any> {
+class EasyEditor extends React.Component<IEditorProps, any> {
   plugins: any[];
 
   isComposing: boolean = false;
@@ -92,8 +96,9 @@ class SlateEditor extends React.Component<IEditorProps, any> {
       basePlugins.map((Plugin) => new Plugin(this)),
       ...(props?.plugins ?? []),
     ];
-    if (props.html) {
-      value = this.getValueByHtml(props.html);
+    if (typeof props.value === "string") {
+      value = this.getValueByHtml(props.value);
+      console.log(value);
     }
 
     this.state = {
@@ -103,12 +108,6 @@ class SlateEditor extends React.Component<IEditorProps, any> {
 
   componentDidMount() {
     this.updateMenu();
-    const { value } = this.props;
-    if (value) {
-      this.setState({
-        value,
-      });
-    }
   }
 
   componentDidUpdate() {
@@ -335,15 +334,28 @@ class SlateEditor extends React.Component<IEditorProps, any> {
   };
 
   render() {
-    const { style = {}, contentStyle = {}, className, minHeight = 300 } = this.props;
-    const cls: any = classnames("slate-editor", className);
+    const {
+      style = {},
+      className,
+      minHeight = 300,
+      showToolbar = true,
+      controls,
+    } = this.props;
+    const cls: any = classnames("easy-editor", className);
     return (
       <div className={cls} style={{ ...style }}>
-        {this.renderMenu(true)}
-        {this.renderMenu()}
+        {showToolbar && (
+          <ToolBar
+            controls={controls}
+            value={this.state.value}
+            onChange={this.onChange}
+            beforeUpload={this.props.beforeUpload}
+          />
+        )}
+        {/* {this.renderMenu()} */}
         <div
-          className="slate-editor-content"
-          style={{ minHeight: `${minHeight}px`, ...contentStyle }}
+          className="easy-editor-content"
+          style={{ minHeight: `${minHeight}px` }}
         >
           {this.renderEditor()}
         </div>
@@ -353,8 +365,8 @@ class SlateEditor extends React.Component<IEditorProps, any> {
   }
 }
 
-export function valueTohtml() {
-  return htmlConvertor;
+export function valueTohtml(value: any) {
+  return new HtmlSerialize().converter().serialize(value);
 }
 
-export default SlateEditor;
+export default EasyEditor;

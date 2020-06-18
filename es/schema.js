@@ -1,22 +1,17 @@
-import _mapInstanceProperty from "@babel/runtime-corejs3/core-js-stable/instance/map";
-
-var _context;
-
 import { __assign } from "tslib";
 import { Block } from "@zykj/slate";
 import * as violations from "@zykj/slate-schema-violations";
 export default {
   document: {
     nodes: [{
-      match: _mapInstanceProperty(_context = ["div", "table", "paragraph"]).call(_context, function (item) {
-        return {
-          type: item
-        };
-      })
+      match: {
+        object: "block"
+      }
     }],
+    last: {
+      type: "paragraph"
+    },
     normalize: function normalize(change, error) {
-      console.dir(error);
-
       try {
         switch (error.code) {
           case violations.CHILD_TYPE_INVALID:
@@ -26,6 +21,13 @@ export default {
               key: error.child.key,
               type: "div"
             })));
+            return change;
+
+          case violations.LAST_CHILD_TYPE_INVALID:
+            var document_1 = change.value.document;
+            change.insertNodeByKey(document_1.key, document_1.nodes.size, Block.create({
+              type: "paragraph"
+            }));
             return change;
 
           default:
@@ -39,28 +41,29 @@ export default {
     }
   },
   blocks: {
-    "paper-description": {
-      parent: {
-        object: "document"
-      },
+    paragraph: {
+      nodes: [{
+        match: [{
+          object: "block"
+        }, {
+          object: "inline"
+        }, {
+          object: "text"
+        }]
+      }]
+    },
+    object: {
+      next: [{
+        match: "paragraph"
+      }],
       normalize: function normalize(change, error) {
-        console.dir(error);
-
-        try {
-          switch (error.code) {
-            case violations.PARENT_OBJECT_INVALID:
-              change = change.unwrapNodeByKey(error.parent.key);
-              return change;
-
-            default:
-              return null;
-          }
-        } catch (err) {
-          console.log(err);
-        }
-
-        return change;
+        console.log(error);
       }
+    },
+    embed: {
+      next: [{
+        match: "paragraph"
+      }]
     },
     table: {
       nodes: [{

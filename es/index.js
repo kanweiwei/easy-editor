@@ -17,6 +17,8 @@ import renderMark from "./renderMark";
 import _renderNode from "./renderNode";
 import schemas from "./schema";
 import "./style.css";
+import ToolBar from "./toolbar";
+import HtmlSerialize from "./htmlSerialize";
 
 var findRealDoms = function findRealDoms(dom, realDom) {
   if (dom.childNodes && _Array$isArray(dom.childNodes)) {
@@ -42,12 +44,12 @@ var getValueByHtml = function getValueByHtml(html) {
 }; // 定义编辑器
 
 
-var SlateEditor =
+var EasyEditor =
 /** @class */
 function (_super) {
-  __extends(SlateEditor, _super);
+  __extends(EasyEditor, _super);
 
-  function SlateEditor(props) {
+  function EasyEditor(props) {
     var _a;
 
     var _this = _super.call(this, props) || this;
@@ -308,8 +310,9 @@ function (_super) {
       return new Plugin(_this);
     })], (_a = props === null || props === void 0 ? void 0 : props.plugins) !== null && _a !== void 0 ? _a : []);
 
-    if (props.html) {
-      value = _this.getValueByHtml(props.html);
+    if (typeof props.value === "string") {
+      value = _this.getValueByHtml(props.value);
+      console.log(value);
     }
 
     _this.state = {
@@ -318,56 +321,57 @@ function (_super) {
     return _this;
   }
 
-  SlateEditor.prototype.componentDidMount = function () {
+  EasyEditor.prototype.componentDidMount = function () {
     this.updateMenu();
-    var value = this.props.value;
-
-    if (value) {
-      this.setState({
-        value: value
-      });
-    }
   };
 
-  SlateEditor.prototype.componentDidUpdate = function () {
+  EasyEditor.prototype.componentDidUpdate = function () {
     if (!this.props.disableMenu) {
       this.updateMenu();
     }
   };
 
-  SlateEditor.prototype.componentWillUnmount = function () {
+  EasyEditor.prototype.componentWillUnmount = function () {
     if (this.rafHandle) {
       raf.cancel(this.rafHandle);
     }
   };
 
-  SlateEditor.prototype.getState = function (name) {
+  EasyEditor.prototype.getState = function (name) {
     return get(this.state, name);
   };
 
-  SlateEditor.prototype.render = function () {
+  EasyEditor.prototype.render = function () {
     var _a = this.props,
         _b = _a.style,
         style = _b === void 0 ? {} : _b,
         className = _a.className,
         _c = _a.minHeight,
-        minHeight = _c === void 0 ? 300 : _c;
-    var cls = classnames("slate-editor", className);
+        minHeight = _c === void 0 ? 300 : _c,
+        _d = _a.showToolbar,
+        showToolbar = _d === void 0 ? true : _d,
+        controls = _a.controls;
+    var cls = classnames("easy-editor", className);
     return /*#__PURE__*/React.createElement("div", {
       className: cls,
       style: __assign({}, style)
-    }, this.renderMenu(true), this.renderMenu(), /*#__PURE__*/React.createElement("div", {
-      className: "slate-editor-content",
+    }, showToolbar && /*#__PURE__*/React.createElement(ToolBar, {
+      controls: controls,
+      value: this.state.value,
+      onChange: this.onChange,
+      beforeUpload: this.props.beforeUpload
+    }), /*#__PURE__*/React.createElement("div", {
+      className: "easy-editor-content",
       style: {
         minHeight: minHeight + "px"
       }
     }, this.renderEditor()), this.renderMask());
   };
 
-  return SlateEditor;
+  return EasyEditor;
 }(React.Component);
 
-export function valueTohtml() {
-  return htmlConvertor;
+export function valueTohtml(value) {
+  return new HtmlSerialize().converter().serialize(value);
 }
-export default SlateEditor;
+export default EasyEditor;

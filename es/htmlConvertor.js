@@ -43,7 +43,9 @@ export var blockTags = {
   section: "section",
   tfoot: "tfoot",
   ul: "ul",
-  video: "video"
+  video: "video",
+  embed: "embed",
+  object: "object"
 };
 export var inlineTags = {
   span: "span",
@@ -215,6 +217,20 @@ var rules = [{
             }
           };
 
+        case "object":
+          {
+            console.log("block", getAttr(el.attrs, "data"), el);
+            return {
+              object: "block",
+              type: "object",
+              isVoid: true,
+              nodes: next(el.childNodes),
+              data: {
+                data: getAttr(el.attrs, "data")
+              }
+            };
+          }
+
         default:
           {
             var _context9;
@@ -241,8 +257,10 @@ var rules = [{
               uuid: uuid,
               content: content,
               props: props,
-              "qst-type": qstType
+              "qst-type": qstType,
+              data: getAttr(el.attrs, "data")
             });
+            console.log(dataType || blockType);
             return {
               object: "block",
               type: dataType || blockType,
