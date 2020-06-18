@@ -43,7 +43,7 @@ ReactDom.render(<Editor />, document.getElementById("root"));
 
 For convenience, some tools have been built in the toolbar.
 tool| instructions|
--|-|-
+-|-|-|
 bold| 加粗|
 italic| 斜体|
 u| 下划线|
@@ -52,7 +52,7 @@ right|文字居右|
 center|文字居中|
 justify|两端对齐|
 image| 插入图片|
-video | 插入音频（mp4、webm）||
+video | 插入音频（mp4、webm）|
 
 ---
 
