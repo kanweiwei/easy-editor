@@ -3,7 +3,8 @@ import * as React from "react";
 import { findDOMNode } from "react-dom";
 import ContextMenu from "./hoverMenu/contextMenu";
 import { getStyleFromData } from "./htmlSerialize";
-
+import { PlyrComponent } from "plyr-react";
+import getExt from "./utils/getExt";
 /**
  * nodes
  */
@@ -453,28 +454,32 @@ export default (props: any, self: any): any => {
     case "embed": {
       let { style, className, ...otherAttrs } = node.data.toJS();
       let src = node.data.get("src");
+      const ext = getExt(src);
       return (
-        <embed
-          {...attributes}
-          {...otherAttrs}
-          style={style}
-          src={src}
-          className={className}
-        />
+        <div {...attributes} {...otherAttrs}>
+          <PlyrComponent
+            sources={{
+              type: "video",
+              sources: [{ src: src, type: `video/${ext}` }],
+            }}
+          />
+        </div>
       );
     }
     case "object": {
       let { style, className, ...otherAttrs } = node.data.toJS();
       let data = node.data.get("data");
-      console.log(node, "object");
+
+      const ext = getExt(data);
       return (
-        <object
-          {...attributes}
-          {...otherAttrs}
-          style={style}
-          data={data}
-          className={className}
-        ></object>
+        <div {...attributes} {...otherAttrs}>
+          <PlyrComponent
+            sources={{
+              type: "video",
+              sources: [{ src: data, type: `video/${ext}` }],
+            }}
+          />
+        </div>
       );
     }
     default:

@@ -7,7 +7,7 @@ import { omit } from "lodash-es";
 import * as React from "react";
 import ImageExtension from "./extensions/image";
 import "./style.css";
-import VedioExtension from "./extensions/vedio";
+import VideoExtension from "./extensions/video";
 var defaultControls = {
   bold: {
     object: "mark",
@@ -68,20 +68,22 @@ var defaultControls = {
   image: {
     type: "image",
     placeholder: "插入图片",
-    component: function component(change, update) {
+    component: function component(change, update, beforeUpload) {
       return /*#__PURE__*/React.createElement(ImageExtension, {
         change: change,
-        update: update
+        update: update,
+        beforeUpload: beforeUpload
       });
     }
   },
-  vedio: {
-    type: "vedio",
+  video: {
+    type: "video",
     placeholder: "插入音频",
-    component: function component(change, update) {
-      return /*#__PURE__*/React.createElement(VedioExtension, {
+    component: function component(change, update, beforeUpload) {
+      return /*#__PURE__*/React.createElement(VideoExtension, {
         change: change,
-        update: update
+        update: update,
+        beforeUpload: beforeUpload
       });
     }
   }
@@ -280,7 +282,7 @@ function (_super) {
 
     _this.renderControls = function () {
       var _a = _this.props.controls,
-          controls = _a === void 0 ? [["bold", "italic", "u"], ["left", "center", "right", "justify"], ["image", "vedio"]] : _a;
+          controls = _a === void 0 ? [["bold", "italic", "u"], ["left", "center", "right", "justify"], ["image", "video"]] : _a;
       return _mapInstanceProperty(controls).call(controls, function (toolGroup) {
         return _mapInstanceProperty(toolGroup).call(toolGroup, function (tool) {
           if (typeof tool === "string") {
@@ -301,7 +303,7 @@ function (_super) {
                         key: t.type
                       }, /*#__PURE__*/React.createElement("span", {
                         className: "tool-btn"
-                      }, t.component(_this.props.value.change(), _this.props.onChange)));
+                      }, t.component(_this.props.value.change(), _this.props.onChange, _this.props.beforeUpload)));
                     }
 
                     return null;

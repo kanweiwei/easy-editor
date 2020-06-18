@@ -48,6 +48,7 @@ right|文字居右
 center|文字居中
 justify|两端对齐
 image| 插入图片
+video | 插入音频（mp4、webm）
 
 ---
 

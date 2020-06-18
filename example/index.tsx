@@ -61,7 +61,7 @@ class Editor extends React.Component {
   render() {
     return (
       <SlateEditor
-        html='<p>asdasd </p><object data="http://vodkgeyttp8.vod.126.net/cloudmusic/b3d1/core/cc53/3ed43d55b6053eee8adea6b93690a434.mp4?wsSecret=451139028541cdc174835e7993506cc2&wsTime=1592394746" ></object>'
+        html='<p>asdasd </p><object data="http://172.16.168.159:9000/test.mp4" ></object>'
         onChange={this.handleChange}
         beforeUpload={this.handleBeforeUpload}
         ref={this.editorRef}

@@ -4,7 +4,7 @@ import { omit } from "lodash-es";
 import * as React from "react";
 import ImageExtension from "./extensions/image";
 import "./style.less";
-import VedioExtension from "./extensions/vedio";
+import VideoExtension from "./extensions/video";
 
 type Control = {
   object?: "mark" | "align";
@@ -59,15 +59,23 @@ const defaultControls = {
   image: {
     type: "image",
     placeholder: "插入图片",
-    component: (change: any, update: any) => (
-      <ImageExtension change={change} update={update} />
+    component: (change: any, update: any, beforeUpload: Function) => (
+      <ImageExtension
+        change={change}
+        update={update}
+        beforeUpload={beforeUpload}
+      />
     ),
   },
-  vedio: {
-    type: "vedio",
+  video: {
+    type: "video",
     placeholder: "插入音频",
-    component: (change: any, update: any) => (
-      <VedioExtension change={change} update={update} />
+    component: (change: any, update: any, beforeUpload: Function) => (
+      <VideoExtension
+        change={change}
+        update={update}
+        beforeUpload={beforeUpload}
+      />
     ),
   },
 };
@@ -227,7 +235,7 @@ class ToolBar extends React.Component<any, any> {
       controls = [
         ["bold", "italic", "u"],
         ["left", "center", "right", "justify"],
-        ["image", "vedio"],
+        ["image", "video"],
       ],
     } = this.props;
     return controls.map((toolGroup: Array<string | Control>) => {
@@ -247,7 +255,8 @@ class ToolBar extends React.Component<any, any> {
                       <span className="tool-btn">
                         {t.component(
                           this.props.value.change(),
-                          this.props.onChange
+                          this.props.onChange,
+                          this.props.beforeUpload
                         )}
                       </span>
                     </span>

@@ -5,6 +5,9 @@ declare const _default: {
                 object: string;
             };
         }[];
+        last: {
+            type: string;
+        };
         normalize: (change: any, error: any) => any;
     };
     blocks: {

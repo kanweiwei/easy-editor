@@ -10,8 +10,10 @@ export default {
         },
       },
     ],
+    last: {
+      type: "paragraph",
+    },
     normalize: (change: any, error: any) => {
-      console.dir(error);
       try {
         switch (error.code) {
           case violations.CHILD_TYPE_INVALID:
@@ -23,6 +25,16 @@ export default {
                 object: "block",
                 key: error.child.key,
                 type: "div",
+              })
+            );
+            return change;
+          case violations.LAST_CHILD_TYPE_INVALID:
+            let document = change.value.document;
+            change.insertNodeByKey(
+              document.key,
+              document.nodes.size,
+              Block.create({
+                type: "paragraph",
               })
             );
             return change;

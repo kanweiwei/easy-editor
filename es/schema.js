@@ -8,9 +8,10 @@ export default {
         object: "block"
       }
     }],
+    last: {
+      type: "paragraph"
+    },
     normalize: function normalize(change, error) {
-      console.dir(error);
-
       try {
         switch (error.code) {
           case violations.CHILD_TYPE_INVALID:
@@ -20,6 +21,13 @@ export default {
               key: error.child.key,
               type: "div"
             })));
+            return change;
+
+          case violations.LAST_CHILD_TYPE_INVALID:
+            var document_1 = change.value.document;
+            change.insertNodeByKey(document_1.key, document_1.nodes.size, Block.create({
+              type: "paragraph"
+            }));
             return change;
 
           default:

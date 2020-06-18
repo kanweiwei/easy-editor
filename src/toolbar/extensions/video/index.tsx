@@ -1,9 +1,9 @@
 import * as React from "react";
 import "./style.less";
 
-const acceptTypes = ["image/png", "image/jpeg", "image/jpg", "image/gif"];
+const acceptTypes = ["video/mp4", "video/webm"];
 
-class ImageExtension extends React.Component<any> {
+class VideoExtension extends React.Component<any> {
   inputRef = React.createRef<HTMLInputElement>();
 
   handleClick = () => {
@@ -12,32 +12,22 @@ class ImageExtension extends React.Component<any> {
     }
   };
 
-  handleChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  handleChange = async (
+    e: React.ChangeEvent<HTMLInputElement>
+  ): Promise<any> => {
     const file = e?.target?.files?.[0];
     e.target.value = "";
     if (file) {
       if (acceptTypes.includes(file.type)) {
-        let url = await new Promise((resolve, reject) => {
-          const reader = new FileReader();
-          reader.onload = () => {
-            resolve(reader.result);
-          };
-          reader.onerror = () => {
-            reject(new Error("error"));
-          };
-          reader.readAsDataURL(file);
-        });
-        if (typeof url == "string") {
-          if (this.props.beforeUpload) {
-            url = await this.props.beforeUpload(file, url);
-          }
+        if (this.props.beforeUpload) {
+          let url = await this.props.beforeUpload(file);
           if (url) {
-            let change = this.props.change.focus().insertInline({
-              object: "inline",
-              type: "image",
+            let change = this.props.change.focus().insertBlock({
+              object: "block",
+              type: "object",
               isVoid: true,
               data: {
-                src: url,
+                data: url,
               },
             });
             this.props.update(change);
@@ -56,7 +46,7 @@ class ImageExtension extends React.Component<any> {
   render() {
     return (
       <span onMouseDown={this.handleClick}>
-        <span className="tool-insert-image" />
+        <span className="tool-insert-video" />
         <input
           type="file"
           style={{ width: 0, height: 0, opacity: 0 }}
@@ -68,4 +58,4 @@ class ImageExtension extends React.Component<any> {
   }
 }
 
-export default ImageExtension;
+export default VideoExtension;

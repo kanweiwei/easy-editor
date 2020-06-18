@@ -7,6 +7,8 @@ import * as React from "react";
 import { findDOMNode } from "react-dom";
 import ContextMenu from "./hoverMenu/contextMenu";
 import { getStyleFromData } from "./htmlSerialize";
+import { PlyrComponent } from "plyr-react";
+import getExt from "./utils/getExt";
 /**
  * nodes
  */
@@ -466,10 +468,15 @@ export default (function (props, self) {
             otherAttrs = __rest(_e, ["style", "className"]);
 
         var src = node.data.get("src");
-        return /*#__PURE__*/React.createElement("embed", _extends({}, attributes, otherAttrs, {
-          style: style,
-          src: src,
-          className: className
+        var ext = getExt(src);
+        return /*#__PURE__*/React.createElement("div", _extends({}, attributes, otherAttrs), /*#__PURE__*/React.createElement(PlyrComponent, {
+          sources: {
+            type: "video",
+            sources: [{
+              src: src,
+              type: "video/" + ext
+            }]
+          }
         }));
       }
 
@@ -481,11 +488,15 @@ export default (function (props, self) {
             otherAttrs = __rest(_f, ["style", "className"]);
 
         var data = node.data.get("data");
-        console.log(node, "object");
-        return /*#__PURE__*/React.createElement("object", _extends({}, attributes, otherAttrs, {
-          style: style,
-          data: data,
-          className: className
+        var ext = getExt(data);
+        return /*#__PURE__*/React.createElement("div", _extends({}, attributes, otherAttrs), /*#__PURE__*/React.createElement(PlyrComponent, {
+          sources: {
+            type: "video",
+            sources: [{
+              src: data,
+              type: "video/" + ext
+            }]
+          }
         }));
       }
 

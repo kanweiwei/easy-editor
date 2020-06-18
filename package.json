@@ -21,6 +21,7 @@
     "immutable": "4.0.0-rc.12",
     "lodash-es": "4.17.15",
     "parse5": "6.0.0",
+    "plyr-react": "^2.2.0",
     "raf": "3.4.1"
   },
   "devDependencies": {
