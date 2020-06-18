@@ -15,15 +15,31 @@ module.exports = {
       {
         test: /\.(js|ts|tsx)$/,
         loader: "babel-loader",
-        exclude: [/node_modules/],
+        // exclude: [/node_modules\/(?!(slate-dev-environment))/],
         options: {
           babelrc: false,
           presets: [
-            ["@babel/preset-env", { useBuiltIns: "usage", corejs: 3 }],
+            [
+              "@babel/preset-env",
+              {
+                useBuiltIns: "entry",
+                corejs: 3,
+                targets: {
+                  browsers:
+                    "last 2 Firefox versions, last 2 Chrome versions, last 2 Edge versions, last 2 Safari versions",
+                },
+              },
+            ],
             ["@babel/preset-react"],
             ["@babel/preset-typescript"],
           ],
-          plugins: ["@babel/plugin-proposal-class-properties"],
+          plugins: [
+            "@babel/plugin-proposal-class-properties",
+            "@babel/plugin-proposal-object-rest-spread",
+            "@babel/plugin-transform-spread",
+            "@babel/plugin-proposal-optional-chaining",
+            "@babel/plugin-transform-object-assign",
+          ],
           compact: true,
           sourceType: "unambiguous",
         },

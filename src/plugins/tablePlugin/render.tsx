@@ -3,7 +3,7 @@ import "./index.less";
 import { range, slice } from "lodash-es";
 import { findDOMNode } from "react-dom";
 import { List } from "immutable";
-import { getStyleFromData } from "../../htmlSerialize";
+import getStyleFromData from "../../utils/getStyleFromData";
 
 function getTdCount(node: any) {
   const trs = node.filterDescendants((n: any) => n.type === "table-row");
@@ -245,12 +245,6 @@ class SlateTable extends React.Component<any, any> {
     );
   }
 }
-export default (self: any, nodeType: string) => {
-  return (props: any) => {
-    const { node } = props;
-    if (node.type && node.type === nodeType) {
-      return <SlateTable {...props} editor={self} />;
-    }
-    return null;
-  };
+export default (editor: any, props: any) => {
+  return <SlateTable {...props} editor={editor} />;
 };

@@ -6,7 +6,7 @@ import { assign, debounce } from "lodash-es";
 import * as React from "react";
 import { findDOMNode } from "react-dom";
 import ContextMenu from "./hoverMenu/contextMenu";
-import { getStyleFromData } from "./htmlSerialize";
+import getStyleFromData from "./utils/getStyleFromData";
 import { PlyrComponent } from "plyr-react";
 import getExt from "./utils/getExt";
 /**
@@ -203,12 +203,11 @@ function (_super) {
   return ResizeBox;
 }(React.Component);
 
-export default (function (props, self) {
+export default (function (self, props) {
   var attributes = props.attributes,
       children = props.children,
       node = props.node,
       isSelected = props.isSelected;
-  console.log(node.type);
 
   switch (node.type) {
     case "div":

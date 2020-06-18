@@ -9,13 +9,13 @@ import { Block } from "@zykj/slate";
 import { getEventTransfer } from "@zykj/slate-react";
 import { get, isEmpty } from "lodash-es";
 import { parseFragment, serialize } from "parse5";
-import hexToBase64 from "../utils/hexToBase64";
-import htmlConvertor, { getAttr } from "../htmlConvertor";
-import { getStyleFromString } from "../htmlSerialize"; // eslint-disable-next-line import/extensions
+import hexToBase64 from "../utils/hexToBase64"; // eslint-disable-next-line import/extensions
 
 import filterWord from "../utils/filterWord.js";
 import getBlobByDataURI from "../utils/getBlobByDataURI";
-export default (function (e, change, self, options, beforeUpload) {
+import getAttr from "../utils/getAttr";
+import getStyleFromString from "../utils/getStyleFromString";
+export default (function (e, change, editor, options, beforeUpload) {
   return __awaiter(void 0, void 0, void 0, function () {
     var maxImageHeight, maxImageWidth, imgStyle, transfer, _a, file_1, url, html, reg, localeImgs, supportFileTypes, supportRtfTypes, result, _loop_1, i, rootDom, _getInvalidImgs_, invalidImgs, y, foundIndex, body, document_1, blocks, firstBlock;
 
@@ -129,7 +129,7 @@ export default (function (e, change, self, options, beforeUpload) {
               src: url
             }
           });
-          self.onChange(change);
+          editor.onChange(change);
           _b.label = 5;
 
         case 5:
@@ -311,16 +311,16 @@ export default (function (e, change, self, options, beforeUpload) {
 
             return [2
             /*return*/
-            , self.onChange(change)];
+            , editor.onChange(change)];
           }
 
-          change = change.insertFragment(htmlConvertor.deserialize(html).document);
+          change = change.insertFragment(editor.convertor.deserialize(html).document);
           return [2
           /*return*/
-          , self.onChange(change)];
+          , editor.onChange(change)];
 
         case 11:
-          document_1 = htmlConvertor.deserialize(html).document;
+          document_1 = editor.convertor.deserialize(html).document;
           blocks = change.value.blocks;
           firstBlock = blocks.first();
 
@@ -368,7 +368,7 @@ export default (function (e, change, self, options, beforeUpload) {
           e.preventDefault();
 
           if (transfer.type !== "files") {
-            self.onChange(change);
+            editor.onChange(change);
           }
 
           return [2

@@ -8,7 +8,7 @@ import * as React from "react";
 import "./index.css";
 import { range, slice } from "lodash-es";
 import { findDOMNode } from "react-dom";
-import { getStyleFromData } from "../../htmlSerialize";
+import getStyleFromData from "../../utils/getStyleFromData";
 
 function getTdCount(node) {
   var trs = node.filterDescendants(function (n) {
@@ -300,16 +300,8 @@ function (_super) {
   return SlateTable;
 }(React.Component);
 
-export default (function (self, nodeType) {
-  return function (props) {
-    var node = props.node;
-
-    if (node.type && node.type === nodeType) {
-      return /*#__PURE__*/React.createElement(SlateTable, _extends({}, props, {
-        editor: self
-      }));
-    }
-
-    return null;
-  };
+export default (function (editor, props) {
+  return /*#__PURE__*/React.createElement(SlateTable, _extends({}, props, {
+    editor: editor
+  }));
 });

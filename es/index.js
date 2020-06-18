@@ -1,4 +1,5 @@
-import _mapInstanceProperty from "@babel/runtime-corejs3/core-js-stable/instance/map";
+import _findInstanceProperty from "@babel/runtime-corejs3/core-js-stable/instance/find";
+import _filterInstanceProperty from "@babel/runtime-corejs3/core-js-stable/instance/filter";
 import _forEachInstanceProperty from "@babel/runtime-corejs3/core-js-stable/instance/for-each";
 import _Array$isArray from "@babel/runtime-corejs3/core-js-stable/array/is-array";
 import { __assign, __extends, __spreadArrays } from "tslib";
@@ -10,11 +11,10 @@ import raf from "raf";
 import * as React from "react";
 import handlePaste from "./events/paste";
 import HoverMenu from "./hoverMenu";
-import htmlConvertor from "./htmlConvertor";
 import initValue from "./initValue";
 import basePlugins from "./plugins";
 import renderMark from "./renderMark";
-import _renderNode from "./renderNode";
+import renderNode from "./renderNode";
 import schemas from "./schema";
 import "./style.css";
 import ToolBar from "./toolbar";
@@ -34,13 +34,6 @@ var findRealDoms = function findRealDoms(dom, realDom) {
     realDom = dom;
     return realDom;
   }
-};
-
-var getValueByHtml = function getValueByHtml(html) {
-  var htmlValue = htmlConvertor.deserialize(html, {
-    toJSON: true
-  });
-  return Value.fromJSON(htmlValue);
 }; // 定义编辑器
 
 
@@ -180,15 +173,16 @@ function (_super) {
     };
 
     _this.resetByHtml = function (html) {
-      var change = getValueByHtml(html).change();
+      var change = _this.convertor.deserialize(html).change();
 
       _this.update(change);
     };
 
     _this.getValueByHtml = function (html) {
-      var htmlValue = htmlConvertor.deserialize(html, {
+      var htmlValue = _this.convertor.deserialize(html, {
         toJSON: true
       });
+
       return Value.fromJSON(htmlValue);
     };
     /** 编辑器中插入Blocks */
@@ -250,6 +244,28 @@ function (_super) {
       return null;
     };
 
+    _this.renderNode = function (props) {
+      if (_this.plugins.length) {
+        var _context;
+
+        var nodePlugins = _filterInstanceProperty(_context = _this.plugins).call(_context, function (p) {
+          return p.type === "node";
+        });
+
+        console.log(props.node.type, nodePlugins);
+
+        var r = _findInstanceProperty(nodePlugins).call(nodePlugins, function (n) {
+          return props.node.type === n.nodeType;
+        });
+
+        if (r) {
+          return r.render(_this, props);
+        }
+      }
+
+      return renderNode(_this, props);
+    };
+
     _this.renderEditor = function () {
       var _a;
 
@@ -274,9 +290,7 @@ function (_super) {
           return e.preventDefault();
         },
         renderMark: renderMark,
-        renderNode: function renderNode(props) {
-          return _renderNode(props, _this);
-        },
+        renderNode: _this.renderNode,
         onKeyDown: _this.props.onKeyDown,
         plugins: _this.plugins,
         autoFocus: (_a = _this.props.autoFocus) !== null && _a !== void 0 ? _a : true,
@@ -306,9 +320,8 @@ function (_super) {
     };
 
     var value = props.value;
-    _this.plugins = __spreadArrays([_mapInstanceProperty(basePlugins).call(basePlugins, function (Plugin) {
-      return new Plugin(_this);
-    })], (_a = props === null || props === void 0 ? void 0 : props.plugins) !== null && _a !== void 0 ? _a : []);
+    _this.plugins = __spreadArrays(basePlugins, (_a = props === null || props === void 0 ? void 0 : props.plugins) !== null && _a !== void 0 ? _a : []);
+    _this.convertor = _this.initHtmlSerialize(_this.plugins);
 
     if (typeof props.value === "string") {
       value = _this.getValueByHtml(props.value);
@@ -320,6 +333,28 @@ function (_super) {
     };
     return _this;
   }
+
+  EasyEditor.prototype.initHtmlSerialize = function (plugins) {
+    var convertor = new HtmlSerialize();
+    console.log(convertor);
+
+    _forEachInstanceProperty(plugins).call(plugins, function (plugin) {
+      convertor.rules.unshift({
+        serialize: function serialize(node, children) {
+          console.log(node, plugin);
+
+          if (node.object === plugin.object && plugin.nodeType === node.type) {
+            if (plugin.exporter) {
+              return plugin.exporter(node, children);
+            }
+          }
+        },
+        deserialize: plugin.importer
+      });
+    });
+
+    return convertor.converter();
+  };
 
   EasyEditor.prototype.componentDidMount = function () {
     this.updateMenu();
@@ -371,7 +406,4 @@ function (_super) {
   return EasyEditor;
 }(React.Component);
 
-export function valueTohtml(value) {
-  return new HtmlSerialize().converter().serialize(value);
-}
 export default EasyEditor;

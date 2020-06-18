@@ -4,14 +4,18 @@ import * as violations from "@zykj/slate-schema-violations";
 export default {
   document: {
     nodes: [{
-      match: {
+      match: [{
         object: "block"
-      }
+      }, {
+        type: "table"
+      }]
     }],
     last: {
       type: "paragraph"
     },
     normalize: function normalize(change, error) {
+      console.dir(error);
+
       try {
         switch (error.code) {
           case violations.CHILD_TYPE_INVALID:

@@ -36,6 +36,7 @@ interface IEditorProps {
 }
 declare class EasyEditor extends React.Component<IEditorProps, any> {
     plugins: any[];
+    convertor: any;
     isComposing: boolean;
     rafHandle: any;
     /**
@@ -45,6 +46,7 @@ declare class EasyEditor extends React.Component<IEditorProps, any> {
     /** 菜单 */
     menu: any;
     constructor(props: any);
+    private initHtmlSerialize;
     componentDidMount(): void;
     componentDidUpdate(): void;
     componentWillUnmount(): void;
@@ -65,9 +67,9 @@ declare class EasyEditor extends React.Component<IEditorProps, any> {
     /** 失去焦点 */
     handleBlur: (e: any) => void;
     renderMenu: (fixed?: boolean) => JSX.Element | null;
+    renderNode: (props: any) => any;
     renderEditor: () => JSX.Element;
     renderMask: () => JSX.Element | null;
     render(): JSX.Element;
 }
-export declare function valueTohtml(value: any): any;
 export default EasyEditor;

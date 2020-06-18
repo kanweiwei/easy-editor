@@ -29,6 +29,7 @@
   line-height: 0px;
   border: 1px solid transparent;
   cursor: pointer;
+  max-width: 30px;
 }
 .easy-editor__toolbar .tools .tool-btn:hover {
   background-color: #f5f5f5;

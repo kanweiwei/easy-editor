@@ -1,13 +1,11 @@
-import PluginInterface from "../../interfaces/pluginInterface";
-export default class TablePlugin implements PluginInterface {
-    static nodeType: string;
-    static split: any;
+/// <reference types="react" />
+import { DefaultTreeElement } from "parse5";
+declare const tablePlugin: {
+    type: string;
+    object: string;
     nodeType: string;
-    objectType: "block";
-    showMenu: boolean;
-    schema: any;
-    normalizeNode: any;
-    renderNode: (props: any) => any;
-    registerBtn(btns: any[]): any[];
-    constructor(self: any);
-}
+    importer(el: DefaultTreeElement, next: Function): any;
+    exporter(node: any, children: any): any;
+    render: (editor: any, props: any) => JSX.Element;
+};
+export default tablePlugin;

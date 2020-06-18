@@ -2,60 +2,344 @@
 import * as React from "react";
 import Html from "@zykj/slate-html-serializer";
 import { parseFragment } from "parse5";
-import tableSerialize from "./plugins/tablePlugin/serialize.rules";
+import getStyleFromString from "./utils/getStyleFromString";
+import getAttr from "./utils/getAttr";
+import getStyleFromData from "./utils/getStyleFromData";
 
-export function getStyleFromData(node: any) {
-  const style: any = {};
-  if (!node.get("data")) {
-    return style;
-  }
-  const tempStyle: any = node.get("data").get("style");
-  if (tempStyle) {
-    const keys: string[] = Object.keys(tempStyle);
-    keys.forEach((key: string) => {
-      let tempKey: string = key;
-      if (tempKey.indexOf("-")) {
-        const t = tempKey.split("-");
-        for (let i = 1; i < t.length; i++) {
-          t[i] = t[i][0].toLocaleUpperCase() + t[i].substring(1);
-        }
-        tempKey = t.join("");
-      }
-      style[tempKey] = tempStyle[key];
-    });
-  }
-  return style;
-}
+export const blockTags = {
+  div: "div",
+  p: "paragraph",
+  table: "table",
+  tbody: "table-body",
+  tr: "table-row",
+  td: "table-cell",
+  addreess: "address",
+  article: "article",
+  aside: "aside",
+  // audio: "audio",
+  blockquote: "blockquote",
+  canvas: "canvas",
+  dd: "dd",
+  dl: "dl",
+  fieldset: "fieldset",
+  figcaption: "figcaption",
+  figure: "figure",
+  footer: "footer",
+  form: "form",
+  h1: "h1",
+  h2: "h2",
+  h3: "h3",
+  h4: "h4",
+  h5: "h5",
+  h6: "h6",
+  header: "header",
+  hgroup: "hgroup",
+  hr: "hr",
+  noscript: "noscript",
+  ol: "ol",
+  output: "ouput",
+  pre: "pre",
+  section: "section",
+  tfoot: "tfoot",
+  ul: "ul",
+  video: "video",
+  embed: "embed",
+  object: "object",
+};
 
-export function getStyleFromString(str: string) {
-  const style = {};
-  if (str) {
-    const temp = str
-      .split(";")
-      .filter((item) => item)
-      .map((item) => {
-        const a = item.split(":");
-        // vertical-align   -> verticalAlign
-        if (a[0].indexOf("-")) {
-          const t = a[0].split("-");
-          for (let i = 1; i < t.length; i++) {
-            t[i] = t[i][0].toLocaleUpperCase() + t[i].substring(1);
-          }
-          a[0] = t.join("");
-        }
-        return {
-          key: a[0],
-          value: a[1],
-        };
-      });
-    temp.forEach((item) => {
-      style[item.key] = item.value;
-    });
-  }
-  return style;
-}
+export const inlineTags = {
+  span: "span",
+  ruby: "ruby",
+  rt: "rt",
+  rp: "rp",
+  tt: "tt",
+  abbr: "abbr",
+  acronym: "acronym",
+  cite: "cite",
+  code: "code",
+  dfn: "dfn",
+  kbd: "kbd",
+  samp: "samp",
+  var: "var",
+  a: "a",
+  bdo: "bdo",
+  img: "img",
+  map: "map",
+  object: "object",
+  q: "q",
+  script: "script",
+  button: "button",
+  input: "input",
+  label: "label",
+  select: "select",
+  textarea: "textarea",
+};
+
+export const markTags = {
+  b: "bold",
+  bold: "bold",
+  sub: "sub",
+  sup: "sup",
+  u: "u",
+  i: "italic",
+  em: "italic",
+};
 
 let rules = [
+  {
+    deserialize(el: any, next: any): any {
+      // 块级标签
+      const blockType = blockTags[el.tagName.toLowerCase()];
+      if (blockType) {
+        switch (blockType) {
+          case "table-body":
+            return {
+              object: "block",
+              type: blockType,
+              nodes: next(
+                el.childNodes.filter(
+                  (childNode: any) => childNode.nodeName === "tr"
+                )
+              ),
+              data: {
+                width: getAttr(el.attrs, "width"),
+                border: getAttr(el.attrs, "border"),
+                rowSpan: getAttr(el.attrs, "rowspan"),
+                colSpan: getAttr(el.attrs, "colspan"),
+                style: getStyleFromString(getAttr(el.attrs, "style")),
+              },
+            };
+          case "table-row":
+            return {
+              object: "block",
+              type: blockType,
+              nodes: next(
+                el.childNodes.filter(
+                  (childNode: any) => childNode.nodeName === "td"
+                )
+              ),
+              data: {
+                style: getStyleFromString(getAttr(el.attrs, "style")),
+              },
+            };
+          case "table-cell":
+            return {
+              object: "block",
+              type: blockType,
+              nodes: next(
+                el.childNodes.filter((childNode: any) => {
+                  if (
+                    childNode.nodeName === "#text" &&
+                    childNode.value.trim().length === 0
+                  ) {
+                    return false;
+                  }
+                  return true;
+                })
+              ),
+              data: {
+                width: getAttr(el.attrs, "width"),
+                border: getAttr(el.attrs, "border"),
+                rowSpan: getAttr(el.attrs, "rowspan"),
+                colSpan: getAttr(el.attrs, "colspan"),
+                style: getStyleFromString(getAttr(el.attrs, "style")),
+                className: getAttr(el.attrs, "class"),
+              },
+            };
+          case "object": {
+            console.log("block", getAttr(el.attrs, "data"), el);
+            return {
+              object: "block",
+              type: "object",
+              isVoid: true,
+              nodes: next(el.childNodes),
+              data: {
+                data: getAttr(el.attrs, "data"),
+              },
+            };
+          }
+          default: {
+            const attrs: any = {};
+            el.attrs.forEach((attr: any) => {
+              attrs[attr.name] = attr.value;
+            });
+            const tempStyle = getAttr(el.attrs, "style");
+            const uuid = getAttr(el.attrs, "uuid");
+            const content = getAttr(el.attrs, "content");
+            const props = getAttr(el.attrs, "props");
+            const style = getStyleFromString(tempStyle);
+            const dataType = getAttr(el.attrs, "data-type");
+            const className = getAttr(el.attrs, "class");
+            const qstType = getAttr(el.attrs, "qst-type");
+            delete attrs.style;
+            delete attrs.class;
+            const data = {
+              ...attrs,
+              style,
+              className,
+              uuid,
+              content,
+              props,
+              "qst-type": qstType,
+              data: getAttr(el.attrs, "data"),
+            };
+            console.log(dataType || blockType);
+            return {
+              object: "block",
+              type: dataType || blockType,
+              nodes: next(el.childNodes),
+              data,
+            };
+          }
+        }
+      }
+    },
+  },
+  {
+    deserialize(el: any, next: any): any {
+      if (el.tagName.toLowerCase() === "img") {
+        const tempStyle = getAttr(el.attrs, "style");
+        const isformula = getAttr(el.attrs, "data-isformula");
+        const maxHeight = getAttr(el.attrs, "data-max-height");
+        const height = getAttr(el.attrs, "height");
+
+        let style = getStyleFromString(tempStyle);
+        if (!style) {
+          style = {};
+        }
+        style.display = "inline-block";
+        if (maxHeight) {
+          style.height = `${maxHeight}px`;
+        } else if (!maxHeight && height) {
+          style.height = `${height}px`;
+        }
+        const data: any = {
+          src: getAttr(el.attrs, "src"),
+          style,
+        };
+        if (isformula === "true") {
+          data["data-isformula"] = true;
+        }
+        if (maxHeight) {
+          data["data-max-height"] = Number(maxHeight);
+        } else if (!maxHeight && height) {
+          data["data-max-height"] = Number(height);
+        }
+
+        return {
+          object: "inline",
+          type: "image",
+          isVoid: true,
+          nodes: next(el.childNodes),
+          data,
+        };
+      }
+    },
+  },
+  {
+    deserialize(el: any, next: any): any {
+      // 行内标签
+      const inlineType = inlineTags[el.tagName.toLowerCase()];
+      if (inlineType) {
+        let inlineNode: any = {
+          object: "inline",
+          type: inlineType,
+          nodes: next(el.childNodes),
+          data: {},
+        };
+        const tempStyle = getAttr(el.attrs, "style");
+        const className = getAttr(el.attrs, "class");
+        let markType = null;
+        if (className && className.indexOf("dot") > -1) {
+          markType = "dot";
+        }
+        let style = getStyleFromString(tempStyle);
+        if (!style) {
+          style = {};
+        }
+        inlineNode.data.style = style;
+        if (className) {
+          inlineNode.data.className = className;
+        }
+
+        // 着重号、下划线等
+        if (markType) {
+          inlineNode = {
+            object: "mark",
+            type: markType,
+            nodes: next(el.childNodes),
+          };
+        }
+        return inlineNode;
+      }
+    },
+  },
+  {
+    deserialize(el: any): any {
+      if (el.nodeName && el.nodeName === "#text") {
+        if (el.value) {
+          if (el.parentNode.nodeName === "u") {
+            return {
+              object: "text",
+              leaves: [
+                {
+                  text: el.value,
+                },
+              ],
+            };
+          }
+          if (el.value.trim().length > 0) {
+            return {
+              object: "text",
+              leaves: [
+                {
+                  text: el.value,
+                },
+              ],
+            };
+          }
+          if (el.value.length >= 3 && el.value.trim().length === 0) {
+            return {
+              object: "text",
+              leaves: [
+                {
+                  text: el.value,
+                },
+              ],
+            };
+          }
+          return {
+            object: "text",
+            leaves: [
+              {
+                text: el.value,
+              },
+            ],
+          };
+        }
+        return {
+          object: "text",
+          leaves: [
+            {
+              text: el.value,
+            },
+          ],
+        };
+      }
+    },
+  },
+  {
+    deserialize(el: any, next: any): any {
+      const markType = markTags[el.tagName.toLowerCase()];
+      if (markType) {
+        return {
+          object: "mark",
+          type: markType,
+          nodes: next(el.childNodes),
+        };
+      }
+    },
+  },
   {
     serialize(obj: any, children: any): any {
       if (obj.object === "block") {
@@ -184,22 +468,14 @@ let rules = [
   },
 ];
 
-rules.push(tableSerialize as any);
-
 class HtmlSerialize {
-  public _converter: Html;
-
   public rules = rules;
 
   public converter() {
-    if (this._converter) {
-      return this._converter;
-    }
-    this._converter = new Html({
+    return new Html({
       rules: this.rules,
       parseHtml: parseFragment,
     });
-    return this._converter;
   }
 }
 

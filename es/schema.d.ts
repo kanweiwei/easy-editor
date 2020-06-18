@@ -1,9 +1,13 @@
 declare const _default: {
     document: {
         nodes: {
-            match: {
+            match: ({
                 object: string;
-            };
+                type?: undefined;
+            } | {
+                type: string;
+                object?: undefined;
+            })[];
         }[];
         last: {
             type: string;
