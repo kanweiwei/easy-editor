@@ -1,4 +1,4 @@
-<h1 align="center">Slate Editor</h1>
+<h1 align="center">Easy Editor</h1>
 <div align="center">A rich text editor based on slate </div>
 
 ## Quick Start
