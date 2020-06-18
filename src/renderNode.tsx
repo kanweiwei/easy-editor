@@ -2,7 +2,7 @@ import { assign, debounce } from "lodash-es";
 import * as React from "react";
 import { findDOMNode } from "react-dom";
 import ContextMenu from "./hoverMenu/contextMenu";
-import { getStyleFromData } from "./htmlSerialize";
+import getStyleFromData from "./utils/getStyleFromData";
 import { PlyrComponent } from "plyr-react";
 import getExt from "./utils/getExt";
 /**
@@ -183,9 +183,8 @@ class ResizeBox extends React.Component<any, any> {
   }
 }
 
-export default (props: any, self: any): any => {
+export default (self: any, props: any): any => {
   const { attributes, children, node, isSelected } = props;
-  console.log(node.type);
   switch (node.type) {
     case "div": {
       let { style, className, ...otherAttrs }: any = node.data.toJS();

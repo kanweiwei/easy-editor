@@ -6,7 +6,6 @@ import raf from "raf";
 import * as React from "react";
 import handlePaste from "./events/paste";
 import HoverMenu from "./hoverMenu";
-import htmlConvertor from "./htmlConvertor";
 import initValue from "./initValue";
 import basePlugins from "./plugins";
 import renderMark from "./renderMark";
@@ -67,14 +66,10 @@ const findRealDoms = (dom: any, realDom: any): any => {
   }
 };
 
-const getValueByHtml = (html: any) => {
-  const htmlValue = htmlConvertor.deserialize(html, { toJSON: true });
-  return Value.fromJSON(htmlValue);
-};
-
 // 定义编辑器
 class EasyEditor extends React.Component<IEditorProps, any> {
   plugins: any[];
+  convertor: any;
 
   isComposing: boolean = false;
 
@@ -91,10 +86,9 @@ class EasyEditor extends React.Component<IEditorProps, any> {
   constructor(props: any) {
     super(props);
     let { value } = props;
-    this.plugins = [
-      basePlugins.map((Plugin) => new Plugin(this)),
-      ...(props?.plugins ?? []),
-    ];
+    this.plugins = [...basePlugins, ...(props?.plugins ?? [])];
+    this.convertor = this.initHtmlSerialize(this.plugins);
+
     if (typeof props.value === "string") {
       value = this.getValueByHtml(props.value);
       console.log(value);
@@ -103,6 +97,25 @@ class EasyEditor extends React.Component<IEditorProps, any> {
     this.state = {
       value: value || initValue(),
     };
+  }
+
+  private initHtmlSerialize(plugins: any[]) {
+    var convertor = new HtmlSerialize();
+    console.log(convertor);
+    plugins.forEach((plugin) => {
+      convertor.rules.unshift({
+        serialize: (node, children) => {
+          console.log(node, plugin);
+          if (node.object === plugin.object && plugin.nodeType === node.type) {
+            if (plugin.exporter) {
+              return plugin.exporter(node, children);
+            }
+          }
+        },
+        deserialize: plugin.importer,
+      });
+    });
+    return convertor.converter();
   }
 
   componentDidMount() {
@@ -234,12 +247,12 @@ class EasyEditor extends React.Component<IEditorProps, any> {
   };
 
   resetByHtml = (html: any) => {
-    const change = getValueByHtml(html).change();
+    const change = this.convertor.deserialize(html).change();
     this.update(change);
   };
 
   getValueByHtml = (html: any) => {
-    const htmlValue = htmlConvertor.deserialize(html, { toJSON: true });
+    const htmlValue = this.convertor.deserialize(html, { toJSON: true });
     return Value.fromJSON(htmlValue);
   };
 
@@ -293,6 +306,18 @@ class EasyEditor extends React.Component<IEditorProps, any> {
     return null;
   };
 
+  renderNode = (props: any) => {
+    if (this.plugins.length) {
+      const nodePlugins = this.plugins.filter((p) => p.type === "node");
+      console.log(props.node.type, nodePlugins);
+      let r = nodePlugins.find((n) => props.node.type === n.nodeType);
+      if (r) {
+        return r.render(this, props);
+      }
+    }
+    return renderNode(this, props);
+  };
+
   renderEditor = () => {
     const { value } = this.state;
     const { readOnly, placeholder, pasteOptions, minHeight = 300 } = this.props;
@@ -309,7 +334,7 @@ class EasyEditor extends React.Component<IEditorProps, any> {
         }
         onContextMenu={(e: any) => e.preventDefault()}
         renderMark={renderMark}
-        renderNode={(props: any) => renderNode(props, this)}
+        renderNode={this.renderNode}
         onKeyDown={this.props.onKeyDown}
         plugins={this.plugins}
         autoFocus={this.props.autoFocus ?? true}
@@ -362,10 +387,6 @@ class EasyEditor extends React.Component<IEditorProps, any> {
       </div>
     );
   }
-}
-
-export function valueTohtml(value: any) {
-  return new HtmlSerialize().converter().serialize(value);
 }
 
 export default EasyEditor;

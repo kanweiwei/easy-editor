@@ -19,11 +19,7 @@
     "experimentalDecorators": true,
     "rootDirs": ["src"],
     "baseUrl": "./",
-    "paths": {
-      "Src/*": ["./src/*"],
-      "Root/*": ["./*"],
-      "@/*": ["./src/*"]
-    },
+    "paths": {},
     "skipLibCheck": true,
     "importHelpers": true
   },

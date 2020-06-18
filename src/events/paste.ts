@@ -3,16 +3,16 @@ import { getEventTransfer } from "@zykj/slate-react";
 import { get, isEmpty } from "lodash-es";
 import { parseFragment, serialize } from "parse5";
 import hexToBase64 from "../utils/hexToBase64";
-import htmlConvertor, { getAttr } from "../htmlConvertor";
-import { getStyleFromString } from "../htmlSerialize";
 // eslint-disable-next-line import/extensions
 import filterWord from "../utils/filterWord.js";
 import getBlobByDataURI from "../utils/getBlobByDataURI";
+import getAttr from "../utils/getAttr";
+import getStyleFromString from "../utils/getStyleFromString";
 
 export default async (
   e: any,
   change: Change,
-  self: any,
+  editor: any,
   options?: any,
   beforeUpload?: (
     file: File | Blob | Buffer | ArrayBuffer,
@@ -61,7 +61,7 @@ export default async (
               src: url,
             },
           });
-          self.onChange(change);
+          editor.onChange(change);
         }
       }
       return false;
@@ -192,15 +192,15 @@ export default async (
                 data,
               });
             });
-            return self.onChange(change);
+            return editor.onChange(change);
           }
           change = change.insertFragment(
-            htmlConvertor.deserialize(html).document
+            editor.convertor.deserialize(html).document
           );
-          return self.onChange(change);
+          return editor.onChange(change);
         }
 
-        const document: any = htmlConvertor.deserialize(html).document;
+        const document: any = editor.convertor.deserialize(html).document;
         const blocks: any = change.value.blocks;
         const firstBlock: Block = blocks.first();
 
@@ -245,7 +245,7 @@ export default async (
   }
   e.preventDefault();
   if (transfer.type !== "files") {
-    self.onChange(change);
+    editor.onChange(change);
   }
   return false;
   // this.postMessage(this.filterHtml(transfer.html));

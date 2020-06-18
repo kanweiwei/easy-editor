@@ -1,6 +1,8 @@
 import * as React from "react";
 import ReactDom from "react-dom";
-import EasyEditor, { valueTohtml } from "easy-editor";
+import audioPlugin from "./audioPlugin.tsx";
+
+import EasyEditor from "easy-editor";
 
 class ImageExtension extends React.Component<any> {
   inputRef = React.createRef<HTMLInputElement>();
@@ -46,11 +48,14 @@ class ImageExtension extends React.Component<any> {
 }
 
 class Editor extends React.Component {
-  editorRef = React.createRef();
+  editorRef = React.createRef<EasyEditor>();
 
   handleChange = (v: any) => {
     console.log("change=>>>", v);
-    console.log(valueTohtml(v.change.value));
+    if (this.editorRef.current) {
+      // value to html
+      console.log(this.editorRef.current.convertor.serialize(v.change.value));
+    }
   };
 
   handleBeforeUpload = (file: any, dataURI: any) => {
@@ -61,9 +66,10 @@ class Editor extends React.Component {
   render() {
     return (
       <EasyEditor
-        value='<p>asdasd </p><object data="http://172.16.168.159:9000/test.mp4" ></object>'
+        value="<p> </p>"
         onChange={this.handleChange}
         beforeUpload={this.handleBeforeUpload}
+        plugins={[audioPlugin]}
         ref={this.editorRef}
       />
     );

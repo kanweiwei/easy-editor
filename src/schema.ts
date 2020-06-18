@@ -5,15 +5,21 @@ export default {
   document: {
     nodes: [
       {
-        match: {
-          object: "block",
-        },
+        match: [
+          {
+            object: "block",
+          },
+          {
+            type: "table",
+          },
+        ],
       },
     ],
     last: {
       type: "paragraph",
     },
     normalize: (change: any, error: any) => {
+      console.dir(error);
       try {
         switch (error.code) {
           case violations.CHILD_TYPE_INVALID:

@@ -1,84 +1,360 @@
 import _extends from "@babel/runtime-corejs3/helpers/extends";
-import _filterInstanceProperty from "@babel/runtime-corejs3/core-js-stable/instance/filter";
-import _mapInstanceProperty from "@babel/runtime-corejs3/core-js-stable/instance/map";
 import _indexOfInstanceProperty from "@babel/runtime-corejs3/core-js-stable/instance/index-of";
 import _forEachInstanceProperty from "@babel/runtime-corejs3/core-js-stable/instance/for-each";
-import _Object$keys from "@babel/runtime-corejs3/core-js-stable/object/keys";
-import { __rest } from "tslib";
+import _trimInstanceProperty from "@babel/runtime-corejs3/core-js-stable/instance/trim";
+import _filterInstanceProperty from "@babel/runtime-corejs3/core-js-stable/instance/filter";
+import { __assign, __rest } from "tslib";
 /* eslint-disable prefer-const */
 
 import * as React from "react";
 import Html from "@zykj/slate-html-serializer";
 import { parseFragment } from "parse5";
-import tableSerialize from "./plugins/tablePlugin/serialize.rules";
-export function getStyleFromData(node) {
-  var style = {};
+import getStyleFromString from "./utils/getStyleFromString";
+import getAttr from "./utils/getAttr";
+import getStyleFromData from "./utils/getStyleFromData";
+export var blockTags = {
+  div: "div",
+  p: "paragraph",
+  table: "table",
+  tbody: "table-body",
+  tr: "table-row",
+  td: "table-cell",
+  addreess: "address",
+  article: "article",
+  aside: "aside",
+  // audio: "audio",
+  blockquote: "blockquote",
+  canvas: "canvas",
+  dd: "dd",
+  dl: "dl",
+  fieldset: "fieldset",
+  figcaption: "figcaption",
+  figure: "figure",
+  footer: "footer",
+  form: "form",
+  h1: "h1",
+  h2: "h2",
+  h3: "h3",
+  h4: "h4",
+  h5: "h5",
+  h6: "h6",
+  header: "header",
+  hgroup: "hgroup",
+  hr: "hr",
+  noscript: "noscript",
+  ol: "ol",
+  output: "ouput",
+  pre: "pre",
+  section: "section",
+  tfoot: "tfoot",
+  ul: "ul",
+  video: "video",
+  embed: "embed",
+  object: "object"
+};
+export var inlineTags = {
+  span: "span",
+  ruby: "ruby",
+  rt: "rt",
+  rp: "rp",
+  tt: "tt",
+  abbr: "abbr",
+  acronym: "acronym",
+  cite: "cite",
+  code: "code",
+  dfn: "dfn",
+  kbd: "kbd",
+  samp: "samp",
+  var: "var",
+  a: "a",
+  bdo: "bdo",
+  img: "img",
+  map: "map",
+  object: "object",
+  q: "q",
+  script: "script",
+  button: "button",
+  input: "input",
+  label: "label",
+  select: "select",
+  textarea: "textarea"
+};
+export var markTags = {
+  b: "bold",
+  bold: "bold",
+  sub: "sub",
+  sup: "sup",
+  u: "u",
+  i: "italic",
+  em: "italic"
+};
+var rules = [{
+  deserialize: function deserialize(el, next) {
+    var _context, _context2, _context3;
 
-  if (!node.get("data")) {
-    return style;
+    // 块级标签
+    var blockType = blockTags[el.tagName.toLowerCase()];
+
+    if (blockType) {
+      switch (blockType) {
+        case "table-body":
+          return {
+            object: "block",
+            type: blockType,
+            nodes: next(_filterInstanceProperty(_context = el.childNodes).call(_context, function (childNode) {
+              return childNode.nodeName === "tr";
+            })),
+            data: {
+              width: getAttr(el.attrs, "width"),
+              border: getAttr(el.attrs, "border"),
+              rowSpan: getAttr(el.attrs, "rowspan"),
+              colSpan: getAttr(el.attrs, "colspan"),
+              style: getStyleFromString(getAttr(el.attrs, "style"))
+            }
+          };
+
+        case "table-row":
+          return {
+            object: "block",
+            type: blockType,
+            nodes: next(_filterInstanceProperty(_context2 = el.childNodes).call(_context2, function (childNode) {
+              return childNode.nodeName === "td";
+            })),
+            data: {
+              style: getStyleFromString(getAttr(el.attrs, "style"))
+            }
+          };
+
+        case "table-cell":
+          return {
+            object: "block",
+            type: blockType,
+            nodes: next(_filterInstanceProperty(_context3 = el.childNodes).call(_context3, function (childNode) {
+              var _context4;
+
+              if (childNode.nodeName === "#text" && _trimInstanceProperty(_context4 = childNode.value).call(_context4).length === 0) {
+                return false;
+              }
+
+              return true;
+            })),
+            data: {
+              width: getAttr(el.attrs, "width"),
+              border: getAttr(el.attrs, "border"),
+              rowSpan: getAttr(el.attrs, "rowspan"),
+              colSpan: getAttr(el.attrs, "colspan"),
+              style: getStyleFromString(getAttr(el.attrs, "style")),
+              className: getAttr(el.attrs, "class")
+            }
+          };
+
+        case "object":
+          {
+            console.log("block", getAttr(el.attrs, "data"), el);
+            return {
+              object: "block",
+              type: "object",
+              isVoid: true,
+              nodes: next(el.childNodes),
+              data: {
+                data: getAttr(el.attrs, "data")
+              }
+            };
+          }
+
+        default:
+          {
+            var _context5;
+
+            var attrs_1 = {};
+
+            _forEachInstanceProperty(_context5 = el.attrs).call(_context5, function (attr) {
+              attrs_1[attr.name] = attr.value;
+            });
+
+            var tempStyle = getAttr(el.attrs, "style");
+            var uuid = getAttr(el.attrs, "uuid");
+            var content = getAttr(el.attrs, "content");
+            var props = getAttr(el.attrs, "props");
+            var style = getStyleFromString(tempStyle);
+            var dataType = getAttr(el.attrs, "data-type");
+            var className = getAttr(el.attrs, "class");
+            var qstType = getAttr(el.attrs, "qst-type");
+            delete attrs_1.style;
+            delete attrs_1.class;
+
+            var data = __assign(__assign({}, attrs_1), {
+              style: style,
+              className: className,
+              uuid: uuid,
+              content: content,
+              props: props,
+              "qst-type": qstType,
+              data: getAttr(el.attrs, "data")
+            });
+
+            console.log(dataType || blockType);
+            return {
+              object: "block",
+              type: dataType || blockType,
+              nodes: next(el.childNodes),
+              data: data
+            };
+          }
+      }
+    }
   }
+}, {
+  deserialize: function deserialize(el, next) {
+    if (el.tagName.toLowerCase() === "img") {
+      var tempStyle = getAttr(el.attrs, "style");
+      var isformula = getAttr(el.attrs, "data-isformula");
+      var maxHeight = getAttr(el.attrs, "data-max-height");
+      var height = getAttr(el.attrs, "height");
+      var style = getStyleFromString(tempStyle);
 
-  var tempStyle = node.get("data").get("style");
-
-  if (tempStyle) {
-    var keys = _Object$keys(tempStyle);
-
-    _forEachInstanceProperty(keys).call(keys, function (key) {
-      var tempKey = key;
-
-      if (_indexOfInstanceProperty(tempKey).call(tempKey, "-")) {
-        var t = tempKey.split("-");
-
-        for (var i = 1; i < t.length; i++) {
-          t[i] = t[i][0].toLocaleUpperCase() + t[i].substring(1);
-        }
-
-        tempKey = t.join("");
+      if (!style) {
+        style = {};
       }
 
-      style[tempKey] = tempStyle[key];
-    });
-  }
+      style.display = "inline-block";
 
-  return style;
-}
-export function getStyleFromString(str) {
-  var style = {};
+      if (maxHeight) {
+        style.height = maxHeight + "px";
+      } else if (!maxHeight && height) {
+        style.height = height + "px";
+      }
 
-  if (str) {
-    var _context, _context2;
+      var data = {
+        src: getAttr(el.attrs, "src"),
+        style: style
+      };
 
-    var temp = _mapInstanceProperty(_context = _filterInstanceProperty(_context2 = str.split(";")).call(_context2, function (item) {
-      return item;
-    })).call(_context, function (item) {
-      var _context3;
+      if (isformula === "true") {
+        data["data-isformula"] = true;
+      }
 
-      var a = item.split(":"); // vertical-align   -> verticalAlign
-
-      if (_indexOfInstanceProperty(_context3 = a[0]).call(_context3, "-")) {
-        var t = a[0].split("-");
-
-        for (var i = 1; i < t.length; i++) {
-          t[i] = t[i][0].toLocaleUpperCase() + t[i].substring(1);
-        }
-
-        a[0] = t.join("");
+      if (maxHeight) {
+        data["data-max-height"] = Number(maxHeight);
+      } else if (!maxHeight && height) {
+        data["data-max-height"] = Number(height);
       }
 
       return {
-        key: a[0],
-        value: a[1]
+        object: "inline",
+        type: "image",
+        isVoid: true,
+        nodes: next(el.childNodes),
+        data: data
       };
-    });
-
-    _forEachInstanceProperty(temp).call(temp, function (item) {
-      style[item.key] = item.value;
-    });
+    }
   }
+}, {
+  deserialize: function deserialize(el, next) {
+    // 行内标签
+    var inlineType = inlineTags[el.tagName.toLowerCase()];
 
-  return style;
-}
-var rules = [{
+    if (inlineType) {
+      var inlineNode = {
+        object: "inline",
+        type: inlineType,
+        nodes: next(el.childNodes),
+        data: {}
+      };
+      var tempStyle = getAttr(el.attrs, "style");
+      var className = getAttr(el.attrs, "class");
+      var markType = null;
+
+      if (className && _indexOfInstanceProperty(className).call(className, "dot") > -1) {
+        markType = "dot";
+      }
+
+      var style = getStyleFromString(tempStyle);
+
+      if (!style) {
+        style = {};
+      }
+
+      inlineNode.data.style = style;
+
+      if (className) {
+        inlineNode.data.className = className;
+      } // 着重号、下划线等
+
+
+      if (markType) {
+        inlineNode = {
+          object: "mark",
+          type: markType,
+          nodes: next(el.childNodes)
+        };
+      }
+
+      return inlineNode;
+    }
+  }
+}, {
+  deserialize: function deserialize(el) {
+    if (el.nodeName && el.nodeName === "#text") {
+      if (el.value) {
+        var _context6, _context7;
+
+        if (el.parentNode.nodeName === "u") {
+          return {
+            object: "text",
+            leaves: [{
+              text: el.value
+            }]
+          };
+        }
+
+        if (_trimInstanceProperty(_context6 = el.value).call(_context6).length > 0) {
+          return {
+            object: "text",
+            leaves: [{
+              text: el.value
+            }]
+          };
+        }
+
+        if (el.value.length >= 3 && _trimInstanceProperty(_context7 = el.value).call(_context7).length === 0) {
+          return {
+            object: "text",
+            leaves: [{
+              text: el.value
+            }]
+          };
+        }
+
+        return {
+          object: "text",
+          leaves: [{
+            text: el.value
+          }]
+        };
+      }
+
+      return {
+        object: "text",
+        leaves: [{
+          text: el.value
+        }]
+      };
+    }
+  }
+}, {
+  deserialize: function deserialize(el, next) {
+    var markType = markTags[el.tagName.toLowerCase()];
+
+    if (markType) {
+      return {
+        object: "mark",
+        type: markType,
+        nodes: next(el.childNodes)
+      };
+    }
+  }
+}, {
   serialize: function serialize(obj, children) {
     if (obj.object === "block") {
       var _a = obj.data.toJS(),
@@ -233,7 +509,6 @@ var rules = [{
     }
   }
 }];
-rules.push(tableSerialize);
 
 var HtmlSerialize =
 /** @class */
@@ -243,15 +518,10 @@ function () {
   }
 
   HtmlSerialize.prototype.converter = function () {
-    if (this._converter) {
-      return this._converter;
-    }
-
-    this._converter = new Html({
+    return new Html({
       rules: this.rules,
       parseHtml: parseFragment
     });
-    return this._converter;
   };
 
   return HtmlSerialize;
