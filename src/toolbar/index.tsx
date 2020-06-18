@@ -289,7 +289,7 @@ class ToolBar extends React.Component<any, any> {
 
   render() {
     const { className } = this.props;
-    const rootClass: string = classnames("slate-editor__toolbar", className);
+    const rootClass: string = classnames("easy-editor__toolbar", className);
 
     return (
       <div className={rootClass}>

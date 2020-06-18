@@ -6,13 +6,13 @@
 ### npm
 
 ```bash
-npm install slate-editor --save
+npm install easy-editor --save
 ```
 
 ### yarn
 
 ```bash
-yarn install slate-editor -S
+yarn install easy-editor -S
 ```
 
 ### with React
@@ -20,7 +20,7 @@ yarn install slate-editor -S
 ```typescript
 import * as React from "react";
 import ReactDom from "react-dom";
-import SlateEditor from "slate-editor";
+import EasyEditor from "easy-editor";
 
 class Editor extends React.Component {
   html = "";
@@ -32,7 +32,7 @@ class Editor extends React.Component {
   };
 
   render() {
-    return <SlateEditor value={"<p>123</p>"} onChange={this.handleChange} />;
+    return <EasyEditor value={"<p>123</p>"} onChange={this.handleChange} />;
   }
 }
 
@@ -59,7 +59,7 @@ video | 插入音频（mp4、webm）|
 ```typescript
 import * as React from "react";
 import ReactDom from "react-dom";
-import SlateEditor from "slate-editor";
+import EasyEditor from "easy-editor";
 
 // audio tool
 class AudioControl extends React.Component {
@@ -118,7 +118,7 @@ class Editor extends React.Component {
 
   render() {
     return (
-      <SlateEditor
+      <EasyEditor
         value={"<p>123</p>"}
         onChange={this.handleChange}
         controls={[

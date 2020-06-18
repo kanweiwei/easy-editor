@@ -238,7 +238,7 @@ class Menu extends React.Component<any, any> {
     const root: any = window.document.getElementById("root");
     const { menuRef, className } = this.props;
     const rootClass: string = classnames(
-      "menu hover-menu slate-editor__hover-menu",
+      "menu hover-menu easy-editor__hover-menu",
       className,
       {
         fixed: !menuRef,

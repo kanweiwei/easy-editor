@@ -34,7 +34,7 @@ interface IEditorProps {
     disableComposition?: boolean;
     disableSelect?: boolean;
 }
-declare class SlateEditor extends React.Component<IEditorProps, any> {
+declare class EasyEditor extends React.Component<IEditorProps, any> {
     plugins: any[];
     isComposing: boolean;
     rafHandle: any;
@@ -70,4 +70,4 @@ declare class SlateEditor extends React.Component<IEditorProps, any> {
     render(): JSX.Element;
 }
 export declare function valueTohtml(value: any): any;
-export default SlateEditor;
+export default EasyEditor;

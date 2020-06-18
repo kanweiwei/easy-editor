@@ -340,7 +340,7 @@ function (_super) {
 
   ToolBar.prototype.render = function () {
     var className = this.props.className;
-    var rootClass = classnames("slate-editor__toolbar", className);
+    var rootClass = classnames("easy-editor__toolbar", className);
     return /*#__PURE__*/React.createElement("div", {
       className: rootClass
     }, /*#__PURE__*/React.createElement("div", {

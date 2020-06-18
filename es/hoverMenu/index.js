@@ -268,7 +268,7 @@ function (_super) {
     var _a = this.props,
         menuRef = _a.menuRef,
         className = _a.className;
-    var rootClass = classnames("menu hover-menu slate-editor__hover-menu", className, {
+    var rootClass = classnames("menu hover-menu easy-editor__hover-menu", className, {
       fixed: !menuRef
     });
     var childNode = /*#__PURE__*/React.createElement("div", {

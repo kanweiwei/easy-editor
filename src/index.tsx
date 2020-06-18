@@ -73,7 +73,7 @@ const getValueByHtml = (html: any) => {
 };
 
 // 定义编辑器
-class SlateEditor extends React.Component<IEditorProps, any> {
+class EasyEditor extends React.Component<IEditorProps, any> {
   plugins: any[];
 
   isComposing: boolean = false;
@@ -340,7 +340,7 @@ class SlateEditor extends React.Component<IEditorProps, any> {
       showToolbar = true,
       controls,
     } = this.props;
-    const cls: any = classnames("slate-editor", className);
+    const cls: any = classnames("easy-editor", className);
     return (
       <div className={cls} style={{ ...style }}>
         {showToolbar && (
@@ -353,7 +353,7 @@ class SlateEditor extends React.Component<IEditorProps, any> {
         )}
         {/* {this.renderMenu()} */}
         <div
-          className="slate-editor-content"
+          className="easy-editor-content"
           style={{ minHeight: `${minHeight}px` }}
         >
           {this.renderEditor()}
@@ -368,4 +368,4 @@ export function valueTohtml(value: any) {
   return new HtmlSerialize().converter().serialize(value);
 }
 
-export default SlateEditor;
+export default EasyEditor;

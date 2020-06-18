@@ -1,6 +1,6 @@
 import * as React from "react";
 import ReactDom from "react-dom";
-import SlateEditor, { valueTohtml } from "slate-editor";
+import EasyEditor, { valueTohtml } from "easy-editor";
 
 class ImageExtension extends React.Component<any> {
   inputRef = React.createRef<HTMLInputElement>();
@@ -60,7 +60,7 @@ class Editor extends React.Component {
 
   render() {
     return (
-      <SlateEditor
+      <EasyEditor
         value='<p>asdasd </p><object data="http://172.16.168.159:9000/test.mp4" ></object>'
         onChange={this.handleChange}
         beforeUpload={this.handleBeforeUpload}

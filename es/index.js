@@ -44,12 +44,12 @@ var getValueByHtml = function getValueByHtml(html) {
 }; // 定义编辑器
 
 
-var SlateEditor =
+var EasyEditor =
 /** @class */
 function (_super) {
-  __extends(SlateEditor, _super);
+  __extends(EasyEditor, _super);
 
-  function SlateEditor(props) {
+  function EasyEditor(props) {
     var _a;
 
     var _this = _super.call(this, props) || this;
@@ -321,27 +321,27 @@ function (_super) {
     return _this;
   }
 
-  SlateEditor.prototype.componentDidMount = function () {
+  EasyEditor.prototype.componentDidMount = function () {
     this.updateMenu();
   };
 
-  SlateEditor.prototype.componentDidUpdate = function () {
+  EasyEditor.prototype.componentDidUpdate = function () {
     if (!this.props.disableMenu) {
       this.updateMenu();
     }
   };
 
-  SlateEditor.prototype.componentWillUnmount = function () {
+  EasyEditor.prototype.componentWillUnmount = function () {
     if (this.rafHandle) {
       raf.cancel(this.rafHandle);
     }
   };
 
-  SlateEditor.prototype.getState = function (name) {
+  EasyEditor.prototype.getState = function (name) {
     return get(this.state, name);
   };
 
-  SlateEditor.prototype.render = function () {
+  EasyEditor.prototype.render = function () {
     var _a = this.props,
         _b = _a.style,
         style = _b === void 0 ? {} : _b,
@@ -351,7 +351,7 @@ function (_super) {
         _d = _a.showToolbar,
         showToolbar = _d === void 0 ? true : _d,
         controls = _a.controls;
-    var cls = classnames("slate-editor", className);
+    var cls = classnames("easy-editor", className);
     return /*#__PURE__*/React.createElement("div", {
       className: cls,
       style: __assign({}, style)
@@ -361,17 +361,17 @@ function (_super) {
       onChange: this.onChange,
       beforeUpload: this.props.beforeUpload
     }), /*#__PURE__*/React.createElement("div", {
-      className: "slate-editor-content",
+      className: "easy-editor-content",
       style: {
         minHeight: minHeight + "px"
       }
     }, this.renderEditor()), this.renderMask());
   };
 
-  return SlateEditor;
+  return EasyEditor;
 }(React.Component);
 
 export function valueTohtml(value) {
   return new HtmlSerialize().converter().serialize(value);
 }
-export default SlateEditor;
+export default EasyEditor;
