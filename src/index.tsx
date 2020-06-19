@@ -253,8 +253,13 @@ class EasyEditor extends React.Component<IEditorProps, any> {
   };
 
   getValueByHtml = (html: any) => {
-    const htmlValue = this.convertor.deserialize(html, { toJSON: true });
-    return Value.fromJSON(htmlValue);
+    let b = document.createElement("body");
+    b.innerHTML = html;
+    if (b.textContent?.length) {
+      const htmlValue = this.convertor.deserialize(html, { toJSON: true });
+      return Value.fromJSON(htmlValue);
+    }
+    return initValue;
   };
 
   /** 编辑器中插入Blocks */
