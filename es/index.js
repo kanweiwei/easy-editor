@@ -179,11 +179,20 @@ function (_super) {
     };
 
     _this.getValueByHtml = function (html) {
-      var htmlValue = _this.convertor.deserialize(html, {
-        toJSON: true
-      });
+      var _a;
 
-      return Value.fromJSON(htmlValue);
+      var b = document.createElement("body");
+      b.innerHTML = html;
+
+      if ((_a = b.textContent) === null || _a === void 0 ? void 0 : _a.length) {
+        var htmlValue = _this.convertor.deserialize(html, {
+          toJSON: true
+        });
+
+        return Value.fromJSON(htmlValue);
+      }
+
+      return initValue;
     };
     /** 编辑器中插入Blocks */
 
@@ -251,8 +260,6 @@ function (_super) {
         var nodePlugins = _filterInstanceProperty(_context = _this.plugins).call(_context, function (p) {
           return p.type === "node";
         });
-
-        console.log(props.node.type, nodePlugins);
 
         var r = _findInstanceProperty(nodePlugins).call(nodePlugins, function (n) {
           return props.node.type === n.nodeType;
@@ -325,7 +332,6 @@ function (_super) {
 
     if (typeof props.value === "string") {
       value = _this.getValueByHtml(props.value);
-      console.log(value);
     }
 
     _this.state = {
@@ -336,13 +342,10 @@ function (_super) {
 
   EasyEditor.prototype.initHtmlSerialize = function (plugins) {
     var convertor = new HtmlSerialize();
-    console.log(convertor);
 
     _forEachInstanceProperty(plugins).call(plugins, function (plugin) {
       convertor.rules.unshift({
         serialize: function serialize(node, children) {
-          console.log(node, plugin);
-
           if (node.object === plugin.object && plugin.nodeType === node.type) {
             if (plugin.exporter) {
               return plugin.exporter(node, children);
