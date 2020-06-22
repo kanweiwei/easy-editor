@@ -1,0 +1,64 @@
+.easy-editor {
+  position: relative;
+  border: 1px solid #ccc;
+}
+.easy-editor .editor {
+  border: 1px solid #ccc;
+}
+.easy-editor .easy-editor-content {
+  padding: 0 8px;
+}
+.easy-editor .resize-container {
+  position: relative;
+  display: inline-block;
+  cursor: move;
+  margin: 0 auto;
+}
+.easy-editor .resize-container img {
+  display: block;
+  height: 100%;
+}
+.easy-editor .resize-container:hover img {
+  outline: 1px dashed #4797f3;
+  cursor: move;
+}
+.easy-editor .resize-container .resize-handle-ne,
+.easy-editor .resize-container .resize-handle-se,
+.easy-editor .resize-container .resize-handle-nw,
+.easy-editor .resize-container .resize-handle-sw {
+  position: absolute;
+  display: block;
+  width: 10px;
+  height: 10px;
+  background: #4797f3;
+  cursor: not-allowed;
+  z-index: 10;
+}
+.easy-editor .resize-container .resize-handle-nw {
+  top: -5px;
+  left: -5px;
+}
+.easy-editor .resize-container .resize-handle-nw.active {
+  cursor: w-resize;
+}
+.easy-editor .resize-container .resize-handle-sw {
+  bottom: -5px;
+  left: -5px;
+}
+.easy-editor .resize-container .resize-handle-sw.active {
+  cursor: sw-resize;
+}
+.easy-editor .resize-container .resize-handle-ne {
+  top: -5px;
+  right: -5px;
+}
+.easy-editor .resize-container .resize-handle-ne.active {
+  cursor: e-resize;
+}
+.easy-editor .resize-container .resize-handle-se {
+  bottom: -5px;
+  right: -5px;
+}
+.easy-editor .resize-container .resize-handle-se.active {
+  cursor: se-resize;
+}

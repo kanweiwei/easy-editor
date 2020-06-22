@@ -1,0 +1,76 @@
+.easy-editor {
+  position: relative;
+  border: 1px solid #ccc;
+  .editor {
+    border: 1px solid #ccc;
+  }
+  .easy-editor-content {
+    padding: 0 8px;
+  }
+
+  .resize-container {
+    position: relative;
+    display: inline-block;
+    cursor: move;
+    margin: 0 auto;
+
+    img {
+      display: block;
+      height: 100%;
+    }
+
+    &:hover img {
+      outline: 1px dashed #4797f3;
+      cursor: move;
+    }
+
+    .resize-handle-ne,
+    .resize-handle-se,
+    .resize-handle-nw,
+    .resize-handle-sw {
+      position: absolute;
+      display: block;
+      width: 10px;
+      height: 10px;
+      background: #4797f3;
+      cursor: not-allowed;
+      z-index: 10;
+    }
+
+    .resize-handle-nw {
+      top: -5px;
+      left: -5px;
+
+      &.active {
+        cursor: w-resize;
+      }
+    }
+
+    .resize-handle-sw {
+      bottom: -5px;
+      left: -5px;
+
+      &.active {
+        cursor: sw-resize;
+      }
+    }
+
+    .resize-handle-ne {
+      top: -5px;
+      right: -5px;
+
+      &.active {
+        cursor: e-resize;
+      }
+    }
+
+    .resize-handle-se {
+      bottom: -5px;
+      right: -5px;
+
+      &.active {
+        cursor: se-resize;
+      }
+    }
+  }
+}
