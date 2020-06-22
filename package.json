@@ -4,13 +4,14 @@
   "description": "基于slate框架的富文本编辑器",
   "repository": "https://github.com/kanweiwei/easy-editor.git",
   "author": "kanweiwei <kwwnjujlc@sina.com>",
-  "license": "apache-2.0",
+  "license": "Apache-2.0",
   "module": "es/index.js",
   "main": "dist/index.js",
   "jsnext:main": "es/index.js",
   "scripts": {
     "build": "gulp compile",
-    "example": "cd example && webpack-dev-server --host 0.0.0.0"
+    "example": "cd example && webpack-dev-server --host 0.0.0.0",
+    "build:demo": "cd example && webpack --config ./webpack.prod.config.js"
   },
   "dependencies": {
     "@babel/runtime-corejs3": "^7.10.3",
