@@ -1,5 +1,5 @@
 {
-  "name": "easy-editor",
+  "name": "@camol/easy-editor",
   "version": "0.1.0",
   "description": "基于slate框架的富文本编辑器",
   "repository": "https://github.com/kanweiwei/easy-editor.git",
