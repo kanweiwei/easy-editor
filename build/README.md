@@ -1,7 +1,7 @@
 <h1 align="center">Easy Editor</h1>
 <div align="center">A rich text editor based on slate </div>
 
-![easy-editor](https://raw.githubusercontent.com/kanweiwei/easy-editor/master/source/image/easy-editor-demo.gif)
+![easy-editor](./source/images/easy-editor-demo.gif)
 
 [Demo](https://kanweiwei.github.io/easy-editor/example/)
 
