@@ -27,7 +27,7 @@ var defaultControls = {
   },
   u: {
     object: "mark",
-    type: "underline",
+    type: "u",
     placeholder: "下划线",
     component: /*#__PURE__*/React.createElement("i", {
       className: "tool-icon ic-xiahuaxian"

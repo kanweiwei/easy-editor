@@ -28,7 +28,7 @@ const defaultControls = {
   },
   u: {
     object: "mark",
-    type: "underline",
+    type: "u",
     placeholder: "下划线",
     component: <i className="tool-icon ic-xiahuaxian" />,
   },
