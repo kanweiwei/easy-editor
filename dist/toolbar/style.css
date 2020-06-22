@@ -8,7 +8,6 @@
   box-shadow: 0 2px 4px #ccc;
   border-bottom: 1px solid #ccc;
   background-color: #fff;
-  margin-bottom: 8px;
 }
 .easy-editor__toolbar .tools::after {
   position: relative;
