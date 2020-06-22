@@ -370,7 +370,7 @@ class EasyEditor extends React.Component<IEditorProps, any> {
       minHeight = 300,
       showToolbar = true,
       controls,
-      contentStyle,
+      contentStyle = {},
     } = this.props;
     const cls: any = classnames("easy-editor", className);
     return (
