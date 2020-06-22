@@ -27,8 +27,7 @@ function compileTs(stream) {
 }
 
 function clean(cb) {
-  rimraf.sync(path.join(cwd, "lib"));
-  rimraf.sync(path.join(cwd, "es"));
+  rimraf.sync(path.join(cwd, "build"));
   cb();
 }
 
@@ -53,7 +52,7 @@ function tsc() {
           next();
         })
       )
-      .pipe(gulp.dest(`dist`))
+      .pipe(gulp.dest(`build/dist`))
   );
 }
 
@@ -86,7 +85,7 @@ function babelify(js, modules) {
         next();
       })
     )
-    .pipe(gulp.dest(modules === false ? `es` : `lib`));
+    .pipe(gulp.dest(modules === false ? `build/es` : `build/lib`));
 }
 
 function compile(modules) {
@@ -119,7 +118,7 @@ function compile(modules) {
   tsResult.on("end", check);
   return merge2([
     babelify(tsResult.js, modules),
-    tsResult.dts.pipe(gulp.dest(modules === false ? `es` : `lib`)),
+    tsResult.dts.pipe(gulp.dest(modules === false ? `build/es` : `build/lib`)),
   ]);
 }
 
@@ -136,15 +135,15 @@ function compileLess() {
       })
     )
     .pipe(base64())
-    .pipe(gulp.dest(`es`))
-    .pipe(gulp.dest(`dist`));
+    .pipe(gulp.dest(`build/es`))
+    .pipe(gulp.dest(`build/dist`));
 }
 
 function copyAssets() {
   return gulp
     .src("src/assets/font/*.*", { base: "src" })
-    .pipe(gulp.dest("es"))
-    .pipe(gulp.dest("dist"));
+    .pipe(gulp.dest("build/es"))
+    .pipe(gulp.dest("build/dist"));
 }
 
 exports.copyAssets = copyAssets;
@@ -161,4 +160,14 @@ exports.compileWithEs = gulp.series(
   compileWithEs
 );
 
-exports.compile = gulp.series(clean, copyAssets, compileLess, compileWithEs);
+function copyPackageFile() {
+  return gulp.src(["./package.json", "README.md"]).pipe(gulp.dest("build"));
+}
+
+exports.compile = gulp.series(
+  clean,
+  copyPackageFile,
+  copyAssets,
+  compileLess,
+  compileWithEs
+);
