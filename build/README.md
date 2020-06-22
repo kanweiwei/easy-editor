@@ -10,13 +10,13 @@
 ### npm
 
 ```bash
-npm install easy-editor --save
+npm install @camol/easy-editor --save
 ```
 
 ### yarn
 
 ```bash
-yarn install easy-editor -S
+yarn install @camol/easy-editor -S
 ```
 
 ### with React
@@ -24,7 +24,7 @@ yarn install easy-editor -S
 ```typescript
 import * as React from "react";
 import ReactDom from "react-dom";
-import EasyEditor from "easy-editor";
+import EasyEditor from "@camol/easy-editor";
 
 class Editor extends React.Component {
   html = "";
@@ -65,7 +65,7 @@ video | 插入音频（mp4、webm）|
 ```typescript
 import * as React from "react";
 import ReactDom from "react-dom";
-import EasyEditor from "easy-editor";
+import EasyEditor from "@camol/easy-editor";
 
 // audio tool
 class AudioControl extends React.Component {
