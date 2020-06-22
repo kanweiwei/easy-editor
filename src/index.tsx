@@ -92,7 +92,7 @@ class EasyEditor extends React.Component<IEditorProps, any> {
     if (typeof props.value === "string") {
       value = this.getValueByHtml(props.value);
     }
-
+    console.log(value);
     this.state = {
       value: value || initValue(),
     };

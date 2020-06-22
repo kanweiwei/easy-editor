@@ -334,6 +334,7 @@ function (_super) {
       value = _this.getValueByHtml(props.value);
     }
 
+    console.log(value);
     _this.state = {
       value: value || initValue()
     };

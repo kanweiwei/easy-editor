@@ -15,7 +15,7 @@ module.exports = {
       {
         test: /\.(js|ts|tsx)$/,
         loader: "babel-loader",
-        // exclude: [/node_modules\/(?!(slate-dev-environment))/],
+        exclude: [/node_modules/],
         options: {
           babelrc: false,
           presets: [

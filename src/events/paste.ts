@@ -205,7 +205,7 @@ export default async (
         const firstBlock: Block = blocks.first();
 
         if (
-          firstBlock.text.length > 0 ||
+          (firstBlock as any).text.length > 0 ||
           firstBlock.findDescendant((n: any) => n.type === "image")
         ) {
           change = change.insertBlock(
