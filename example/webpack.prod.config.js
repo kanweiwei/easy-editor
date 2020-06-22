@@ -1,4 +1,3 @@
-const HtmlPlugin = require("html-webpack-plugin");
 const webpack = require("webpack");
 const path = require("path");
 
@@ -55,16 +54,6 @@ module.exports = {
       },
     ],
   },
-  mode: "development",
-  plugins: [
-    // new HtmlPlugin({
-    //   template: "./example/index.html",
-    //   filename: "index.html",
-    //   inject: true,
-    //   hash: true,
-    // }),
-  ],
-  devServer: {
-    publicPath: "/site",
-  },
+  mode: "production",
+  plugins: [],
 };

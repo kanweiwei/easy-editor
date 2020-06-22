@@ -348,14 +348,9 @@ export default (self: any, props: any): any => {
       return (
         <span contentEditable={false}>
           <ContextMenu {...props}>
-            <ul>
-              <li>
-                <span onMouseDown={setFloatRight}>靠右环绕</span>
-              </li>
-              <li>
-                <span onMouseDown={setNoFloat}>清除环绕</span>
-              </li>
-              {/* <li>
+            <div onMouseDown={setFloatRight}>靠右环绕</div>
+            <div onMouseDown={setNoFloat}>清除环绕</div>
+            {/* 
                 <ButtonModal
                   button={{
                     text: '调整图片属性',
@@ -397,8 +392,7 @@ export default (self: any, props: any): any => {
                 >
                   <ImgAttrsForm ref={(n: any) => (imgForm = n)} node={node} onload={onload} />
                 </ButtonModal>
-              </li> */}
-            </ul>
+              */}
           </ContextMenu>
           <ResizeBox
             isSelected={isSelected}

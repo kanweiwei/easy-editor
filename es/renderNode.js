@@ -395,11 +395,11 @@ export default (function (self, props) {
         var imgForm = void 0;
         return /*#__PURE__*/React.createElement("span", {
           contentEditable: false
-        }, /*#__PURE__*/React.createElement(ContextMenu, props, /*#__PURE__*/React.createElement("ul", null, /*#__PURE__*/React.createElement("li", null, /*#__PURE__*/React.createElement("span", {
+        }, /*#__PURE__*/React.createElement(ContextMenu, props, /*#__PURE__*/React.createElement("div", {
           onMouseDown: setFloatRight
-        }, "\u9760\u53F3\u73AF\u7ED5")), /*#__PURE__*/React.createElement("li", null, /*#__PURE__*/React.createElement("span", {
+        }, "\u9760\u53F3\u73AF\u7ED5"), /*#__PURE__*/React.createElement("div", {
           onMouseDown: setNoFloat
-        }, "\u6E05\u9664\u73AF\u7ED5")))), /*#__PURE__*/React.createElement(ResizeBox, _extends({
+        }, "\u6E05\u9664\u73AF\u7ED5")), /*#__PURE__*/React.createElement(ResizeBox, _extends({
           isSelected: isSelected
         }, {
           style: style
