@@ -91,7 +91,6 @@ class EasyEditor extends React.Component<IEditorProps, any> {
 
     if (typeof props.value === "string") {
       value = this.getValueByHtml(props.value);
-      console.log(value);
     }
 
     this.state = {
@@ -101,11 +100,9 @@ class EasyEditor extends React.Component<IEditorProps, any> {
 
   private initHtmlSerialize(plugins: any[]) {
     var convertor = new HtmlSerialize();
-    console.log(convertor);
     plugins.forEach((plugin) => {
       convertor.rules.unshift({
         serialize: (node, children) => {
-          console.log(node, plugin);
           if (node.object === plugin.object && plugin.nodeType === node.type) {
             if (plugin.exporter) {
               return plugin.exporter(node, children);
@@ -314,7 +311,6 @@ class EasyEditor extends React.Component<IEditorProps, any> {
   renderNode = (props: any) => {
     if (this.plugins.length) {
       const nodePlugins = this.plugins.filter((p) => p.type === "node");
-      console.log(props.node.type, nodePlugins);
       let r = nodePlugins.find((n) => props.node.type === n.nodeType);
       if (r) {
         return r.render(this, props);

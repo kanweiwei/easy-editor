@@ -147,7 +147,6 @@ let rules = [
               },
             };
           case "object": {
-            console.log("block", getAttr(el.attrs, "data"), el);
             return {
               object: "block",
               type: "object",
@@ -183,7 +182,6 @@ let rules = [
               "qst-type": qstType,
               data: getAttr(el.attrs, "data"),
             };
-            console.log(dataType || blockType);
             return {
               object: "block",
               type: dataType || blockType,
