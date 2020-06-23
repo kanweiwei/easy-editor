@@ -8,6 +8,7 @@ import * as React from "react";
 import ImageExtension from "./extensions/image";
 import "./style.css";
 import VideoExtension from "./extensions/video";
+import EditorTooltip from "./tooltip";
 var defaultControls = {
   bold: {
     object: "mark",
@@ -44,13 +45,13 @@ var defaultControls = {
   sub: {
     object: "mark",
     type: "sub",
-    placeholder: "上标",
+    placeholder: "下标",
     component: /*#__PURE__*/React.createElement("i", {
       className: "tool-icon ic-sub"
     })
   },
   left: {
-    object: "mark",
+    object: "align",
     type: "align",
     placeholder: "居左",
     component: /*#__PURE__*/React.createElement("i", {
@@ -155,11 +156,13 @@ function (_super) {
       });
       return /*#__PURE__*/React.createElement("span", {
         key: item.type
+      }, /*#__PURE__*/React.createElement(EditorTooltip, {
+        placeholder: placeholder
       }, /*#__PURE__*/React.createElement("span", {
         className: btnClass,
         title: placeholder,
         onMouseDown: onMouseDown
-      }, _this.renderComponent(component)));
+      }, _this.renderComponent(component))));
     };
 
     _this.renderIndentButton = function (type, icon, title) {
@@ -287,13 +290,15 @@ function (_super) {
       });
       return /*#__PURE__*/React.createElement("span", {
         key: type
+      }, /*#__PURE__*/React.createElement(EditorTooltip, {
+        placeholder: placeholder
       }, /*#__PURE__*/React.createElement("span", {
         className: cls,
         onMouseDown: function onMouseDown(e) {
           return _this.setAlign(e, type);
         },
         title: placeholder
-      }, _this.renderComponent(component)));
+      }, _this.renderComponent(component))));
     };
 
     _this.renderControls = function () {
@@ -317,9 +322,11 @@ function (_super) {
                     if ("component" in t && typeof t.component === "function") {
                       return /*#__PURE__*/React.createElement("span", {
                         key: t.type
+                      }, /*#__PURE__*/React.createElement(EditorTooltip, {
+                        placeholder: t.placeholder
                       }, /*#__PURE__*/React.createElement("span", {
                         className: "tool-btn"
-                      }, t.component(_this.props.value.change(), _this.props.onChange, _this.props.beforeUpload)));
+                      }, t.component(_this.props.value.change(), _this.props.onChange, _this.props.beforeUpload))));
                     }
 
                     return null;
@@ -332,9 +339,11 @@ function (_super) {
               return /*#__PURE__*/React.createElement("span", {
                 key: tool.type,
                 title: tool.placeholder || ""
+              }, /*#__PURE__*/React.createElement(EditorTooltip, {
+                placeholder: tool.placeholder
               }, /*#__PURE__*/React.createElement("span", {
                 className: "tool-btn"
-              }, tool.component(_this.props.value.change(), _this.props.onChange)));
+              }, tool.component(_this.props.value.change(), _this.props.onChange, _this.props.beforeUpload))));
             }
           }
 
