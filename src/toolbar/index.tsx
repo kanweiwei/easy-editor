@@ -5,6 +5,7 @@ import * as React from "react";
 import ImageExtension from "./extensions/image";
 import "./style.less";
 import VideoExtension from "./extensions/video";
+import EditorTooltip from "./tooltip";
 
 type Control = {
   object?: "mark" | "align";
@@ -32,8 +33,20 @@ const defaultControls = {
     placeholder: "下划线",
     component: <i className="tool-icon ic-xiahuaxian" />,
   },
-  left: {
+  sup: {
     object: "mark",
+    type: "sup",
+    placeholder: "上标",
+    component: <i className="tool-icon ic-sup" />,
+  },
+  sub: {
+    object: "mark",
+    type: "sub",
+    placeholder: "下标",
+    component: <i className="tool-icon ic-sub" />,
+  },
+  left: {
+    object: "align",
     type: "align",
     placeholder: "居左",
     component: <i className="tool-icon ic-align-left" />,
@@ -115,13 +128,15 @@ class ToolBar extends React.Component<any, any> {
 
     return (
       <span key={item.type}>
-        <span
-          className={btnClass}
-          title={placeholder}
-          onMouseDown={onMouseDown}
-        >
-          {this.renderComponent(component)}
-        </span>
+        <EditorTooltip placeholder={placeholder}>
+          <span
+            className={btnClass}
+            title={placeholder}
+            onMouseDown={onMouseDown}
+          >
+            {this.renderComponent(component)}
+          </span>
+        </EditorTooltip>
       </span>
     );
   };
@@ -219,13 +234,15 @@ class ToolBar extends React.Component<any, any> {
     });
     return (
       <span key={type}>
-        <span
-          className={cls}
-          onMouseDown={(e) => this.setAlign(e, type)}
-          title={placeholder}
-        >
-          {this.renderComponent(component)}
-        </span>
+        <EditorTooltip placeholder={placeholder}>
+          <span
+            className={cls}
+            onMouseDown={(e) => this.setAlign(e, type)}
+            title={placeholder}
+          >
+            {this.renderComponent(component)}
+          </span>
+        </EditorTooltip>
       </span>
     );
   };
@@ -233,7 +250,7 @@ class ToolBar extends React.Component<any, any> {
   renderControls = () => {
     const {
       controls = [
-        ["bold", "italic", "u"],
+        ["bold", "italic", "u", "sup", "sub"],
         ["left", "center", "right", "justify"],
         ["image", "video"],
       ],
@@ -252,13 +269,15 @@ class ToolBar extends React.Component<any, any> {
                 if ("component" in t && typeof t.component === "function") {
                   return (
                     <span key={t.type}>
-                      <span className="tool-btn">
-                        {t.component(
-                          this.props.value.change(),
-                          this.props.onChange,
-                          this.props.beforeUpload
-                        )}
-                      </span>
+                      <EditorTooltip placeholder={t.placeholder}>
+                        <span className="tool-btn">
+                          {t.component(
+                            this.props.value.change(),
+                            this.props.onChange,
+                            this.props.beforeUpload
+                          )}
+                        </span>
+                      </EditorTooltip>
                     </span>
                   );
                 }
@@ -271,12 +290,15 @@ class ToolBar extends React.Component<any, any> {
           if ("component" in tool && typeof tool.component === "function") {
             return (
               <span key={tool.type} title={tool.placeholder || ""}>
-                <span className="tool-btn">
-                  {tool.component(
-                    this.props.value.change(),
-                    this.props.onChange
-                  )}
-                </span>
+                <EditorTooltip placeholder={tool.placeholder}>
+                  <span className="tool-btn">
+                    {tool.component(
+                      this.props.value.change(),
+                      this.props.onChange,
+                      this.props.beforeUpload
+                    )}
+                  </span>
+                </EditorTooltip>
               </span>
             );
           }

@@ -258,6 +258,10 @@ class EasyEditor extends React.Component<IEditorProps, any> {
     return initValue;
   };
 
+  getHtml = () => {
+    return this.convertor.serialize(this.state.value);
+  };
+
   /** 编辑器中插入Blocks */
   insertBlocks = (blocks: Block[]) => {
     const { value } = this.state;

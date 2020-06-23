@@ -60,6 +60,7 @@ declare class EasyEditor extends React.Component<IEditorProps, any> {
     updateMenu: () => void;
     resetByHtml: (html: any) => void;
     getValueByHtml: (html: any) => (() => Value) | Value;
+    getHtml: () => any;
     /** 编辑器中插入Blocks */
     insertBlocks: (blocks: Block[]) => void;
     /** 菜单ref */

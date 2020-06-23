@@ -1,6 +1,6 @@
 {
   "name": "@camol/easy-editor",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "基于slate框架的富文本编辑器",
   "repository": "https://github.com/kanweiwei/easy-editor.git",
   "author": "kanweiwei <kwwnjujlc@sina.com>",
@@ -24,7 +24,8 @@
     "lodash-es": "4.17.15",
     "parse5": "6.0.0",
     "plyr-react": "^2.2.0",
-    "raf": "3.4.1"
+    "raf": "3.4.1",
+    "rc-tooltip": "^4.2.1"
   },
   "devDependencies": {
     "@babel/core": "7.10.2",

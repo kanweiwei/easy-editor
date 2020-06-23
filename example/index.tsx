@@ -2,7 +2,7 @@ import * as React from "react";
 import ReactDom from "react-dom";
 import audioPlugin from "./audioPlugin.tsx";
 
-import EasyEditor from "@camol/easy-editor";
+import EasyEditor from "../build/es";
 
 class ImageExtension extends React.Component<any> {
   inputRef = React.createRef<HTMLInputElement>();

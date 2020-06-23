@@ -19,6 +19,14 @@ npm install @camol/easy-editor --save
 yarn install @camol/easy-editor -S
 ```
 
+### Examples
+
+```bash
+git clone https://github.com/kanweiwei/easy-editor.git
+cd easy-editor
+yarn && yarn build && yarn example
+```
+
 ### with React
 
 ```typescript
@@ -53,6 +61,8 @@ tool| instructions|
 bold| 加粗|
 italic| 斜体|
 u| 下划线|
+sup| 上标 |
+sub | 下标 |
 left|文字居左|
 right|文字居右|
 center|文字居中|
