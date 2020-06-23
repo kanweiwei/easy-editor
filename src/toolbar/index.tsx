@@ -32,6 +32,18 @@ const defaultControls = {
     placeholder: "下划线",
     component: <i className="tool-icon ic-xiahuaxian" />,
   },
+  sup: {
+    object: "mark",
+    type: "sup",
+    placeholder: "上标",
+    component: <i className="tool-icon ic-sup" />,
+  },
+  sub: {
+    object: "mark",
+    type: "sub",
+    placeholder: "上标",
+    component: <i className="tool-icon ic-sub" />,
+  },
   left: {
     object: "mark",
     type: "align",
@@ -233,7 +245,7 @@ class ToolBar extends React.Component<any, any> {
   renderControls = () => {
     const {
       controls = [
-        ["bold", "italic", "u"],
+        ["bold", "italic", "u", "sup", "sub"],
         ["left", "center", "right", "justify"],
         ["image", "video"],
       ],
