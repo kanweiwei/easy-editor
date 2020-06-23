@@ -33,6 +33,22 @@ var defaultControls = {
       className: "tool-icon ic-xiahuaxian"
     })
   },
+  sup: {
+    object: "mark",
+    type: "sup",
+    placeholder: "上标",
+    component: /*#__PURE__*/React.createElement("i", {
+      className: "tool-icon ic-sup"
+    })
+  },
+  sub: {
+    object: "mark",
+    type: "sub",
+    placeholder: "上标",
+    component: /*#__PURE__*/React.createElement("i", {
+      className: "tool-icon ic-sub"
+    })
+  },
   left: {
     object: "mark",
     type: "align",
@@ -282,7 +298,7 @@ function (_super) {
 
     _this.renderControls = function () {
       var _a = _this.props.controls,
-          controls = _a === void 0 ? [["bold", "italic", "u"], ["left", "center", "right", "justify"], ["image", "video"]] : _a;
+          controls = _a === void 0 ? [["bold", "italic", "u", "sup", "sub"], ["left", "center", "right", "justify"], ["image", "video"]] : _a;
       return _mapInstanceProperty(controls).call(controls, function (toolGroup) {
         return _mapInstanceProperty(toolGroup).call(toolGroup, function (tool) {
           if (typeof tool === "string") {

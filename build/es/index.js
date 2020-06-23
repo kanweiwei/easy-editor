@@ -194,6 +194,10 @@ function (_super) {
 
       return initValue;
     };
+
+    _this.getHtml = function () {
+      return _this.convertor.serialize(_this.state.value);
+    };
     /** 编辑器中插入Blocks */
 
 
