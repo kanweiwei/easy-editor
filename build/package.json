@@ -17,7 +17,7 @@
     "@babel/runtime-corejs3": "^7.10.3",
     "@zykj/slate": "^0.38.0",
     "@zykj/slate-html-serializer": "0.6.19",
-    "@zykj/slate-react": "^0.16.1",
+    "@zykj/slate-react": "^0.16.2",
     "@zykj/slate-schema-violations": "0.1.39",
     "classnames": "2.2.6",
     "immutable": "4.0.0-rc.12",
