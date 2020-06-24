@@ -1,17 +1,17 @@
 import _mapInstanceProperty from "@babel/runtime-corejs3/core-js-stable/instance/map";
-import _Promise from "@babel/runtime-corejs3/core-js-stable/promise";
 import _includesInstanceProperty from "@babel/runtime-corejs3/core-js-stable/instance/includes";
 import { __awaiter, __extends, __generator } from "tslib";
 import * as React from "react";
+import createObjectURL from "../../../utils/createObjectURL";
 import "./style.css";
-var acceptTypes = ["image/png", "image/jpeg", "image/jpg", "image/gif", "application/pdf"];
+var acceptTypes = ["application/pdf"];
 
-var ImageExtension =
+var PdfExtension =
 /** @class */
 function (_super) {
-  __extends(ImageExtension, _super);
+  __extends(PdfExtension, _super);
 
-  function ImageExtension() {
+  function PdfExtension() {
     var _this = _super !== null && _super.apply(this, arguments) || this;
 
     _this.inputRef = /*#__PURE__*/React.createRef();
@@ -35,69 +35,52 @@ function (_super) {
               e.target.value = "";
               if (!file) return [3
               /*break*/
-              , 6];
+              , 5];
               if (!_includesInstanceProperty(acceptTypes).call(acceptTypes, file.type)) return [3
               /*break*/
-              , 5];
-              return [4
-              /*yield*/
-              , new _Promise(function (resolve, reject) {
-                var reader = new FileReader();
-
-                reader.onload = function () {
-                  resolve(reader.result);
-                };
-
-                reader.onerror = function () {
-                  reject(new Error("error"));
-                };
-
-                reader.readAsDataURL(file);
-              })];
-
-            case 1:
-              url = _c.sent();
+              , 4];
+              url = createObjectURL(file);
               if (!(typeof url == "string")) return [3
               /*break*/
-              , 4];
+              , 3];
               if (!this.props.beforeUpload) return [3
               /*break*/
-              , 3];
+              , 2];
               return [4
               /*yield*/
               , this.props.beforeUpload(file, url)];
 
-            case 2:
+            case 1:
               url = _c.sent();
-              url = window.URL.createObjectURL(file);
-              _c.label = 3;
+              _c.label = 2;
 
-            case 3:
+            case 2:
               if (url) {
                 change = this.props.change.focus().insertBlock({
                   object: "block",
                   type: "pdf",
                   isVoid: true,
                   data: {
-                    url: url
+                    url: url,
+                    name: file.name
                   }
                 });
                 this.props.update(change);
               }
 
-              _c.label = 4;
+              _c.label = 3;
 
-            case 4:
+            case 3:
               return [3
               /*break*/
-              , 6];
+              , 5];
 
-            case 5:
+            case 4:
               throw new Error("Only accept " + _mapInstanceProperty(acceptTypes).call(acceptTypes, function (v) {
                 return v.split("/")[1];
               }).join("、") + ", but the file type is " + file.type);
 
-            case 6:
+            case 5:
               return [2
               /*return*/
               ];
@@ -109,11 +92,11 @@ function (_super) {
     return _this;
   }
 
-  ImageExtension.prototype.render = function () {
+  PdfExtension.prototype.render = function () {
     return /*#__PURE__*/React.createElement("span", {
       onMouseDown: this.handleClick
     }, /*#__PURE__*/React.createElement("span", {
-      className: "tool-insert-image"
+      className: "tool-insert-pdf"
     }), /*#__PURE__*/React.createElement("input", {
       type: "file",
       style: {
@@ -127,7 +110,7 @@ function (_super) {
     }));
   };
 
-  return ImageExtension;
+  return PdfExtension;
 }(React.Component);
 
-export default ImageExtension;
+export default PdfExtension;

@@ -9,6 +9,7 @@ import ImageExtension from "./extensions/image";
 import "./style.css";
 import VideoExtension from "./extensions/video";
 import EditorTooltip from "./tooltip";
+import PdfExtension from "./extensions/pdf";
 var defaultControls = {
   bold: {
     object: "mark",
@@ -98,6 +99,17 @@ var defaultControls = {
     placeholder: "插入音频",
     component: function component(change, update, beforeUpload) {
       return /*#__PURE__*/React.createElement(VideoExtension, {
+        change: change,
+        update: update,
+        beforeUpload: beforeUpload
+      });
+    }
+  },
+  pdf: {
+    type: "pdf",
+    placeholder: "插入pdf",
+    component: function component(change, update, beforeUpload) {
+      return /*#__PURE__*/React.createElement(PdfExtension, {
         change: change,
         update: update,
         beforeUpload: beforeUpload
@@ -303,7 +315,7 @@ function (_super) {
 
     _this.renderControls = function () {
       var _a = _this.props.controls,
-          controls = _a === void 0 ? [["bold", "italic", "u", "sup", "sub"], ["left", "center", "right", "justify"], ["image", "video"]] : _a;
+          controls = _a === void 0 ? [["bold", "italic", "u", "sup", "sub"], ["left", "center", "right", "justify"], ["image", "video", "pdf"]] : _a;
       return _mapInstanceProperty(controls).call(controls, function (toolGroup) {
         return _mapInstanceProperty(toolGroup).call(toolGroup, function (tool) {
           if (typeof tool === "string") {

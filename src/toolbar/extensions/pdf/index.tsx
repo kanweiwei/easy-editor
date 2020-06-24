@@ -1,15 +1,10 @@
 import * as React from "react";
+import createObjectURL from "../../../utils/createObjectURL";
 import "./style.less";
 
-const acceptTypes = [
-  "image/png",
-  "image/jpeg",
-  "image/jpg",
-  "image/gif",
-  "application/pdf",
-];
+const acceptTypes = ["application/pdf"];
 
-class ImageExtension extends React.Component<any> {
+class PdfExtension extends React.Component<any> {
   inputRef = React.createRef<HTMLInputElement>();
 
   handleClick = () => {
@@ -23,36 +18,19 @@ class ImageExtension extends React.Component<any> {
     e.target.value = "";
     if (file) {
       if (acceptTypes.includes(file.type)) {
-        let url = await new Promise((resolve, reject) => {
-          const reader = new FileReader();
-          reader.onload = () => {
-            resolve(reader.result);
-          };
-          reader.onerror = () => {
-            reject(new Error("error"));
-          };
-          reader.readAsDataURL(file);
-        });
+        let url = createObjectURL(file);
         if (typeof url == "string") {
           if (this.props.beforeUpload) {
             url = await this.props.beforeUpload(file, url);
-            url = window.URL.createObjectURL(file);
           }
           if (url) {
-            // let change = this.props.change.focus().insertInline({
-            //   object: "inline",
-            //   type: "image",
-            //   isVoid: true,
-            //   data: {
-            //     src: url,
-            //   },
-            // });
             let change = this.props.change.focus().insertBlock({
               object: "block",
               type: "pdf",
               isVoid: true,
               data: {
                 url,
+                name: file.name,
               },
             });
             this.props.update(change);
@@ -71,7 +49,7 @@ class ImageExtension extends React.Component<any> {
   render() {
     return (
       <span onMouseDown={this.handleClick}>
-        <span className="tool-insert-image" />
+        <span className="tool-insert-pdf" />
         <input
           type="file"
           style={{ width: 0, height: 0, opacity: 0, position: "absolute" }}
@@ -83,4 +61,4 @@ class ImageExtension extends React.Component<any> {
   }
 }
 
-export default ImageExtension;
+export default PdfExtension;
