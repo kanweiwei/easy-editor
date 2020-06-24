@@ -1,9 +1,10 @@
-export default interface PluginInterface {
+import { DefaultTreeElement } from "parse5";
+export default interface EditorPlugin {
+    type: "node" | "mark";
+    object: "block" | "inline" | "mark";
     nodeType: string;
-    objectType: "block" | "inline" | "mark";
-    showMenu: boolean;
     schema?: any;
-    normalizeNode?: any;
-    renderNode: (props: any) => any;
-    registerBtn?: (btns: any[]) => any[];
+    importer(el: DefaultTreeElement, next: Function): any;
+    exporter(node: any, children: any): any;
+    render(editor: any, props: any): any;
 }

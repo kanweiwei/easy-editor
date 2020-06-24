@@ -70,6 +70,7 @@ const findRealDoms = (dom: any, realDom: any): any => {
 class EasyEditor extends React.Component<IEditorProps, any> {
   plugins: any[];
   convertor: any;
+  schemas: any;
 
   isComposing: boolean = false;
 
@@ -87,12 +88,12 @@ class EasyEditor extends React.Component<IEditorProps, any> {
     super(props);
     let { value } = props;
     this.plugins = [...basePlugins, ...(props?.plugins ?? [])];
+    this.schemas = this.initSchema(schemas, this.plugins);
     this.convertor = this.initHtmlSerialize(this.plugins);
 
     if (typeof props.value === "string") {
       value = this.getValueByHtml(props.value);
     }
-    console.log(value);
     this.state = {
       value: value || initValue(),
     };
@@ -113,6 +114,28 @@ class EasyEditor extends React.Component<IEditorProps, any> {
       });
     });
     return convertor.converter();
+  }
+
+  private initSchema(
+    schema: { [x: string]: { [x: string]: any } },
+    plugins: any[] = []
+  ) {
+    const m = {
+      inline: "inlines",
+      block: "blocks",
+    };
+    plugins.forEach((plugin) => {
+      if (plugin.schema) {
+        let k = m[plugin.object];
+        if (k) {
+          schema[k][plugin.nodeType] = {
+            ...(schema[k][plugin.nodeType] ?? {}),
+            ...plugin.schema,
+          };
+        }
+      }
+    });
+    return schema;
   }
 
   componentDidMount() {
@@ -343,7 +366,7 @@ class EasyEditor extends React.Component<IEditorProps, any> {
         onKeyDown={this.props.onKeyDown}
         plugins={this.plugins}
         autoFocus={this.props.autoFocus ?? true}
-        schema={schemas}
+        schema={this.schemas}
         spellCheck={false}
         readOnly={readOnly}
         style={{ minHeight: `${minHeight}px` }}

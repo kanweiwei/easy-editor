@@ -193,9 +193,5 @@ export default {
       }
     }
   },
-  inlines: {
-    image: {
-      isVoid: true
-    }
-  }
+  inlines: {}
 };

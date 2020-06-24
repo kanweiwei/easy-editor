@@ -73,10 +73,6 @@ declare const _default: {
             normalize: (change: any, error: any) => any;
         };
     };
-    inlines: {
-        image: {
-            isVoid: boolean;
-        };
-    };
+    inlines: {};
 };
 export default _default;
