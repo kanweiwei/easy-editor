@@ -37,6 +37,7 @@ interface IEditorProps {
 declare class EasyEditor extends React.Component<IEditorProps, any> {
     plugins: any[];
     convertor: any;
+    schemas: any;
     isComposing: boolean;
     rafHandle: any;
     /**
@@ -47,6 +48,7 @@ declare class EasyEditor extends React.Component<IEditorProps, any> {
     menu: any;
     constructor(props: any);
     private initHtmlSerialize;
+    private initSchema;
     componentDidMount(): void;
     componentDidUpdate(): void;
     componentWillUnmount(): void;
