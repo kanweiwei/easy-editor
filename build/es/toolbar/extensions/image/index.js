@@ -4,7 +4,7 @@ import _includesInstanceProperty from "@babel/runtime-corejs3/core-js-stable/ins
 import { __awaiter, __extends, __generator } from "tslib";
 import * as React from "react";
 import "./style.css";
-var acceptTypes = ["image/png", "image/jpeg", "image/jpg", "image/gif"];
+var acceptTypes = ["image/png", "image/jpeg", "image/jpg", "image/gif", "application/pdf"];
 
 var ImageExtension =
 /** @class */
@@ -69,16 +69,17 @@ function (_super) {
 
             case 2:
               url = _c.sent();
+              url = window.URL.createObjectURL(file);
               _c.label = 3;
 
             case 3:
               if (url) {
-                change = this.props.change.focus().insertInline({
-                  object: "inline",
-                  type: "image",
+                change = this.props.change.focus().insertBlock({
+                  object: "block",
+                  type: "pdf",
                   isVoid: true,
                   data: {
-                    src: url
+                    url: url
                   }
                 });
                 this.props.update(change);

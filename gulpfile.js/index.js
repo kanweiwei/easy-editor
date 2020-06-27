@@ -171,3 +171,10 @@ exports.compile = gulp.series(
   compileLess,
   compileWithEs
 );
+
+exports.watch = () => {
+  return gulp.watch(
+    ["src/**/*.tsx", "src/**/*.less", "src/**/*.ts"],
+    gulp.series(clean, copyPackageFile, copyAssets, compileLess, compileWithEs)
+  );
+};

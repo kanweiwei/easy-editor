@@ -1,2 +1,5 @@
 import tablePlugin from "./tablePlugin";
-export default [tablePlugin];
+import imagePlugin from "./imagePlugin";
+import pdfPlugin from "./pdfPlugin";
+
+export default [tablePlugin, imagePlugin, pdfPlugin];

@@ -305,7 +305,7 @@ function (_super) {
         onKeyDown: _this.props.onKeyDown,
         plugins: _this.plugins,
         autoFocus: (_a = _this.props.autoFocus) !== null && _a !== void 0 ? _a : true,
-        schema: schemas,
+        schema: _this.schemas,
         spellCheck: false,
         readOnly: readOnly,
         style: {
@@ -332,13 +332,13 @@ function (_super) {
 
     var value = props.value;
     _this.plugins = __spreadArrays(basePlugins, (_a = props === null || props === void 0 ? void 0 : props.plugins) !== null && _a !== void 0 ? _a : []);
+    _this.schemas = _this.initSchema(schemas, _this.plugins);
     _this.convertor = _this.initHtmlSerialize(_this.plugins);
 
     if (typeof props.value === "string") {
       value = _this.getValueByHtml(props.value);
     }
 
-    console.log(value);
     _this.state = {
       value: value || initValue()
     };
@@ -362,6 +362,31 @@ function (_super) {
     });
 
     return convertor.converter();
+  };
+
+  EasyEditor.prototype.initSchema = function (schema, plugins) {
+    if (plugins === void 0) {
+      plugins = [];
+    }
+
+    var m = {
+      inline: "inlines",
+      block: "blocks"
+    };
+
+    _forEachInstanceProperty(plugins).call(plugins, function (plugin) {
+      var _a;
+
+      if (plugin.schema) {
+        var k = m[plugin.object];
+
+        if (k) {
+          schema[k][plugin.nodeType] = __assign(__assign({}, (_a = schema[k][plugin.nodeType]) !== null && _a !== void 0 ? _a : {}), plugin.schema);
+        }
+      }
+    });
+
+    return schema;
   };
 
   EasyEditor.prototype.componentDidMount = function () {

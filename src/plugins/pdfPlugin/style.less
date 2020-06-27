@@ -1,0 +1,125 @@
+.easy-editor-upload.pdf-wrapper {
+  height: 48px;
+  border-radius: 2px;
+  padding: 0px;
+  background: white;
+  border: 1px solid #ccc;
+  line-height: 48px;
+  margin-bottom: 8px;
+
+  .easy-editor-icon.ic_pdf {
+    width: 32px;
+    height: 32px;
+    background: url("../../icons/ic_pdf.png") center no-repeat;
+    background-size: 32px 32px;
+    margin-right: 8px;
+    float: left;
+    margin-top: 8px;
+    margin-left: 8px;
+  }
+  .easy-editor-upload {
+    &__name {
+      float: left;
+      max-width: 50%;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      white-space: nowrap;
+      cursor: pointer;
+    }
+    &__clean {
+      float: right;
+      width: 20px;
+      height: 20px;
+      background: url("../../icons/ic_clean.png") center no-repeat;
+      background-size: 20px 20px;
+      margin-right: 16px;
+      margin-top: 14px;
+      cursor: pointer;
+      &:hover {
+        background: url("../../icons/ic_clean-active.png") center no-repeat;
+        background-size: 20px 20px;
+      }
+    }
+    &__see {
+      float: right;
+      width: 20px;
+      height: 20px;
+      background: url("../../icons/ic_see.png") center no-repeat;
+      background-size: 20px 20px;
+      margin-right: 16px;
+      margin-top: 14px;
+      cursor: pointer;
+      &:hover {
+        background: url("../../icons/ic_see-active.png") center no-repeat;
+        background-size: 20px 20px;
+      }
+    }
+  }
+  a {
+    text-decoration: none;
+    color: #333;
+  }
+  a:active {
+    color: #333;
+  }
+  a:hover {
+    text-decoration: underline;
+    color: #096dd9;
+  }
+  .pdf-viewer-wrapper {
+    position: "fixed";
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #555;
+    z-index: 9999;
+    overflow: auto;
+    .react-pdf__Page canvas {
+      margin: 0 auto;
+    }
+    .react-pdf__Page__annotations {
+      display: none;
+    }
+    .react-pdf__Page__textContent {
+      display: none;
+    }
+    &__header {
+      background: #333;
+      margin-bottom: 16px;
+      box-shadow: 0 0 4px #333;
+      color: #fff;
+      text-align: center;
+      .close-btn {
+        float: right;
+        background: url("../../icons/ic_close.png") center no-repeat;
+        background-size: 20px 20px;
+        margin-top: 14px;
+        margin-right: 16px;
+        width: 20px;
+        height: 20px;
+        cursor: pointer;
+      }
+    }
+  }
+
+  .prev-btn,
+  .next-btn {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    display: inline-block;
+    height: 30px;
+    line-height: 30px;
+    text-align: center;
+    border: none;
+    outline: none;
+    margin: 0 8px;
+    padding: 0 8px;
+    border-radius: 4px;
+    cursor: pointer;
+    &:disabled {
+      cursor: not-allowed;
+    }
+  }
+}

@@ -169,7 +169,6 @@ let rules = [
             const style = getStyleFromString(tempStyle);
             const dataType = getAttr(el.attrs, "data-type");
             const className = getAttr(el.attrs, "class");
-            const qstType = getAttr(el.attrs, "qst-type");
             delete attrs.style;
             delete attrs.class;
             const data = {
@@ -179,7 +178,6 @@ let rules = [
               uuid,
               content,
               props,
-              "qst-type": qstType,
               data: getAttr(el.attrs, "data"),
             };
             return {

@@ -16,7 +16,7 @@ npm install @camol/easy-editor --save
 ### yarn
 
 ```bash
-yarn install @camol/easy-editor -S
+yarn add @camol/easy-editor -S
 ```
 
 ### Examples
@@ -69,6 +69,7 @@ center|文字居中|
 justify|两端对齐|
 image| 插入图片|
 video | 插入音频（mp4、webm）|
+pdf | 插入 pdf|
 
 #### How to add a custom tool ?
 

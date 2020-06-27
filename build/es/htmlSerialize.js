@@ -178,7 +178,6 @@ var rules = [{
             var style = getStyleFromString(tempStyle);
             var dataType = getAttr(el.attrs, "data-type");
             var className = getAttr(el.attrs, "class");
-            var qstType = getAttr(el.attrs, "qst-type");
             delete attrs_1.style;
             delete attrs_1.class;
 
@@ -188,7 +187,6 @@ var rules = [{
               uuid: uuid,
               content: content,
               props: props,
-              "qst-type": qstType,
               data: getAttr(el.attrs, "data")
             });
 

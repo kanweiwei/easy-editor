@@ -1,0 +1,122 @@
+.easy-editor-upload.pdf-wrapper {
+  height: 48px;
+  border-radius: 2px;
+  padding: 0px;
+  background: white;
+  border: 1px solid #ccc;
+  line-height: 48px;
+  margin-bottom: 8px;
+}
+.easy-editor-upload.pdf-wrapper .easy-editor-icon.ic_pdf {
+  width: 32px;
+  height: 32px;
+  background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAACyElEQVRYR+2XX0hTURzHv+euPzq3uT/+K4OE2WpTJlKBEZEPIYSSqFgmSKIIqz0kloQRpRQkBgZRIIQvQQj1IEQP0UMYBEoJ6ZAIl9KLl6JaWIKbY/cX58bGHNe8tzn34g8ul3t/5/5+n9+fc+45DGkWlmb/+C8Af3mBi0UEN4G5GcENIIsYvd7nE3u1BvRPAH95Qa4Q0bklglsAK5UYuRjgBJCd6IhAfUkBfC7d5YzodE6SyEWMnAzMyZ0RkKEmqqQBPrkLSY2jNccQxlR/L9Db4mnxCh8fK0GyANYLl5BxsEIVg9jeiGLfgux7wwBsF3tgbvOqApgr25MCgMs3YG7pSB9ATs8tZDe1pg8g9/oATA3N6QPIu3kXxlONMsDSy+fy3VBVowiUkh7I738Aw8la2WHgXj9IkmDrvKoNwOLpQubhIwi+G0fo4wxyrt0GwisQO5pgqGmQdVz4NEqU/DtDsYi53lTfDEN1nXYAPi8t57tkJ6Yz5/BzaBBWbzdCsx+w80ApvnS2KxpNBCgYfAgh26wdgEcZCfzA79ERGOvO4mu3B0Wv3mPxyaPYssGh1srAr9ERLL14BnNzO/THT2gHCM/Pyk2UVVkFQ3W9bGBlbhYAITg5geXJ8TUzoLPasDzxBvqjlQjcH8Du4afaADIP/a0xd8I7mGci+hyvU7JqbvUgNDO9SiUYjNheZIelzbuqHCmZBTvsDvA+4PeoLD4eRnBmCvqKYzDWno69TwmA1dMlN2+iRALfsTLvRzSDXL+pAErl2gLYykDKMqC46ii8DAwNfiv2LeRx1YZtyfiuWABIirOpBMSIiUyAaJ9ekP/ZMQB/WWELAxwg7Afki68oqrbk3FDS2/JEWn4oQXhbiSBILiKBnxEcxIiD7VWMDNRr94l9assQHaf5aBYPJoGVMIJLTiWjsU0B0BrheuM1Z2A9g1r1fwAQkVIw4AjvMQAAAABJRU5ErkJggg==) center no-repeat;
+  background-size: 32px 32px;
+  margin-right: 8px;
+  float: left;
+  margin-top: 8px;
+  margin-left: 8px;
+}
+.easy-editor-upload.pdf-wrapper .easy-editor-upload__name {
+  float: left;
+  max-width: 50%;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  cursor: pointer;
+}
+.easy-editor-upload.pdf-wrapper .easy-editor-upload__clean {
+  float: right;
+  width: 20px;
+  height: 20px;
+  background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAB20lEQVRYR2NkGGDAOMD2Mww9B+jo6DjgC7UrV64cICVUSQoBHR2dBgYGhnoCFjReuXIFpI4oQJIDiDKRREWDywE6Ojq5DAwMk0j0BKnK865cuTIZpgklBIyNjfl//frlBpL89+9fKCMjozYDA8PqyMjIchYWFg5SbQKpP3ToEIO8vDyDubn5056enkI2NrZdZ8+e/YjVAcgWQBOc/ZUrVxyfPXv2joGBQZAcB5SWljLo6ekxxMbGXpeSktJCNwNnGhi0Drh48SKDvr4+2CMPHz5kEBISYuDl5QXzkeVgPqVqCCxevJjh0qVLDN3d3WDzkQzHykdTQ3kUjDpgNARGQ2A0BEZD4O3btwxXr15lsLOzAxe9IDYPDw+4uoVVvdra2gzCwsLwSo9adcFXBgYGLnpXx7EMDAyzfv/+LbZ//35QS9eIVAd8//6dwd/fn6GsrIzBxcVlu5SUlBfR7QFdXV3j////n/n////qnJycW/7+/tWkOOD06dMM06ZNY/j48SO49lRVVfWTkJDYTLQDQAq1tbW1mJiYVv3//x/UNCMZyMrKvvTw8DgWHh7eJSEhcQKbAQRbxZaWlpyfP39WZWBgECLFBf///3919erVa4T0EHQAIQMolR91AAB/3rUwks4k2gAAAABJRU5ErkJggg==) center no-repeat;
+  background-size: 20px 20px;
+  margin-right: 16px;
+  margin-top: 14px;
+  cursor: pointer;
+}
+.easy-editor-upload.pdf-wrapper .easy-editor-upload__clean:hover {
+  background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAB70lEQVRYR2NkGGDAOMD2Mww9BwhMvu2AL9Q+5KoeICVUSQoBoak3GxgYmerxWvD/X+O7bPUGYh1BkgOINZQUdYPLAcLTbuX+Z2CcRIoPSFXLyPA/722W2mSYPpQQEJx5l5/x7z83qGQoA8N/bYb//1c7ygmXMzMwcpBqGUj95bdfGMQ42RjUhbifrrn9svA/M9Ou9+nKH7E6ANkCUIL7z8hk/z5L1XHmxf/vGBgYBMlxwOwrTxmU+DgZnOWFrqfrMWqhm4EzDQxaB9z7+J1BiZ8T7JGX334x8LIxM3CxMIP5yHIwn1I1BPY+esdw79N3hlQdabD5cMPlhLDyUdRQIwpGHTAaAqMhMBoCoyHw6dcfhoeffjDoivCAi14Qm4OFiUGciw3Mv/zmC4M8HwcDHxsLvNKjVl3wlYGBgYuu1bHw9Nux//8zzGL6/Fes1UMd1NI1ItUBP//+Y2g4cY8hTFWcwVCMd3u6PqMX0e0BkWl3jP8x/D/DwMCw2ldZ9JaVBH81KQ64+f4bw+Z7rxm+/vnLkKYjzSDBze6Xoc+4mWgHgBQKzbitxfCPYRUDA4M2KZbD1Ipwsr40E+c/Zi8t0JWqz3gCmxkEW8UyfY85v3J8Vf3/lxlS6RMJmFgZXr3LUL1GSDlBBxAygFL5UQcAAFh9wjAWauqwAAAAAElFTkSuQmCC) center no-repeat;
+  background-size: 20px 20px;
+}
+.easy-editor-upload.pdf-wrapper .easy-editor-upload__see {
+  float: right;
+  width: 20px;
+  height: 20px;
+  background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAABv0lEQVRYR+3WTYhPURgG8N8sbExKY68pFBsfO4WFFQtlKx9lK7OwQKMUslAsrMhOicjehgVFplBTMyVlJmxmOctJInqnc3W7/vfcw9A/dU+d7uI873ue8zznPe8dMeQxMuT99QR6Bf47BVZhFzZiU/pGIc3hffq+wNfS6ipRYDXOYk+aQSI3vuAJ3uAqlnLgLgKH0uY7Sk/UwE0nEg/a4nMELuBix8Yf8Q0bOnC3cGIQpo3AXRzJJD2HR5hNmM2YwMlMzDPsba4PInAHxzKJqpht6UJ+TkRep5jvmdhLTVWbBE7heibBjXTSsCYsqo8q+SSuZHIcSOotQ+oEtuMp1maCt+BdWh90R0KVUGAmk2MB+yv76gRu43gmcL5W9xWsSSLuwE18wHgm12PsaypQSuAw7rUkXxGBqPXnGO2wYA1etWBKLFhM1bBsU/MSnsflf3wJQ8H71R6DynAKOwvKcCt243fKMKw7Ws/d9hB9wvq//BCF9OtKHqIKcw2nMyRiqfQp/uXkOQvqew61GVVEoh2fwUGUdsWXqSWvuB03HQgCQWSsNgMT/lbzId52WPdzuet/oDTPH+N6Ar0CvQI/AJiMXCHfCF6VAAAAAElFTkSuQmCC) center no-repeat;
+  background-size: 20px 20px;
+  margin-right: 16px;
+  margin-top: 14px;
+  cursor: pointer;
+}
+.easy-editor-upload.pdf-wrapper .easy-editor-upload__see:hover {
+  background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAACg0lEQVRYR+1WMWgTYRh9358URClNLpuDiM2lFsRacBCqQycdhK5SFdy0dy04aFEQWnEQ6uAgubSTIBbFvYsdFBQFLQgWpM1F1KVb7gRBSsndk5w2Nu3dJW2RIOTglvu///3ve+/7/u8ELX6kxeejTaCtwH+mwMxCR2qta0AlkBVSp6hstYuEfokitu+h9P1I9jUGpdJsdzVUYP/Mwt7VSuc4RJ0CUH07YsEFa6DMg97CnuSPqZXLx3/GxccSSBdK5xQ5TqC/2Yw2xgnwwReZckeyT6P2RxLQCvYEiMn4g+UrQU+A7vgsOV02ciNhMaEEMnn7MQXno0ApuIlKZc4d612sxmQeLB/2E2pUADNyD/DSNfTBzetbCKQt+5EAF6OAHEMP9qSml/vEUwOisCq+Wiyb3e+r3zXLZqQa9G87Zk+dqnUENMu+CuB+TBZ519BHtfzyJERN1MX9AU8X7BtC3I3G4FnXyM2tr9cIpPLFY0rkRTW5yILx/N7yWM9SkGlIjRBeHzxSEsmPMTWxQk+dcce6A/tqBLRC6SHISzHZf3YNPej79WczCRKma+qWZpW+ADwYQ+K5Y+ind0QgbRWHBTIbBr4rAqmC3a98voLIvjgLoJKdFP9dKIGmLKBDJAdd41BgU10RZqziLULu/NMiJIddM/dkSxHWfLXstwBONGrDtLV0FEyc3E4bCjFbNvULG7FDLyKtUPoG8kCkEju4iAA6jpHLNLyIakrki/cgci2mkqsONncVh2QeacHGA1s6jNaJBOPY77ouxNA2puIb0J/f9TjeLP/vVvWHKKIpikaBFrQS4fhCR0gHCfXMuaJ/irfu72rDH5JmgXYa1ybQVqCtwC+gcDIwcI+9vAAAAABJRU5ErkJggg==) center no-repeat;
+  background-size: 20px 20px;
+}
+.easy-editor-upload.pdf-wrapper a {
+  text-decoration: none;
+  color: #333;
+}
+.easy-editor-upload.pdf-wrapper a:active {
+  color: #333;
+}
+.easy-editor-upload.pdf-wrapper a:hover {
+  text-decoration: underline;
+  color: #096dd9;
+}
+.easy-editor-upload.pdf-wrapper .pdf-viewer-wrapper {
+  position: "fixed";
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #555;
+  z-index: 9999;
+  overflow: auto;
+}
+.easy-editor-upload.pdf-wrapper .pdf-viewer-wrapper .react-pdf__Page canvas {
+  margin: 0 auto;
+}
+.easy-editor-upload.pdf-wrapper .pdf-viewer-wrapper .react-pdf__Page__annotations {
+  display: none;
+}
+.easy-editor-upload.pdf-wrapper .pdf-viewer-wrapper .react-pdf__Page__textContent {
+  display: none;
+}
+.easy-editor-upload.pdf-wrapper .pdf-viewer-wrapper__header {
+  background: #333;
+  margin-bottom: 16px;
+  box-shadow: 0 0 4px #333;
+  color: #fff;
+  text-align: center;
+}
+.easy-editor-upload.pdf-wrapper .pdf-viewer-wrapper__header .close-btn {
+  float: right;
+  background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAACQUlEQVRYR82XMYvUUBDH//O2sPHq+wBaaZdJFE9OEFEbBW1srVSwUtBO8AQ7Ba0Ez8rWRkEbPQ7B41Y0mXRnpR/g6rOx2DfyluTIZrN5L+5JNpAiZN7MbybzJv9H6PminuOjE4CIrFprzxljzgNYJqJll4Cq7gLYtdZuGGM2mXkrNLEgABG5CcDdHOhYAKwz87rPvhUgy7IrRPSgQ+B6PFHVx3Ecv5sFMhNARO4AeObLIPD9XWZ+3mTbCCAilwC8D3QeanaZmT/UjacA0jQ9YYz5Fuq1i5219mSSJN+ra6YARCSb45v7eISZ45kARbe/9HmZ8/2t6u6YqMB/zr7knqjCPkCWZReI6GNbdtbas8aYPSJ6rarHJ0pJtKOq1621S8aYz21+VPViHMefnM0+gIg8AXDPU96YmSXP82MA3pQQRLQD4FoURT9ExA0r10dt11Nmvl8H2Aaw0raqGqiEKOzHwetgLb6GzHy6DvATwBFfgzVAoGNwF+IXMx+dAMjzfE9VD/sAxosqJXfPHTIfuyei31EULS0WgIj0+wlEpN8mTNN0zRjz0LMLVqIo+tq2DfM8P6WqQ888eZQkyVp9F6wC+OIbRIPB4A+AV02DCMCN0Wh0yDeIAJwpVdPijGKXee8/owKiv9+xAyh04NuQgdTVRlWv1vXhLEl2kHqw5GzUhW2i9CB1YaMenNiGTeUs9OGLOSSaWGtv13VgNdZiH0zqVSlUkzuWOd0wdTQDMFTVjVLthDRpUAVCHP2rTe8AfwHAaUEwbMtd9QAAAABJRU5ErkJggg==) center no-repeat;
+  background-size: 20px 20px;
+  margin-top: 14px;
+  margin-right: 16px;
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+}
+.easy-editor-upload.pdf-wrapper .prev-btn,
+.easy-editor-upload.pdf-wrapper .next-btn {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  display: inline-block;
+  height: 30px;
+  line-height: 30px;
+  text-align: center;
+  border: none;
+  outline: none;
+  margin: 0 8px;
+  padding: 0 8px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.easy-editor-upload.pdf-wrapper .prev-btn:disabled,
+.easy-editor-upload.pdf-wrapper .next-btn:disabled {
+  cursor: not-allowed;
+}

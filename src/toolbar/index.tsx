@@ -6,6 +6,7 @@ import ImageExtension from "./extensions/image";
 import "./style.less";
 import VideoExtension from "./extensions/video";
 import EditorTooltip from "./tooltip";
+import PdfExtension from "./extensions/pdf";
 
 type Control = {
   object?: "mark" | "align";
@@ -85,6 +86,17 @@ const defaultControls = {
     placeholder: "插入音频",
     component: (change: any, update: any, beforeUpload: Function) => (
       <VideoExtension
+        change={change}
+        update={update}
+        beforeUpload={beforeUpload}
+      />
+    ),
+  },
+  pdf: {
+    type: "pdf",
+    placeholder: "插入pdf",
+    component: (change: any, update: any, beforeUpload: Function) => (
+      <PdfExtension
         change={change}
         update={update}
         beforeUpload={beforeUpload}
@@ -252,7 +264,7 @@ class ToolBar extends React.Component<any, any> {
       controls = [
         ["bold", "italic", "u", "sup", "sub"],
         ["left", "center", "right", "justify"],
-        ["image", "video"],
+        ["image", "video", "pdf"],
       ],
     } = this.props;
     return controls.map((toolGroup: Array<string | Control>) => {

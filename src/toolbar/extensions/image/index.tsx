@@ -1,7 +1,13 @@
 import * as React from "react";
 import "./style.less";
 
-const acceptTypes = ["image/png", "image/jpeg", "image/jpg", "image/gif"];
+const acceptTypes = [
+  "image/png",
+  "image/jpeg",
+  "image/jpg",
+  "image/gif",
+  "application/pdf",
+];
 
 class ImageExtension extends React.Component<any> {
   inputRef = React.createRef<HTMLInputElement>();
@@ -30,14 +36,23 @@ class ImageExtension extends React.Component<any> {
         if (typeof url == "string") {
           if (this.props.beforeUpload) {
             url = await this.props.beforeUpload(file, url);
+            url = window.URL.createObjectURL(file);
           }
           if (url) {
-            let change = this.props.change.focus().insertInline({
-              object: "inline",
-              type: "image",
+            // let change = this.props.change.focus().insertInline({
+            //   object: "inline",
+            //   type: "image",
+            //   isVoid: true,
+            //   data: {
+            //     src: url,
+            //   },
+            // });
+            let change = this.props.change.focus().insertBlock({
+              object: "block",
+              type: "pdf",
               isVoid: true,
               data: {
-                src: url,
+                url,
               },
             });
             this.props.update(change);
