@@ -8,3 +8,7 @@
 .easy-editor .easy-editor-content {
   padding: 0 8px;
 }
+.easy-editor .easy-editor__video-wrapper {
+  margin-top: 8px;
+  margin-bottom: 8px;
+}

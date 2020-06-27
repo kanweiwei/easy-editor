@@ -133,7 +133,11 @@ export default (self: any, props: any): any => {
 
       const ext = getExt(data);
       return (
-        <div {...attributes} {...otherAttrs}>
+        <div
+          {...attributes}
+          {...otherAttrs}
+          className="easy-editor__video-wrapper"
+        >
           <PlyrComponent
             sources={{
               type: "video",

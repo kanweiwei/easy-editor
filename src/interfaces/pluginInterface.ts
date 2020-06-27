@@ -8,4 +8,5 @@ export default interface EditorPlugin {
   importer(el: DefaultTreeElement, next: Function): any;
   exporter(node: any, children: any): any;
   render(editor: any, props: any): any;
+  [p: string]: any;
 }

@@ -161,7 +161,9 @@ export default (function (self, props) {
 
         var data = node.data.get("data");
         var ext = getExt(data);
-        return /*#__PURE__*/React.createElement("div", _extends({}, attributes, otherAttrs), /*#__PURE__*/React.createElement(PlyrComponent, {
+        return /*#__PURE__*/React.createElement("div", _extends({}, attributes, otherAttrs, {
+          className: "easy-editor__video-wrapper"
+        }), /*#__PURE__*/React.createElement(PlyrComponent, {
           sources: {
             type: "video",
             sources: [{

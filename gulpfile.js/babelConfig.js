@@ -11,7 +11,7 @@ module.exports = function (modules) {
       [
         "@babel/preset-env",
         {
-          modules,
+          modules: false,
           targets: {
             browsers: [
               "last 2 versions",
