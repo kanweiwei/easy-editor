@@ -74,12 +74,12 @@ function (_super) {
 
             case 3:
               if (url) {
-                change = this.props.change.focus().insertBlock({
-                  object: "block",
-                  type: "pdf",
+                change = this.props.change.focus().insertInline({
+                  object: "inline",
+                  type: "image",
                   isVoid: true,
                   data: {
-                    url: url
+                    src: url
                   }
                 });
                 this.props.update(change);
