@@ -8,6 +8,7 @@
   "module": "es/index.js",
   "main": "dist/index.js",
   "jsnext:main": "es/index.js",
+  "types": "es/index.d.ts",
   "scripts": {
     "build": "gulp compile",
     "example": "cd example && webpack-dev-server --host 0.0.0.0",
