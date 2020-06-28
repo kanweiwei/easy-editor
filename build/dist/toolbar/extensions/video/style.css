@@ -1,7 +1,0 @@
-.tool-insert-video {
-  background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAABMUlEQVRYR+3Xvy4FQRiG8d/pXQSFRqFUk6iUegmFQiMalQKNREJCo5LgChQajeAaFEIUIlGoXAKZZFb2SI7dtTu7pzjbbfLNPE/e79s/09Px1euYLy8wjk1MJZa6x07GyAucYTkxPNt+BefhJi/whTvMJZbo4wylQOIAzOaT/p1Aani2/0+rh7IFoyEsSmAMV3jEEZ4rDk7txzBM8W2EfuIYuxUkGhMI0O0IfsIGrkuINCqwj0OsRfAN5gskGhXIPirTMY3FCJ/A6wCRJAIzUWAhQifx0obAAU6wFGGnWG2rBSH+rAXh1bqOhzaHMLDesYWLEuCspPYMhI0u8YY9fFSAh9JGBCoy+8pHAoUJ1Im3zNrRH1FhC4r+B8rE/FfNQIHODyadH83qRvuv9Z2fjr8BIVuGIbyAUo0AAAAASUVORK5CYII=) center center no-repeat;
-  width: 20px;
-  height: 20px;
-  background-size: 20px 20px;
-  display: inline-block;
-}

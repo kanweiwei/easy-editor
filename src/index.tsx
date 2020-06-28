@@ -159,6 +159,9 @@ class EasyEditor extends React.Component<IEditorProps, any> {
   }
 
   onChange = (change: any) => {
+    if (this.props.readOnly) {
+      return;
+    }
     if (this.props.onChange) {
       const res = this.props.onChange({ change });
       if (typeof res === "boolean" && !res) {
@@ -374,17 +377,6 @@ class EasyEditor extends React.Component<IEditorProps, any> {
     );
   };
 
-  renderMask = () => {
-    if (this.props.readOnly) {
-      return (
-        <div
-          style={{ position: "absolute", top: 0, left: 0, right: 0, bottom: 0 }}
-        />
-      );
-    }
-    return null;
-  };
-
   render() {
     const {
       style = {},
@@ -411,7 +403,6 @@ class EasyEditor extends React.Component<IEditorProps, any> {
         >
           {this.renderEditor()}
         </div>
-        {this.renderMask()}
       </div>
     );
   }
