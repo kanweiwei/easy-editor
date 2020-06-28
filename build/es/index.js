@@ -314,22 +314,6 @@ function (_super) {
       });
     };
 
-    _this.renderMask = function () {
-      if (_this.props.readOnly) {
-        return /*#__PURE__*/React.createElement("div", {
-          style: {
-            position: "absolute",
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0
-          }
-        });
-      }
-
-      return null;
-    };
-
     var value = props.value;
     _this.plugins = __spreadArrays(basePlugins, (_a = props === null || props === void 0 ? void 0 : props.plugins) !== null && _a !== void 0 ? _a : []);
     _this.schemas = _this.initSchema(schemas, _this.plugins);
@@ -433,7 +417,7 @@ function (_super) {
       style: {
         minHeight: minHeight + "px"
       }
-    }, this.renderEditor()), this.renderMask());
+    }, this.renderEditor()));
   };
 
   return EasyEditor;

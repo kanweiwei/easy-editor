@@ -72,7 +72,6 @@ declare class EasyEditor extends React.Component<IEditorProps, any> {
     renderMenu: (fixed?: boolean) => JSX.Element | null;
     renderNode: (props: any) => any;
     renderEditor: () => JSX.Element;
-    renderMask: () => JSX.Element | null;
     render(): JSX.Element;
 }
 export default EasyEditor;
