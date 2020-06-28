@@ -159,6 +159,9 @@ class EasyEditor extends React.Component<IEditorProps, any> {
   }
 
   onChange = (change: any) => {
+    if (this.props.readOnly) {
+      return;
+    }
     if (this.props.onChange) {
       const res = this.props.onChange({ change });
       if (typeof res === "boolean" && !res) {
