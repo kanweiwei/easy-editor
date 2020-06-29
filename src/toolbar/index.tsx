@@ -12,7 +12,7 @@ export type CustomControl = {
   object?: "mark" | "align";
   type: string;
   placeholder?: string;
-  component: any;
+  component: React.ReactNode;
 };
 
 export type Control =
