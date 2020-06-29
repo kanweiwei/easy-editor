@@ -3,23 +3,23 @@ import Tooltip from "rc-tooltip";
 import "rc-tooltip/assets/bootstrap_white.css";
 import "./style.less";
 
-const EditorTooltip: React.FC<
-  {
-    placeholder: React.ReactElement;
-  } & any
-> = (
-  props: {
-    placeholder: React.ReactElement;
-  } & any
-) => {
-  const { placeholder = "" } = props;
+type EditorTooltipProps = {
+  placeholder?: (() => React.ReactNode) | React.ReactNode;
+  children: React.ReactElement;
+};
+
+const EditorTooltip = (props: EditorTooltipProps) => {
+  const { placeholder } = props;
+  if (!placeholder) {
+    return <>{props.children}</>;
+  }
   return (
     <Tooltip
       overlayClassName="easy-editor__tooltip"
       placement="bottom"
       overlay={placeholder}
     >
-      {props.children as any}
+      {props.children}
     </Tooltip>
   );
 };
