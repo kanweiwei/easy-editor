@@ -12,7 +12,7 @@ export type CustomControl = {
   object?: "mark" | "align";
   type: string;
   placeholder?: string;
-  component: React.ReactElement | Function;
+  component: any;
 };
 
 export type Control =
@@ -88,35 +88,17 @@ const defaultControls = {
   image: {
     type: "image",
     placeholder: "插入图片",
-    component: (change: any, update: any, beforeUpload: Function) => (
-      <ImageExtension
-        change={change}
-        update={update}
-        beforeUpload={beforeUpload}
-      />
-    ),
+    component: ImageExtension,
   },
   video: {
     type: "video",
     placeholder: "插入音频",
-    component: (change: any, update: any, beforeUpload: Function) => (
-      <VideoExtension
-        change={change}
-        update={update}
-        beforeUpload={beforeUpload}
-      />
-    ),
+    component: VideoExtension,
   },
   pdf: {
     type: "pdf",
     placeholder: "插入pdf",
-    component: (change: any, update: any, beforeUpload: Function) => (
-      <PdfExtension
-        change={change}
-        update={update}
-        beforeUpload={beforeUpload}
-      />
-    ),
+    component: PdfExtension,
   },
 };
 
@@ -132,13 +114,15 @@ class ToolBar extends React.Component<any, any> {
     onChange(change);
   };
 
-  renderComponent = (component: React.ReactElement | Function) => {
-    if ("$$typeof" in component) {
-      return component;
+  renderComponent = (component: any) => {
+    if (component) {
+      if ("$$typeof" in component) {
+        return component;
+      }
+      const C = component;
+      return <C />;
     }
-    if (typeof component === "function") {
-      return component();
-    }
+
     return null;
   };
 
@@ -287,22 +271,25 @@ class ToolBar extends React.Component<any, any> {
         if (typeof tool === "string") {
           if (tool in defaultControls) {
             const t = defaultControls[tool];
+
             switch (t.object) {
               case "mark":
                 return this.renderMarkBtn(t);
               case "align":
                 return this.renderAlign(t);
               default: {
-                if ("component" in t && typeof t.component === "function") {
+                if ("component" in t) {
+                  let C = t.component;
+                  const { value, onChange, beforeUpload } = this.props;
                   return (
                     <span key={t.type}>
                       <EditorTooltip placeholder={t.placeholder}>
                         <span className="tool-btn">
-                          {t.component(
-                            this.props.value.change(),
-                            this.props.onChange,
-                            this.props.beforeUpload
-                          )}
+                          <C
+                            change={value.change()}
+                            update={onChange}
+                            beforeUpload={beforeUpload}
+                          />
                         </span>
                       </EditorTooltip>
                     </span>
@@ -314,16 +301,18 @@ class ToolBar extends React.Component<any, any> {
           }
         } else {
           // custom tool
-          if ("component" in tool && typeof tool.component === "function") {
+          if ("component" in tool) {
+            let C = tool.component;
+            const { value, onChange, beforeUpload } = this.props;
             return (
               <span key={tool.type} title={tool.placeholder || ""}>
                 <EditorTooltip placeholder={tool.placeholder}>
                   <span className="tool-btn">
-                    {tool.component(
-                      this.props.value.change(),
-                      this.props.onChange,
-                      this.props.beforeUpload
-                    )}
+                    <C
+                      change={value.change()}
+                      update={onChange}
+                      beforeUpload={beforeUpload}
+                    />
                   </span>
                 </EditorTooltip>
               </span>
