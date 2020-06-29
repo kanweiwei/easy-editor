@@ -1,4 +1,18 @@
-## 0.1.5 (2020-06-28)
+# [0.2.0](https://github.com/kanweiwei/easy-editor/compare/v0.1.5...v0.2.0) (2020-06-29)
+
+
+### Bug Fixes
+
+* control type defination ([2de975c](https://github.com/kanweiwei/easy-editor/commit/2de975c0c68484bf8e80ef7bf3f61e22c23941ac))
+
+
+### Features
+
+* contentStyle ([20d98b9](https://github.com/kanweiwei/easy-editor/commit/20d98b97bc678e61c4c851144ecba119a38b2eee))
+
+
+
+## [0.1.5](https://github.com/kanweiwei/easy-editor/compare/09569762618fbfc660d66fe398cb1764b1ee59a3...v0.1.5) (2020-06-28)
 
 
 ### Bug Fixes
