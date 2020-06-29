@@ -8,12 +8,27 @@ import VideoExtension from "./extensions/video";
 import EditorTooltip from "./tooltip";
 import PdfExtension from "./extensions/pdf";
 
-type Control = {
+export type CustomControl = {
   object?: "mark" | "align";
   type: string;
   placeholder?: string;
   component: React.ReactElement | Function;
 };
+
+export type Control =
+  | "bold"
+  | "italic"
+  | "u"
+  | "sup"
+  | "sub"
+  | "left"
+  | "right"
+  | "center"
+  | "justify"
+  | "image"
+  | "vidoe"
+  | "pdf"
+  | CustomControl;
 
 const defaultControls = {
   bold: {
@@ -127,7 +142,7 @@ class ToolBar extends React.Component<any, any> {
     return null;
   };
 
-  renderMarkBtn = (item: Control) => {
+  renderMarkBtn = (item: CustomControl) => {
     const { type, component, placeholder } = item;
     const activeMarks = this.props.value.activeMarks.toArray();
     const isActive = activeMarks.some((m: Mark) => m.type == type);
@@ -236,7 +251,7 @@ class ToolBar extends React.Component<any, any> {
     onChange(change);
   };
 
-  renderAlign = (control: Control) => {
+  renderAlign = (control: CustomControl) => {
     const { type, component, placeholder } = control;
     const isActive = this.props.value.blocks.some(
       (block: any) => block.data.get("style")?.["textAlign"] === type

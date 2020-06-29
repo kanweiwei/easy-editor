@@ -12,7 +12,7 @@ import renderMark from "./renderMark";
 import renderNode from "./renderNode";
 import schemas from "./schema";
 import "./style.less";
-import ToolBar from "./toolbar";
+import ToolBar, { Control } from "./toolbar";
 import HtmlSerialize from "./htmlSerialize";
 
 interface IEditorProps {
@@ -31,7 +31,7 @@ interface IEditorProps {
     file: File | Blob | Buffer | ArrayBuffer,
     dataURI: string
   ) => string | Promise<string>;
-  controls?: Array<string[]>;
+  controls?: Array<Control[]>;
   showToolbar?: boolean;
   onUpdate?: (value: any, html?: string) => any;
   onBlur?: (e: any, change: any) => any;
