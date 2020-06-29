@@ -1,4 +1,8 @@
 <h1 align="center">Easy Editor</h1>
+<div align="center">
+<img src="https://img.shields.io/npm/v/@camol/easy-editor?style=flat-square"/>
+<img alt="GitHub" src="https://img.shields.io/github/license/kanweiwei/easy-editor">
+</div>
 <div align="center">A rich text editor based on slate </div>
 
 ![easy-editor](./source/images/easy-editor-demo.gif)
@@ -145,15 +149,7 @@ class Editor extends React.Component {
           [
             {
               type: "audio",
-              component: (change, update, beforeUpload) => {
-                return (
-                  <AudioControl
-                    change={change}
-                    update={update}
-                    beforeUpload={beforeUpload}
-                  />
-                );
-              },
+              component: AudioControl,
             },
           ],
         ]}
