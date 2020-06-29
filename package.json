@@ -12,7 +12,7 @@
   "scripts": {
     "build": "gulp compile",
     "example": "cd example && webpack-dev-server --host 0.0.0.0",
-    "build:demo": "cd example && webpack --config ./webpack.prod.config.js",
+    "build:demo": "npm run build && cd example && webpack --config ./webpack.prod.config.js",
     "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s -r 0"
   },
   "dependencies": {

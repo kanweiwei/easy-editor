@@ -49,6 +49,7 @@ interface IEditorProps {
   disableKeyDown?: boolean;
   disableComposition?: boolean;
   disableSelect?: boolean;
+  contentStyle?: React.CSSProperties;
 }
 
 const findRealDoms = (dom: any, realDom: any): any => {
@@ -384,6 +385,7 @@ class EasyEditor extends React.Component<IEditorProps, any> {
       minHeight = 300,
       showToolbar = true,
       controls,
+      contentStyle = {},
     } = this.props;
     const cls: any = classnames("easy-editor", className);
     return (
@@ -399,7 +401,7 @@ class EasyEditor extends React.Component<IEditorProps, any> {
         {/* {this.renderMenu()} */}
         <div
           className="easy-editor-content"
-          style={{ minHeight: `${minHeight}px` }}
+          style={{ minHeight: `${minHeight}px`, ...contentStyle }}
         >
           {this.renderEditor()}
         </div>
