@@ -282,7 +282,7 @@ export default class EasyEditor extends React.Component<IEditorProps, any> {
       const htmlValue = this.convertor.deserialize(html, { toJSON: true });
       return Value.fromJSON(htmlValue);
     }
-    return initValue;
+    return initValue();
   };
 
   getHtml = () => {
