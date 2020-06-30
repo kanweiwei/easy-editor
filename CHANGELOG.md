@@ -1,3 +1,12 @@
+## [0.2.1](https://github.com/kanweiwei/easy-editor/compare/v0.2.0...v0.2.1) (2020-06-30)
+
+
+### Bug Fixes
+
+* initValue ([5db5187](https://github.com/kanweiwei/easy-editor/commit/5db51877663913b6f6d1ab810bba1ea069ed9f0c))
+
+
+
 # [0.2.0](https://github.com/kanweiwei/easy-editor/compare/v0.1.5...v0.2.0) (2020-06-29)
 
 
