@@ -36,7 +36,6 @@ const mathPlugin: EditorPlugin = {
   },
   render(editor, props) {
     const tex = props.node.data.get("tex");
-    console.log(props);
     return <MathView tex={tex} {...props} />;
   },
 };
@@ -44,37 +43,43 @@ const mathPlugin: EditorPlugin = {
 function MathView(props: any) {
   const { tex, isFocused } = props;
   const [url, setUrl] = React.useState<string>();
-  console.log(props);
 
+  const tmpRef = React.createRef<HTMLSpanElement>();
+
+  // tex2png
   React.useEffect(() => {
-    window.MathJax.startup.promise.then(() => {
-      const svg = window.MathJax.tex2svg(tex, { display: true });
-      console.log(window.MathJax.startup.adaptor.outerHTML(svg), svg);
-      const cas = window.document.createElement("canvas");
-      const ctx = cas.getContext("2d");
-      if (ctx) {
-        let v = Canvg.fromString(
-          ctx,
-          window.MathJax.startup.adaptor.outerHTML(svg.childNodes[0]),
-          {
-            window,
-          }
-        );
-        v.start();
-        v = Canvg.fromString(
-          ctx,
-          window.MathJax.startup.adaptor.outerHTML(svg.childNodes[0]),
-          {
-            // scaleWidth: originWidth * 2,
-            // scaleHeight: originHeight * 2,
-          }
-        );
-        v.start();
-        let baseurl = cas.toDataURL("image/png", 1);
-
-        setUrl(baseurl);
+    if (tex) {
+      window.MathJax.startup.promise.then(() => {
+        const svg = window.MathJax.tex2svg(tex, { display: true });
+        const cas = window.document.createElement("canvas");
+        const ctx = cas.getContext("2d");
+        if (ctx) {
+          let v = Canvg.fromString(
+            ctx,
+            window.MathJax.startup.adaptor.outerHTML(svg.childNodes[0]),
+            {
+              window,
+            }
+          );
+          v.start();
+          v = Canvg.fromString(
+            ctx,
+            window.MathJax.startup.adaptor.outerHTML(svg.childNodes[0]),
+            {
+              emSize: 14,
+            }
+          );
+          v.start();
+          let baseurl = cas.toDataURL("image/png", 1);
+          // upload png or server url
+          setUrl(baseurl);
+        }
+      });
+    } else {
+      if (url) {
+        setUrl("");
       }
-    });
+    }
   }, [tex]);
 
   React.useEffect(() => {
@@ -94,25 +99,40 @@ function MathView(props: any) {
 
   const xy = React.useRef({ x: 0, y: 0 });
 
-  const clickImg = (e: React.MouseEvent<HTMLImageElement>) => {
-    console.log(e);
+  const updateXY = (node?: HTMLElement | null) => {
+    if (!node) return;
     // @ts-ignore
-    const rect = e.target.getBoundingClientRect();
+    const rect = node.getBoundingClientRect();
     const x = rect.x;
     const y = rect.y + rect.height + 8;
     xy.current = {
       x,
       y,
     };
+    let textInput = document.querySelector<HTMLDivElement>("#math-textarea");
+    if (textInput) {
+      textInput.style.left = xy.current.x + "px";
+      textInput.style.top = xy.current.y + "px";
+    }
+  };
+
+  const handleClick = (e: React.MouseEvent<HTMLImageElement>) => {
+    // @ts-ignore
+    updateXY(e.target);
   };
 
   const [, update] = React.useReducer((x) => x + 1, 0);
 
+  // show textarea
   React.useEffect(() => {
     let textInput = document.querySelector<HTMLDivElement>("#math-textarea");
     if (props.isSelected) {
       if (textInput) {
         if (textInput.style.display !== "block") {
+          if (props.editor.value.texts.some((n: any) => n.text.length)) {
+            return;
+          }
+          updateXY(tmpRef.current);
           const textarea = textInput.querySelector("textarea");
           if (textarea) {
             textarea.value = props.node.data.get("tex");
@@ -123,6 +143,7 @@ function MathView(props: any) {
           update();
         }
       } else {
+        updateXY(tmpRef.current);
         const wrapper = document.createElement("div");
         wrapper.setAttribute("id", "math-textarea");
         wrapper.setAttribute(
@@ -157,7 +178,6 @@ function MathView(props: any) {
   // click handler
   React.useEffect(() => {
     let saveBtn = document.querySelector(".math-toolbar__save");
-    console.log(saveBtn);
 
     const saveHandler = () => {
       const textarea = document.querySelector<HTMLTextAreaElement>(
@@ -165,12 +185,20 @@ function MathView(props: any) {
       );
       if (textarea) {
         let change = props.editor.value.change();
-        change.setNodeByKey(props.node.key, {
-          data: {
-            tex: textarea.value,
-          },
-        });
-        console.log(change);
+        if (textarea.value) {
+          change.setNodeByKey(props.node.key, {
+            data: {
+              tex: textarea.value,
+            },
+          });
+        } else {
+          change.setNodeByKey(props.node.key, {
+            data: {
+              tex: textarea.value,
+            },
+          });
+        }
+
         change.collapseToFocus().focus();
         props.editor.onChange(change);
       }
@@ -186,10 +214,27 @@ function MathView(props: any) {
     };
   });
 
+  // autoFocus
+  React.useEffect(() => {
+    const textarea = document.querySelector<HTMLTextAreaElement>(
+      "#math-textarea textarea"
+    );
+    if (textarea) {
+      if (textarea?.clientHeight > 0) {
+        textarea?.focus();
+      }
+    }
+  });
+
   if (url) {
-    return <img src={url} data-tex={tex} onClick={clickImg} />;
+    return <img src={url} data-tex={tex} onClick={handleClick} />;
+  } else {
+    return (
+      <span className="math-content-tmp" onClick={handleClick} ref={tmpRef}>
+        输入 Tex 公式
+      </span>
+    );
   }
-  return null;
 }
 
 export default mathPlugin;
