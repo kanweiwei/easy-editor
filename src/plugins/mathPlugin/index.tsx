@@ -6,6 +6,7 @@ import Canvg from "canvg";
 import "./tex-svg";
 import { Selection } from "@zykj/slate";
 import "./style.less";
+import getBlobByDataURI from "../../utils/getBlobByDataURI";
 
 declare let window: Window & { MathJax: any };
 
@@ -17,7 +18,8 @@ const mathPlugin: EditorPlugin = {
     isVoid: true,
   },
   importer(el, next): any {
-    if (getAttr(el.attrs, "data-type") === "math-content") {
+    let type = getAttr(el.attrs, "data-type");
+    if (type === "math-content") {
       const tex = getAttr(el.attrs, "data-tex");
       return {
         object: "inline",
@@ -36,45 +38,68 @@ const mathPlugin: EditorPlugin = {
   },
   render(editor, props) {
     const tex = props.node.data.get("tex");
-    return <MathView tex={tex} {...props} />;
+    return (
+      <MathView tex={tex} beforeUpload={editor.props.beforeUpload} {...props} />
+    );
   },
 };
 
 function MathView(props: any) {
-  const { tex, isFocused } = props;
+  const { isFocused } = props;
+  let { tex } = props;
   const [url, setUrl] = React.useState<string>();
 
   const tmpRef = React.createRef<HTMLSpanElement>();
+  tex = atob(tex);
 
   // tex2png
   React.useEffect(() => {
     if (tex) {
-      window.MathJax.startup.promise.then(() => {
-        const svg = window.MathJax.tex2svg(tex, { display: true });
-        const cas = window.document.createElement("canvas");
-        const ctx = cas.getContext("2d");
-        if (ctx) {
-          let v = Canvg.fromString(
-            ctx,
-            window.MathJax.startup.adaptor.outerHTML(svg.childNodes[0]),
-            {
-              window,
+      window.MathJax.startup.promise
+        .then(() => {
+          const svg = window.MathJax.tex2svg(tex, { display: true });
+          const cas = window.document.createElement("canvas");
+          const ctx = cas.getContext("2d");
+          if (ctx) {
+            let v = Canvg.fromString(
+              ctx,
+              window.MathJax.startup.adaptor.outerHTML(svg.childNodes[0]),
+              {
+                window,
+              }
+            );
+            v.start();
+            v = Canvg.fromString(
+              ctx,
+              window.MathJax.startup.adaptor.outerHTML(svg.childNodes[0]),
+              {
+                emSize: 14,
+              }
+            );
+            v.start();
+            let baseurl = cas.toDataURL("image/png", 1);
+            if (props.beforeUpload) {
+              let res = props.beforeUpload(
+                getBlobByDataURI(baseurl, "image/png"),
+                baseurl
+              );
+              if (typeof res !== "string" && "then" in res) {
+                return res;
+              } else {
+                if (res) {
+                  setUrl(res);
+                }
+              }
             }
-          );
-          v.start();
-          v = Canvg.fromString(
-            ctx,
-            window.MathJax.startup.adaptor.outerHTML(svg.childNodes[0]),
-            {
-              emSize: 14,
-            }
-          );
-          v.start();
-          let baseurl = cas.toDataURL("image/png", 1);
-          // upload png or server url
-          setUrl(baseurl);
-        }
-      });
+            // upload png or use server url
+            setUrl(baseurl);
+          }
+        })
+        .then((imgUrl?: string) => {
+          if (imgUrl) {
+            setUrl(imgUrl);
+          }
+        });
     } else {
       if (url) {
         setUrl("");
@@ -89,8 +114,14 @@ function MathView(props: any) {
       let pre = value.document.getPreviousText(value.selection.anchorKey);
       let next = value.document.getNextText(value.selection.anchorKey);
       let range = Selection.create({
-        anchor: pre,
-        focus: next,
+        anchor: {
+          key: pre.key,
+          offset: pre.text.length,
+        },
+        focus: {
+          key: next.key,
+          offset: 0,
+        },
       });
       change.select(range).focus();
       props.editor.onChange(change);
@@ -119,6 +150,27 @@ function MathView(props: any) {
   const handleClick = (e: React.MouseEvent<HTMLImageElement>) => {
     // @ts-ignore
     updateXY(e.target);
+    // @ts-ignore
+    let parent = e.target.parentNode;
+    while (parent && !parent.dataset.key) {
+      let p = parent.parentNode;
+      if (p && p.dataset.key) {
+        let textInput = document.querySelector<HTMLDivElement>(
+          "#math-textarea"
+        );
+        let textarea = document.querySelector<HTMLTextAreaElement>(
+          "#math-textarea textarea"
+        );
+        if (textInput && textarea) {
+          textInput.style.left = xy.current.x + "px";
+          textInput.style.top = xy.current.y + "px";
+          // @ts-ignore
+          textarea.value = atob(e.target.dataset.tex);
+          textInput.setAttribute("data-key", props.node.key);
+        }
+      }
+      parent = p;
+    }
   };
 
   const [, update] = React.useReducer((x) => x + 1, 0);
@@ -135,11 +187,12 @@ function MathView(props: any) {
           updateXY(tmpRef.current);
           const textarea = textInput.querySelector("textarea");
           if (textarea) {
-            textarea.value = props.node.data.get("tex");
+            textarea.value = tex;
           }
           textInput.style.display = "block";
           textInput.style.left = xy.current.x + "px";
           textInput.style.top = xy.current.y + "px";
+          textInput.setAttribute("data-key", props.node.key);
           update();
         }
       } else {
@@ -151,7 +204,7 @@ function MathView(props: any) {
           `left: ${xy.current.x}px;top: ${xy.current.y}px;`
         );
         const textarea = document.createElement("textarea");
-        textarea.value = props.node.data.get("tex");
+        textarea.value = tex;
 
         // confirm btn
         const toolbar = document.createElement("div");
@@ -164,52 +217,59 @@ function MathView(props: any) {
 
         wrapper.appendChild(textarea);
         wrapper.appendChild(toolbar);
+        wrapper.setAttribute("data-key", props.node.key);
+
         document.body.appendChild(wrapper);
+
+        document
+          .querySelector(".math-toolbar__save")!
+          .addEventListener("click", saveHandler);
+
         update();
       }
     } else {
-      if (textInput && textInput.style.display != "none") {
+      if (
+        textInput &&
+        textInput.style.display != "none" &&
+        textInput.dataset.key === props.node.key
+      ) {
         textInput.style.display = "none";
-        update();
       }
     }
   });
 
+  const saveHandler = () => {
+    const wrapper = document.querySelector<HTMLDivElement>("#math-textarea");
+    if (wrapper) {
+      const textarea = wrapper.querySelector("textarea");
+      const key = wrapper.dataset.key;
+      if (!textarea) return;
+      let change = props.editor.value.change();
+      if (textarea.value) {
+        change.setNodeByKey(key, {
+          data: {
+            tex: btoa(textarea.value),
+          },
+        });
+      } else {
+        change.setNodeByKey(key, {
+          data: {
+            tex: btoa(textarea.value),
+          },
+        });
+      }
+
+      change.collapseToFocus().focus();
+      props.editor.onChange(change);
+    }
+  };
+
   // click handler
   React.useEffect(() => {
-    let saveBtn = document.querySelector(".math-toolbar__save");
-
-    const saveHandler = () => {
-      const textarea = document.querySelector<HTMLTextAreaElement>(
-        "#math-textarea textarea"
-      );
-      if (textarea) {
-        let change = props.editor.value.change();
-        if (textarea.value) {
-          change.setNodeByKey(props.node.key, {
-            data: {
-              tex: textarea.value,
-            },
-          });
-        } else {
-          change.setNodeByKey(props.node.key, {
-            data: {
-              tex: textarea.value,
-            },
-          });
-        }
-
-        change.collapseToFocus().focus();
-        props.editor.onChange(change);
-      }
-    };
-    if (saveBtn) {
-      saveBtn.addEventListener("click", saveHandler);
-    }
     return () => {
       let saveBtn = document.querySelector(".math-toolbar__save");
       if (saveBtn) {
-        saveBtn.removeEventListener("click", saveHandler);
+        // saveBtn.removeEventListener("click", saveHandler);
       }
     };
   });
@@ -227,7 +287,7 @@ function MathView(props: any) {
   });
 
   if (url) {
-    return <img src={url} data-tex={tex} onClick={handleClick} />;
+    return <img src={url} data-tex={btoa(tex)} onClick={handleClick} />;
   } else {
     return (
       <span className="math-content-tmp" onClick={handleClick} ref={tmpRef}>

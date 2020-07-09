@@ -66,7 +66,9 @@ class Editor extends React.Component {
   render() {
     return (
       <EasyEditor
-        value="<p> </p><span data-type='math-content' data-tex='1+2 = 3'></span>"
+        value={`<p> </p><span data-type='math-content' data-tex='${btoa(
+          "1+2 = 3"
+        )}'></span>`}
         onChange={this.handleChange}
         beforeUpload={this.handleBeforeUpload}
         plugins={[audioPlugin]}
