@@ -45,12 +45,10 @@ const mathPlugin: EditorPlugin = {
 };
 
 function MathView(props: any) {
-  const { isFocused } = props;
-  let { tex } = props;
+  const { tex, isFocused } = props;
   const [url, setUrl] = React.useState<string>();
 
   const tmpRef = React.createRef<HTMLSpanElement>();
-  tex = atob(tex);
 
   // tex2png
   React.useEffect(() => {
@@ -165,7 +163,7 @@ function MathView(props: any) {
           textInput.style.left = xy.current.x + "px";
           textInput.style.top = xy.current.y + "px";
           // @ts-ignore
-          textarea.value = atob(e.target.dataset.tex);
+          textarea.value = e.target.dataset.tex ? e.target.dataset.tex : "";
           textInput.setAttribute("data-key", props.node.key);
         }
       }
@@ -248,13 +246,13 @@ function MathView(props: any) {
       if (textarea.value) {
         change.setNodeByKey(key, {
           data: {
-            tex: btoa(textarea.value),
+            tex: textarea.value,
           },
         });
       } else {
         change.setNodeByKey(key, {
           data: {
-            tex: btoa(textarea.value),
+            tex: textarea.value,
           },
         });
       }
@@ -287,7 +285,7 @@ function MathView(props: any) {
   });
 
   if (url) {
-    return <img src={url} data-tex={btoa(tex)} onClick={handleClick} />;
+    return <img src={url} data-tex={tex} onClick={handleClick} />;
   } else {
     return (
       <span className="math-content-tmp" onClick={handleClick} ref={tmpRef}>
