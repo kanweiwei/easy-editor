@@ -7,6 +7,7 @@ import "./style.less";
 import VideoExtension from "./extensions/video";
 import EditorTooltip from "./tooltip";
 import PdfExtension from "./extensions/pdf";
+import MathExtention from "./extensions/math";
 
 export type CustomControl = {
   object?: "mark" | "align";
@@ -99,6 +100,11 @@ const defaultControls = {
     type: "pdf",
     placeholder: "插入pdf",
     component: PdfExtension,
+  },
+  math: {
+    type: "math",
+    placeholder: "插入公式",
+    component: MathExtention,
   },
 };
 
@@ -263,7 +269,7 @@ class ToolBar extends React.Component<any, any> {
       controls = [
         ["bold", "italic", "u", "sup", "sub"],
         ["left", "center", "right", "justify"],
-        ["image", "video", "pdf"],
+        ["image", "video", "pdf", "math"],
       ],
     } = this.props;
     return controls.map((toolGroup: Array<string | Control>) => {
