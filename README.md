@@ -74,6 +74,7 @@ justify|两端对齐|
 image| 插入图片|
 video | 插入音频（mp4、webm）|
 pdf | 插入 pdf|
+math | 插入 latex 数学公式 |
 
 #### How to add a custom tool ?
 
