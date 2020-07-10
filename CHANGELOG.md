@@ -1,3 +1,12 @@
+## [0.2.3](https://github.com/kanweiwei/easy-editor/compare/v0.2.2...v0.2.3) (2020-07-10)
+
+
+### Bug Fixes
+
+* fix math exporter ([f9db6b8](https://github.com/kanweiwei/easy-editor/commit/f9db6b8331d7d84bc9018166493cb605510fa76a))
+
+
+
 ## [0.2.2](https://github.com/kanweiwei/easy-editor/compare/v0.2.1...v0.2.2) (2020-07-09)
 
 
