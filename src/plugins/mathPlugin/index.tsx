@@ -72,15 +72,7 @@ function MathView(props: any) {
           const cas = window.document.createElement("canvas");
           const ctx = cas.getContext("2d");
           if (ctx) {
-            let v = Canvg.fromString(
-              ctx,
-              window.MathJax.startup.adaptor.outerHTML(svg.childNodes[0]),
-              {
-                window,
-              }
-            );
-            v.start();
-            v = Canvg.fromString(
+            const v = Canvg.fromString(
               ctx,
               window.MathJax.startup.adaptor.outerHTML(svg.childNodes[0]),
               {
