@@ -21,6 +21,7 @@ const mathPlugin: EditorPlugin = {
     let type = getAttr(el.attrs, "data-type");
     if (type === "math-content") {
       const tex = getAttr(el.attrs, "data-tex");
+      const url = getAttr(el.attrs, "data-url") || "";
       return {
         object: "inline",
         type: "math-content",
@@ -28,30 +29,42 @@ const mathPlugin: EditorPlugin = {
         nodes: next(el.childNodes),
         data: {
           tex,
+          url,
         },
       };
     }
   },
   exporter(node, children): any {
     const tex = node.data.get("tex");
-    return <span data-type="math-content" data-tex={tex}></span>;
+    const url = node.data.get("url");
+    if (url) {
+      return <img src={url} data-type="math-content" data-tex={tex} />;
+    }
+    return <span data-type="math-content" data-tex={tex} data-url={url}></span>;
   },
   render(editor, props) {
     const tex = props.node.data.get("tex");
+    const url = props.node.data.get("url");
     return (
-      <MathView tex={tex} beforeUpload={editor.props.beforeUpload} {...props} />
+      <MathView
+        tex={tex}
+        url={url}
+        beforeUpload={editor.props.beforeUpload}
+        {...props}
+      />
     );
   },
 };
 
 function MathView(props: any) {
-  const { tex, isFocused } = props;
-  const [url, setUrl] = React.useState<string>();
+  const { tex, url, isFocused } = props;
 
   const tmpRef = React.createRef<HTMLSpanElement>();
 
   // tex2png
   React.useEffect(() => {
+    let value = props.editor.value;
+    let change = value.change();
     if (tex) {
       window.MathJax.startup.promise
         .then(() => {
@@ -76,6 +89,7 @@ function MathView(props: any) {
             );
             v.start();
             let baseurl = cas.toDataURL("image/png", 1);
+
             if (props.beforeUpload) {
               let res = props.beforeUpload(
                 getBlobByDataURI(baseurl, "image/png"),
@@ -85,22 +99,44 @@ function MathView(props: any) {
                 return res;
               } else {
                 if (res) {
-                  setUrl(res);
+                  change.setNodeByKey(props.node.key, {
+                    data: {
+                      tex: tex,
+                      url: res,
+                    },
+                  });
                 }
               }
             }
             // upload png or use server url
-            setUrl(baseurl);
+            change.setNodeByKey(props.node.key, {
+              data: {
+                tex: tex,
+                url: baseurl,
+              },
+            });
           }
         })
         .then((imgUrl?: string) => {
           if (imgUrl) {
-            setUrl(imgUrl);
+            change.setNodeByKey(props.node.key, {
+              data: {
+                tex: tex,
+                url: imgUrl,
+              },
+            });
           }
+          props.editor.onChange(change);
         });
     } else {
       if (url) {
-        setUrl("");
+        change.setNodeByKey(props.node.key, {
+          data: {
+            tex: tex,
+            url: "",
+          },
+        });
+        props.editor.onChange(change);
       }
     }
   }, [tex]);
@@ -243,16 +279,17 @@ function MathView(props: any) {
       const key = wrapper.dataset.key;
       if (!textarea) return;
       let change = props.editor.value.change();
-      if (textarea.value) {
+      const v = textarea.value.trim();
+      if (v) {
         change.setNodeByKey(key, {
           data: {
-            tex: textarea.value,
+            tex: v,
           },
         });
       } else {
         change.setNodeByKey(key, {
           data: {
-            tex: textarea.value,
+            tex: v,
           },
         });
       }
