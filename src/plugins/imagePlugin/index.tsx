@@ -242,7 +242,15 @@ const imagePlugin: EditorPlugin = {
               </ButtonModal>
             */}
         </ContextMenu>
-        <ResizeBox isSelected={isSelected} {...{ style }} onChange={changeImg}>
+        <ResizeBox
+          isSelected={
+            isSelected &&
+            editor.state.value.selection.anchorKey ==
+              editor.state.value.selection.focusKey
+          }
+          {...{ style }}
+          onChange={changeImg}
+        >
           <img
             onContextMenu={handleClickImg}
             src={src}
