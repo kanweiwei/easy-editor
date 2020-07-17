@@ -1,28 +1,45 @@
 import * as React from "react";
-import { debounce } from "lodash-es";
-import { findDOMNode, createPortal } from "react-dom";
+import { createPortal } from "react-dom";
 import "./style.less";
 
-function ImageMenu(props: any) {
-  console.log("menu porps =>>>", props);
+const ImageMenu = React.forwardRef((props: any, ref) => {
   if (props.container) {
     return createPortal(<div>菜单</div>, props.container);
   }
   return null;
-}
+});
 
 function ResizeBox(props: any) {
   const rootDomRef = React.useRef<HTMLSpanElement>(null);
 
-  const target = React.useRef<HTMLSpanElement>(null);
+  const target = React.useRef<HTMLSpanElement | null>(null);
 
-  const editorDom = React.useRef();
-
-  const debouncedChange = debounce((width: number, height: number) => {
+  const updateWH = (options: { width: number; height: number }) => {
     if (props.onChange) {
-      props.onChange(width, height);
+      props.onChange(options.width, options.height);
     }
-  }, 200);
+  };
+
+  const menuRef = React.useRef();
+
+  const wh = React.useRef({ width: 0, height: 0 });
+
+  React.useEffect(() => {
+    if (rootDomRef.current) {
+      const img = new Image();
+      img.src = props.src;
+      img.onload = () => {
+        if (rootDomRef.current) {
+          let { width, height } = rootDomRef.current.getBoundingClientRect();
+          wh.current = {
+            width,
+            height,
+          };
+          updateWH(wh.current);
+        }
+      };
+    }
+  }, []);
 
   const resizing = (e: any) => {
     const $container: any = rootDomRef.current;
@@ -38,42 +55,59 @@ function ResizeBox(props: any) {
       document!.documentElement.scrollTop;
     const cur = target.current;
     if (!cur) return;
+    const imageEditor = rootDomRef.current?.querySelector<HTMLSpanElement>(
+      ".image-editor"
+    );
+
+    if (!imageEditor) return;
     if (cur.className.indexOf("resize-handle-se") > -1) {
       width = mouse.x - left;
       height = (width / originWidth) * originHeight;
+      imageEditor.style.left = "0px";
+      imageEditor.style.right = "auto";
     } else if (cur.className.indexOf("resize-handle-sw") > -1) {
       width -= mouse.x - left;
       height = (width / originWidth) * originHeight;
       left = mouse.x;
+      imageEditor.style.right = "0px";
+      imageEditor.style.left = "auto";
     } else if (cur.className.indexOf("resize-handle-nw") > -1) {
       width -= mouse.x - left;
       height = (width / originWidth) * originHeight;
       left = mouse.x;
       top = mouse.y;
+      imageEditor.style.right = "0px";
+      imageEditor.style.left = "auto";
     } else if (cur.className.indexOf("resize-handle-ne") > -1) {
       width = mouse.x - left;
       height = (width / originWidth) * originHeight;
       top = mouse.y;
+      imageEditor.style.left = "0px";
+      imageEditor.style.right = "auto";
     }
 
-    width =
-      width >= editorDom.current.offsetWidth
-        ? editorDom.current.offsetWidth
-        : width;
     $container.style.width = `${width}px`;
     $container.style.height = `${height}px`;
-    const img: any = $container.querySelector("img");
-    if (img) {
-      img.style.width = `${width}px`;
-      img.style.height = `${height}px`;
+    const resizeWrapper = rootDomRef.current?.querySelector<HTMLSpanElement>(
+      ".resize-container"
+    );
+    if (resizeWrapper) {
+      resizeWrapper.style.width = `${width}px`;
+      resizeWrapper.style.height = `${height}px`;
     }
-    debouncedChange(width, height);
+    imageEditor.style.width = `${width}px`;
+    imageEditor.style.height = `${height}px`;
+    wh.current = {
+      width,
+      height,
+    };
   };
 
   const endResize = (e: any) => {
     e.preventDefault();
     window.removeEventListener("mousemove", resizing);
     window.removeEventListener("mouseup", endResize);
+    updateWH(wh.current);
   };
 
   const startResize = (e: any) => {
@@ -93,123 +127,59 @@ function ResizeBox(props: any) {
   if (isSelected) {
     if (!float) {
       return (
-        <span className="resize-container" ref={rootDomRef} {...{ style }}>
-          <span
-            className="resize-handle resize-handle-ne active"
-            onMouseDown={startResize}
-          />
-          <span className="resize-handle resize-handle-nw" />
+        <span
+          className="image-editor-wrapper"
+          style={{ display: "inline-block" }}
+          ref={rootDomRef}
+        >
           {children}
-          <span
-            className="resize-handle resize-handle-se active"
-            onMouseDown={startResize}
-          />
-          <span className="resize-handle resize-handle-sw" />
-          <ImageMenu ref={menuRef} />
+          <span className="resize-container" {...{ style }}>
+            <span
+              className="resize-handle resize-handle-ne active"
+              onMouseDown={startResize}
+            />
+            <span className="resize-handle resize-handle-nw" />
+
+            <span
+              className="resize-handle resize-handle-se active"
+              onMouseDown={startResize}
+            />
+            <span className="resize-handle resize-handle-sw" />
+            <span className="image-editor" draggable style={style}>
+              <img src={props.src} />
+            </span>
+            <ImageMenu ref={menuRef} />
+          </span>
         </span>
       );
     }
     return (
-      <span className="resize-container" ref={rootDomRef} {...{ style }}>
-        <span className="resize-handle resize-handle-ne" />
-        <span
-          className="resize-handle resize-handle-nw active"
-          onMouseDown={startResize}
-        />
+      <span
+        className="image-editor-wrapper"
+        style={{ display: "inline-block" }}
+        ref={rootDomRef}
+      >
         {children}
-        <span className="resize-handle resize-handle-se" />
-        <span
-          className="resize-handle resize-handle-sw active"
-          onMouseDown={startResize}
-        />
-        <ImageMenu ref={menuRef} />
+        <span className="resize-container" {...{ style }}>
+          <span className="resize-handle resize-handle-ne" />
+          <span
+            className="resize-handle resize-handle-nw active"
+            onMouseDown={startResize}
+          />
+          <span className="resize-handle resize-handle-se" />
+          <span
+            className="resize-handle resize-handle-sw active"
+            onMouseDown={startResize}
+          />
+          <span className="image-editor" draggable style={style}>
+            <img src={props.src} />
+          </span>
+          <ImageMenu ref={menuRef} />
+        </span>
       </span>
     );
   }
   return <>{children}</>;
-}
-
-class ResizeBox extends React.Component<any, any> {
-  public rootDom: any;
-
-  public target: any;
-
-  public editorDom: any;
-
-  public debouncedChange = debounce((width: number, height: number) => {
-    if (this.props.onChange) {
-      this.props.onChange(width, height);
-    }
-  }, 200);
-
-  public startResize = (e: any) => {
-    e.preventDefault();
-    e.stopPropagation();
-    this.target = e.target;
-    window.addEventListener("mousemove", this.resizing);
-    window.addEventListener("mouseup", this.endResize);
-  };
-
-  public endResize = (e: any) => {
-    e.preventDefault();
-    window.removeEventListener("mousemove", this.resizing);
-    window.removeEventListener("mouseup", this.endResize);
-  };
-
-  findParentBlockDom = (child: any) => {
-    while ((child = child.parentNode)) {
-      if ((child.tagName as String).toLowerCase() === "div") {
-        return child;
-      }
-    }
-  };
-
-  public resizing = (e: any) => {
-    const $container: any = findDOMNode(this);
-    const mouse: any = {};
-    let { width, height, left } = $container.getBoundingClientRect();
-    const originWidth = width;
-    const originHeight = height;
-    mouse.x =
-      ((e.touches && e.touches[0].clientX) || e.clientX || e.pageX) +
-      document!.documentElement.scrollLeft;
-    mouse.y =
-      ((e.touches && e.touches[0].clientY) || e.clientY || e.pageY) +
-      document!.documentElement.scrollTop;
-    if (this.target.className.indexOf("resize-handle-se") > -1) {
-      width = mouse.x - left;
-      height = (width / originWidth) * originHeight;
-    } else if (this.target.className.indexOf("resize-handle-sw") > -1) {
-      width -= mouse.x - left;
-      height = (width / originWidth) * originHeight;
-      left = mouse.x;
-    } else if (this.target.className.indexOf("resize-handle-nw") > -1) {
-      width -= mouse.x - left;
-      height = (width / originWidth) * originHeight;
-      left = mouse.x;
-      top = mouse.y;
-    } else if (this.target.className.indexOf("resize-handle-ne") > -1) {
-      width = mouse.x - left;
-      height = (width / originWidth) * originHeight;
-      top = mouse.y;
-    }
-    width =
-      width >= this.editorDom.offsetWidth ? this.editorDom.offsetWidth : width;
-    $container.style.width = `${width}px`;
-    $container.style.height = `${height}px`;
-    const img: any = $container.querySelector("img");
-    if (img) {
-      img.style.width = `${width}px`;
-      img.style.height = `${height}px`;
-    }
-    this.debouncedChange(width, height);
-  };
-
-  componentDidMount() {
-    this.editorDom = this.findParentBlockDom(findDOMNode(this));
-  }
-
-  render() {}
 }
 
 export default ResizeBox;
