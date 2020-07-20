@@ -27,8 +27,9 @@ export type Control =
   | "center"
   | "justify"
   | "image"
-  | "vidoe"
+  | "video"
   | "pdf"
+  | "math"
   | CustomControl;
 
 const defaultControls = {
