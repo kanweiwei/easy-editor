@@ -1,12 +1,107 @@
 import * as React from "react";
 import { createPortal } from "react-dom";
 import "./style.less";
+import EditorTooltip from "../../toolbar/tooltip";
+import classnames from "classnames";
 
 const ImageMenu = React.forwardRef((props: any, ref) => {
-  if (props.container) {
-    return createPortal(<div>菜单</div>, props.container);
+  console.log(props.value, props.node);
+  const domRef = React.useRef<HTMLDivElement>(null);
+  React.useImperativeHandle(ref, () => domRef.current);
+  const { node, value, editor } = props;
+
+  const style = node.data.get("style");
+  let position: string = "around";
+  if (style && "float" in style) {
+    position = style.float;
   }
-  return null;
+
+  const setFloat = (to: string) => {
+    if (position === to) return;
+    const change = value.change();
+    const style = node.data.get("style");
+    style.float = to;
+
+    if (to == "around") {
+      delete style.float;
+    }
+
+    change.setNodeByKey(node.key, {
+      data: {
+        ...node.data.toJS(),
+        style,
+      },
+    });
+    editor.update(change);
+  };
+
+  const renderFloatBtn = (display: "inline" | "block") => {
+    if (display === "inline") {
+      return (
+        <>
+          <EditorTooltip placeholder="文字右环绕">
+            <span
+              className={classnames("float-btn image-left", {
+                active: position === "left",
+              })}
+              onClick={() => setFloat("left")}
+            ></span>
+          </EditorTooltip>
+          <EditorTooltip placeholder="文字左环绕">
+            <span
+              className={classnames("float-btn image-right", {
+                active: position === "right",
+              })}
+              onClick={() => setFloat("right")}
+            ></span>
+          </EditorTooltip>
+          <EditorTooltip placeholder="文字紧密环绕">
+            <span
+              className={classnames("float-btn image-around", {
+                active: position === "around",
+              })}
+              onClick={() => setFloat("around")}
+            ></span>
+          </EditorTooltip>
+        </>
+      );
+    }
+    if (display === "block") {
+      return null;
+    }
+    return null;
+  };
+
+  let display: "inline" | "block" = "inline";
+  if (node.object === "block") {
+    display = "block";
+  }
+
+  return createPortal(
+    <div
+      ref={domRef}
+      onClick={(e) => e.stopPropagation()}
+      className="image-edit-toolbar"
+    >
+      <EditorTooltip placeholder="嵌入行内">
+        <span
+          className={classnames("ic_image_inline", {
+            active: display === "inline",
+          })}
+        ></span>
+      </EditorTooltip>
+      <EditorTooltip placeholder="独占一行">
+        <span
+          className={classnames("ic_image_block", {
+            active: display === "block",
+          })}
+        ></span>
+      </EditorTooltip>
+      <span className="image-menu-divider"></span>
+      {renderFloatBtn(display)}
+    </div>,
+    document.body
+  );
 });
 
 function ResizeBox(props: any) {
@@ -20,7 +115,33 @@ function ResizeBox(props: any) {
     }
   };
 
-  const menuRef = React.useRef();
+  const menuRef = React.useRef<HTMLDivElement>();
+
+  React.useEffect(() => {
+    if (!rootDomRef.current) return;
+    const {
+      width,
+      height,
+      left,
+      top,
+    } = rootDomRef.current.getBoundingClientRect();
+    const menuDom = menuRef.current;
+    if (!menuDom) {
+      return;
+    }
+    let tmpStyle = `position: fixed; top: ${
+      document.documentElement.scrollTop + top + height + 8
+    }px;  border-radius: 4px; padding: 5px 8px; line-height: 30px; height: 30px; box-shadow: rgba(60, 64, 67, 0.15) 0px 1px 3px 1px; background: #fff;`;
+    if (float === "right") {
+      tmpStyle += `right: ${
+        document.documentElement.clientWidth - (left + width)
+      }px;`;
+    } else {
+      tmpStyle += `left: ${document.documentElement.scrollLeft + left}px;`;
+    }
+    // @ts-ignore
+    menuDom.style = tmpStyle;
+  });
 
   const wh = React.useRef({ width: 0, height: 0 });
 
@@ -148,17 +269,18 @@ function ResizeBox(props: any) {
             <span className="image-editor" draggable style={style}>
               <img src={props.src} />
             </span>
-            <ImageMenu ref={menuRef} />
+            <ImageMenu
+              ref={menuRef}
+              value={props.editor.state.value}
+              node={props.node}
+              editor={props.editor}
+            />
           </span>
         </span>
       );
     }
     return (
-      <span
-        className="image-editor-wrapper"
-        style={{ display: "inline-block" }}
-        ref={rootDomRef}
-      >
+      <span className="image-editor-wrapper" ref={rootDomRef} style={{ float }}>
         {children}
         <span className="resize-container" {...{ style }}>
           <span className="resize-handle resize-handle-ne" />
@@ -174,7 +296,12 @@ function ResizeBox(props: any) {
           <span className="image-editor" draggable style={style}>
             <img src={props.src} />
           </span>
-          <ImageMenu ref={menuRef} />
+          <ImageMenu
+            ref={menuRef}
+            value={props.editor.state.value}
+            node={props.node}
+            editor={props.editor}
+          />
         </span>
       </span>
     );
