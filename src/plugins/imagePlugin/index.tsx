@@ -156,6 +156,8 @@ const imagePlugin: EditorPlugin = {
         {...{ style }}
         src={src}
         onChange={changeImg}
+        {...props}
+        editor={editor}
       >
         <img
           onContextMenu={handleClickImg}

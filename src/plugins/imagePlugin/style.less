@@ -83,3 +83,57 @@
     }
   }
 }
+
+.imgControl(@image) {
+  display: inline-block;
+  width: 30px;
+  height: 30px;
+  background: url("../../icons/@{image}.png") center center no-repeat;
+  background-size: 16px 16px;
+  cursor: pointer;
+  &:hover {
+    background: #eee url("../../icons/@{image}.png") center center no-repeat;
+    background-size: 16px 16px;
+    border-radius: 50%;
+  }
+  &.active {
+    background: rgb(232, 240, 254) url("../../icons/@{image}--active.png")
+      center center no-repeat;
+    background-size: 16px 16px;
+    border-radius: 50%;
+  }
+}
+
+.image-edit-toolbar {
+  > * {
+    margin-right: 8px;
+  }
+}
+.ic_image_inline {
+  .imgControl("ic_image_inline");
+}
+.ic_image_block {
+  .imgControl("ic_image_block");
+}
+
+.image-menu-divider {
+  display: inline-block;
+  height: 30px;
+  width: 0;
+  border-right: 1px solid #eee;
+}
+.float-btn {
+  &.active {
+    background: #4797f3;
+    color: #fff;
+  }
+}
+.image-left {
+  .imgControl("ic_image_left");
+}
+.image-right {
+  .imgControl("ic_image_right");
+}
+.image-around {
+  .imgControl("ic_image_around");
+}
