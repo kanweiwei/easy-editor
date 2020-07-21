@@ -90,9 +90,23 @@ export default class EasyEditor extends React.Component<IEditorProps, any> {
     plugins.forEach((plugin) => {
       convertor.rules.unshift({
         serialize: (node, children) => {
-          if (node.object === plugin.object && plugin.nodeType === node.type) {
-            if (plugin.exporter) {
-              return plugin.exporter(node, children);
+          if (Array.isArray(plugin.object)) {
+            if (
+              plugin.object.indexOf(node.object) > -1 &&
+              plugin.nodeType === node.type
+            ) {
+              if (plugin.exporter) {
+                return plugin.exporter(node, children);
+              }
+            }
+          } else {
+            if (
+              node.object === plugin.object &&
+              plugin.nodeType === node.type
+            ) {
+              if (plugin.exporter) {
+                return plugin.exporter(node, children);
+              }
             }
           }
         },
