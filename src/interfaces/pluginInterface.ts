@@ -2,7 +2,7 @@ import { AST } from "parse5";
 
 export default interface EditorPlugin {
   type: "node" | "mark";
-  object: "block" | "inline" | "mark";
+  object: "block" | "inline" | "mark" | string[];
   nodeType: string;
   schema?: any;
   importer(el: AST.Default.Element, next: Function): any;

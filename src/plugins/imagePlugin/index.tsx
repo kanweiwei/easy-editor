@@ -8,39 +8,47 @@ import ResizeBox from "./ResizeBox";
 const imagePlugin: EditorPlugin = {
   type: "node",
   nodeType: "image",
-  object: "inline",
+  object: ["block", "inline"],
   schema: {
     isVoid: true,
   },
   importer(el: AST.Default.Element, next: Function): any {
+    if (
+      el.tagName.toLocaleLowerCase() === "div" &&
+      getAttr(el.attrs, "data-type") === "image-block"
+    ) {
+      let imgNode = el.childNodes[0] as AST.Default.Element;
+      let src = getAttr(imgNode.attrs, "src");
+      let styleObj = getStyleFromString(getAttr(imgNode.attrs, "style"));
+      let parentStyleObj = getStyleFromString(getAttr(el.attrs, "style"));
+      let data: any = {
+        src,
+        style: styleObj,
+      };
+      if ("align" in parentStyleObj) {
+        data.align = parentStyleObj.align;
+      }
+      return {
+        object: "block",
+        type: "image",
+        isVoid: true,
+        nodes: [],
+        data,
+      };
+    }
     if (el.tagName.toLowerCase() === "img") {
       const tempStyle = getAttr(el.attrs, "style");
-      const isformula = getAttr(el.attrs, "data-isformula");
-      const maxHeight = getAttr(el.attrs, "data-max-height");
-      const height = getAttr(el.attrs, "height");
 
       let style = getStyleFromString(tempStyle);
       if (!style) {
         style = {};
       }
       style.display = "inline-block";
-      if (maxHeight) {
-        style.height = `${maxHeight}px`;
-      } else if (!maxHeight && height) {
-        style.height = `${height}px`;
-      }
+
       const data: any = {
         src: getAttr(el.attrs, "src"),
         style,
       };
-      if (isformula === "true") {
-        data["data-isformula"] = true;
-      }
-      if (maxHeight) {
-        data["data-max-height"] = Number(maxHeight);
-      } else if (!maxHeight && height) {
-        data["data-max-height"] = Number(height);
-      }
 
       return {
         object: "inline",
@@ -53,6 +61,19 @@ const imagePlugin: EditorPlugin = {
   },
   exporter(node: any, children: any) {
     let { style, ...otherAttrs } = node.data.toJS();
+    if (node.object === "block") {
+      return (
+        <>
+          <div
+            data-type="image-block"
+            style={{ textAlign: node.data.get("align") || "left" }}
+          >
+            <img src={node.data.get("src")} style={node.data.get("style")} />
+          </div>
+          <span>&#8203;</span>
+        </>
+      );
+    }
     return (
       <>
         <span>&#8203;</span>
@@ -146,6 +167,16 @@ const imagePlugin: EditorPlugin = {
       editor.onChange(change, "qst");
     };
 
+    const ImageNode = (
+      <img
+        onContextMenu={handleClickImg}
+        src={src}
+        className={className}
+        {...{ style }}
+        {...attributes}
+        alt=""
+      />
+    );
     return (
       <ResizeBox
         isSelected={
@@ -159,14 +190,11 @@ const imagePlugin: EditorPlugin = {
         {...props}
         editor={editor}
       >
-        <img
-          onContextMenu={handleClickImg}
-          src={src}
-          className={className}
-          {...{ style }}
-          {...attributes}
-          alt=""
-        />
+        {node.data.get("align") ? (
+          <div style={{ textAlign: node.data.get("align") }}>{ImageNode}</div>
+        ) : (
+          ImageNode
+        )}
       </ResizeBox>
     );
   },

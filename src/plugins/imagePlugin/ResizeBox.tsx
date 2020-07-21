@@ -3,6 +3,7 @@ import { createPortal } from "react-dom";
 import "./style.less";
 import EditorTooltip from "../../toolbar/tooltip";
 import classnames from "classnames";
+import { Block, Inline } from "@zykj/slate";
 
 const ImageMenu = React.forwardRef((props: any, ref) => {
   console.log(props.value, props.node);
@@ -32,6 +33,50 @@ const ImageMenu = React.forwardRef((props: any, ref) => {
         style,
       },
     });
+    editor.update(change);
+  };
+
+  const setAlign = (to: string) => {
+    const change = value.change();
+    change.setNodeByKey(node.key, {
+      data: {
+        ...node.data.toJS(),
+        align: to,
+      },
+    });
+    editor.update(change);
+  };
+
+  const handleSetBlock = () => {
+    const change = value.change();
+    change.removeNodeByKey(node.key);
+    const style = Object.assign({}, node.data.get("style") || {});
+    delete style.float;
+    change.insertBlock(
+      Block.create({
+        type: "image",
+        data: {
+          ...node.data.toJS(),
+          style,
+        },
+        isVoid: true,
+      })
+    );
+    editor.update(change);
+  };
+
+  const handleSetInline = () => {
+    const change = value.change();
+    change.removeNodeByKey(node.key);
+    let data = node.data.toJS();
+    delete data.align;
+    change.insertInline(
+      Inline.create({
+        type: "image",
+        data: data,
+        isVoid: true,
+      })
+    );
     editor.update(change);
   };
 
@@ -67,7 +112,35 @@ const ImageMenu = React.forwardRef((props: any, ref) => {
       );
     }
     if (display === "block") {
-      return null;
+      const align = props.node.data.get("align") || "left";
+      return (
+        <>
+          <EditorTooltip placeholder="图片居左">
+            <span
+              className={classnames("float-btn image-left", {
+                active: align === "left",
+              })}
+              onClick={() => setAlign("left")}
+            ></span>
+          </EditorTooltip>
+          <EditorTooltip placeholder="图片居中">
+            <span
+              className={classnames("float-btn image-around", {
+                active: align === "center",
+              })}
+              onClick={() => setAlign("center")}
+            ></span>
+          </EditorTooltip>
+          <EditorTooltip placeholder="图片居右">
+            <span
+              className={classnames("float-btn image-right", {
+                active: align === "right",
+              })}
+              onClick={() => setAlign("right")}
+            ></span>
+          </EditorTooltip>
+        </>
+      );
     }
     return null;
   };
@@ -88,6 +161,7 @@ const ImageMenu = React.forwardRef((props: any, ref) => {
           className={classnames("ic_image_inline", {
             active: display === "inline",
           })}
+          onClick={handleSetInline}
         ></span>
       </EditorTooltip>
       <EditorTooltip placeholder="独占一行">
@@ -95,6 +169,7 @@ const ImageMenu = React.forwardRef((props: any, ref) => {
           className={classnames("ic_image_block", {
             active: display === "block",
           })}
+          onClick={handleSetBlock}
         ></span>
       </EditorTooltip>
       <span className="image-menu-divider"></span>
@@ -105,7 +180,10 @@ const ImageMenu = React.forwardRef((props: any, ref) => {
 });
 
 function ResizeBox(props: any) {
-  const rootDomRef = React.useRef<HTMLSpanElement>(null);
+  const { children, isSelected, style } = props;
+  const { float } = style;
+
+  const rootDomRef = React.useRef<HTMLElement & { align: any }>(null);
 
   const target = React.useRef<HTMLSpanElement | null>(null);
 
@@ -119,12 +197,9 @@ function ResizeBox(props: any) {
 
   React.useEffect(() => {
     if (!rootDomRef.current) return;
-    const {
-      width,
-      height,
-      left,
-      top,
-    } = rootDomRef.current.getBoundingClientRect();
+    const { width, height, left, top } = rootDomRef.current
+      .querySelector(".resize-container img")
+      ?.getBoundingClientRect()!;
     const menuDom = menuRef.current;
     if (!menuDom) {
       return;
@@ -132,7 +207,7 @@ function ResizeBox(props: any) {
     let tmpStyle = `position: fixed; top: ${
       document.documentElement.scrollTop + top + height + 8
     }px;  border-radius: 4px; padding: 5px 8px; line-height: 30px; height: 30px; box-shadow: rgba(60, 64, 67, 0.15) 0px 1px 3px 1px; background: #fff;`;
-    if (float === "right") {
+    if (float === "right" || props.node.data.get("align") == "right") {
       tmpStyle += `right: ${
         document.documentElement.clientWidth - (left + width)
       }px;`;
@@ -151,7 +226,9 @@ function ResizeBox(props: any) {
       img.src = props.src;
       img.onload = () => {
         if (rootDomRef.current) {
-          let { width, height } = rootDomRef.current.getBoundingClientRect();
+          let { width, height } = rootDomRef.current
+            .querySelector("img")
+            ?.getBoundingClientRect()!;
           wh.current = {
             width,
             height,
@@ -163,7 +240,9 @@ function ResizeBox(props: any) {
   }, []);
 
   const resizing = (e: any) => {
-    const $container: any = rootDomRef.current;
+    const $container: any = rootDomRef.current?.querySelector(
+      ".resize-container img"
+    );
     const mouse: any = {};
     let { width, height, left } = $container.getBoundingClientRect();
     const originWidth = width;
@@ -239,22 +318,44 @@ function ResizeBox(props: any) {
     window.addEventListener("mouseup", endResize);
   };
 
-  const { children, isSelected, style } = props;
-  const { float } = style;
   const attrs: any = {};
   if (float) {
     attrs.onMouseDown = startResize;
   }
+
+  const Wrapper = props.node.object === "inline" ? "span" : "div";
+  let wrapperStyle: React.CSSProperties =
+    props.node.object === "inline"
+      ? { display: "inline-block" }
+      : { display: "block" };
+  if (props.node.data.get("align")) {
+    wrapperStyle.textAlign = props.node.data.get("align");
+  }
+
+  let imageEditorStyle = { ...style };
+  if (props.node.data.get("align")) {
+    const align = props.node.data.get("align");
+    if (align === "right") {
+      imageEditorStyle.right = "0px";
+      imageEditorStyle.left = "auto";
+    }
+    if (align === "center") {
+      imageEditorStyle.left = "50%";
+      imageEditorStyle.right = "auto";
+      imageEditorStyle.transform = "translate(-50%, 0)";
+    }
+  }
+
   if (isSelected) {
     if (!float) {
       return (
-        <span
+        <Wrapper
           className="image-editor-wrapper"
-          style={{ display: "inline-block" }}
+          style={wrapperStyle}
           ref={rootDomRef}
         >
           {children}
-          <span className="resize-container" {...{ style }}>
+          <span className="resize-container" {...{ style: imageEditorStyle }}>
             <span
               className="resize-handle resize-handle-ne active"
               onMouseDown={startResize}
@@ -266,7 +367,7 @@ function ResizeBox(props: any) {
               onMouseDown={startResize}
             />
             <span className="resize-handle resize-handle-sw" />
-            <span className="image-editor" draggable style={style}>
+            <span className="image-editor" draggable style={imageEditorStyle}>
               <img src={props.src} />
             </span>
             <ImageMenu
@@ -276,13 +377,17 @@ function ResizeBox(props: any) {
               editor={props.editor}
             />
           </span>
-        </span>
+        </Wrapper>
       );
     }
     return (
-      <span className="image-editor-wrapper" ref={rootDomRef} style={{ float }}>
+      <Wrapper
+        className="image-editor-wrapper"
+        ref={rootDomRef}
+        style={{ float }}
+      >
         {children}
-        <span className="resize-container" {...{ style }}>
+        <span className="resize-container" {...{ style: imageEditorStyle }}>
           <span className="resize-handle resize-handle-ne" />
           <span
             className="resize-handle resize-handle-nw active"
@@ -293,7 +398,7 @@ function ResizeBox(props: any) {
             className="resize-handle resize-handle-sw active"
             onMouseDown={startResize}
           />
-          <span className="image-editor" draggable style={style}>
+          <span className="image-editor" draggable style={imageEditorStyle}>
             <img src={props.src} />
           </span>
           <ImageMenu
@@ -303,7 +408,7 @@ function ResizeBox(props: any) {
             editor={props.editor}
           />
         </span>
-      </span>
+      </Wrapper>
     );
   }
   return <>{children}</>;
