@@ -13,7 +13,8 @@
     "build": "gulp compile",
     "example": "cd example && webpack-dev-server --host 0.0.0.0",
     "build:demo": "npm run build && cd example && webpack --config ./webpack.prod.config.js",
-    "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s -r 0"
+    "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s -r 0",
+    "lint": "eslint src/** --no-error-on-unmatched-pattern"
   },
   "dependencies": {
     "@babel/runtime-corejs3": "^7.10.3",
@@ -55,12 +56,18 @@
     "@types/react-dom": "^16.9.8",
     "@types/ua-parser-js": "0.7.33",
     "@types/video.js": "^7.3.10",
+    "@typescript-eslint/eslint-plugin": "^3.7.1",
+    "@typescript-eslint/parser": "^3.7.1",
     "babel-loader": "8.1.0",
     "babel-polyfill": "^6.26.0",
     "babel-runtime": "^6.26.0",
     "core-js": "3.6.5",
     "css-loader": "3.6.0",
     "cz-conventional-changelog": "3.2.0",
+    "eslint": "^7.5.0",
+    "eslint-plugin-import": "^2.22.0",
+    "eslint-plugin-react": "^7.20.4",
+    "eslint-plugin-react-hooks": "^4.0.8",
     "gulp": "4.0.2",
     "gulp-babel": "8.0.0",
     "gulp-base64": "0.1.3",

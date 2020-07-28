@@ -35,7 +35,7 @@ export default async (
     return change;
   }
   switch (transfer.type) {
-    case "files":
+    case "files": {
       const file: File = transfer.files[0];
       if (file && file.type.includes("image")) {
         let url = await new Promise((resolve, reject) => {
@@ -65,6 +65,7 @@ export default async (
         }
       }
       return false;
+    }
     case "html":
       {
         let html: string = filterWord(transfer.html);
@@ -107,8 +108,7 @@ export default async (
                 `(${supportRtfTypes.join("|")})[^}]*}([^}]*)}`,
                 "i"
               );
-              // @ts-ignore
-              const [str, type, hexData] = m.match(reg);
+              const [, type, hexData] = m.match(reg);
               // let imgType = "jpg";
               let fileType = "image/jpg";
               const typeIndex = supportFileTypes.findIndex(

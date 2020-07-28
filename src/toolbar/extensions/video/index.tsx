@@ -20,9 +20,9 @@ class VideoExtension extends React.Component<any> {
     if (file) {
       if (acceptTypes.includes(file.type)) {
         if (this.props.beforeUpload) {
-          let url = await this.props.beforeUpload(file);
+          const url = await this.props.beforeUpload(file);
           if (url) {
-            let change = this.props.change.focus().insertBlock({
+            const change = this.props.change.focus().insertBlock({
               object: "block",
               type: "object",
               isVoid: true,

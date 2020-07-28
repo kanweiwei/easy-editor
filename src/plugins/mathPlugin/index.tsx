@@ -2,7 +2,6 @@ import * as React from "react";
 import EditorPlugin from "../../interfaces/pluginInterface";
 import getAttr from "../../utils/getAttr";
 import Canvg from "canvg";
-//@ts-ignore
 import "./tex-svg";
 import { Selection } from "@zykj/slate";
 import "./style.less";
@@ -18,7 +17,7 @@ const mathPlugin: EditorPlugin = {
     isVoid: true,
   },
   importer(el, next): any {
-    let type = getAttr(el.attrs, "data-type");
+    const type = getAttr(el.attrs, "data-type");
     if (type === "math-content") {
       const tex = getAttr(el.attrs, "data-tex");
       const url = getAttr(el.attrs, "data-url") || "";
@@ -34,7 +33,7 @@ const mathPlugin: EditorPlugin = {
       };
     }
   },
-  exporter(node, children): any {
+  exporter(node): any {
     const tex = node.data.get("tex");
     const url = node.data.get("url");
     if (url) {
@@ -63,8 +62,8 @@ function MathView(props: any) {
 
   // tex2png
   React.useEffect(() => {
-    let value = props.editor.value;
-    let change = value.change();
+    const value = props.editor.value;
+    const change = value.change();
     if (tex) {
       window.MathJax.startup.promise
         .then(() => {
@@ -80,10 +79,10 @@ function MathView(props: any) {
               }
             );
             v.start();
-            let baseurl = cas.toDataURL("image/png", 1);
+            const baseurl = cas.toDataURL("image/png", 1);
 
             if (props.beforeUpload) {
-              let res = props.beforeUpload(
+              const res = props.beforeUpload(
                 getBlobByDataURI(baseurl, "image/png"),
                 baseurl
               );
@@ -134,12 +133,12 @@ function MathView(props: any) {
   }, [tex]);
 
   React.useEffect(() => {
-    let value = props.editor.value;
+    const value = props.editor.value;
     if (isFocused && value.selection.anchorKey === value.selection.focusKey) {
-      let change = value.change();
-      let pre = value.document.getPreviousText(value.selection.anchorKey);
-      let next = value.document.getNextText(value.selection.anchorKey);
-      let range = Selection.create({
+      const change = value.change();
+      const pre = value.document.getPreviousText(value.selection.anchorKey);
+      const next = value.document.getNextText(value.selection.anchorKey);
+      const range = Selection.create({
         anchor: {
           key: pre.key,
           offset: pre.text.length,
@@ -158,7 +157,6 @@ function MathView(props: any) {
 
   const updateXY = (node?: HTMLElement | null) => {
     if (!node) return;
-    // @ts-ignore
     const rect = node.getBoundingClientRect();
     const x = rect.x;
     const y = rect.y + rect.height + 8;
@@ -166,7 +164,7 @@ function MathView(props: any) {
       x,
       y,
     };
-    let textInput = document.querySelector<HTMLDivElement>("#math-textarea");
+    const textInput = document.querySelector<HTMLDivElement>("#math-textarea");
     if (textInput) {
       textInput.style.left = xy.current.x + "px";
       textInput.style.top = xy.current.y + "px";
@@ -179,12 +177,12 @@ function MathView(props: any) {
     // @ts-ignore
     let parent = e.target.parentNode;
     while (parent && !parent.dataset.key) {
-      let p = parent.parentNode;
+      const p = parent.parentNode;
       if (p && p.dataset.key) {
-        let textInput = document.querySelector<HTMLDivElement>(
+        const textInput = document.querySelector<HTMLDivElement>(
           "#math-textarea"
         );
-        let textarea = document.querySelector<HTMLTextAreaElement>(
+        const textarea = document.querySelector<HTMLTextAreaElement>(
           "#math-textarea textarea"
         );
         if (textInput && textarea) {
@@ -203,7 +201,7 @@ function MathView(props: any) {
 
   // show textarea
   React.useEffect(() => {
-    let textInput = document.querySelector<HTMLDivElement>("#math-textarea");
+    const textInput = document.querySelector<HTMLDivElement>("#math-textarea");
     if (props.isSelected) {
       if (textInput) {
         if (textInput.style.display !== "block") {
@@ -247,9 +245,10 @@ function MathView(props: any) {
 
         document.body.appendChild(wrapper);
 
-        document
-          .querySelector(".math-toolbar__save")!
-          .addEventListener("click", saveHandler);
+        const saveBtn = document.querySelector(".math-toolbar__save");
+        if (saveBtn) {
+          saveBtn.addEventListener("click", saveHandler);
+        }
 
         update();
       }
@@ -270,7 +269,7 @@ function MathView(props: any) {
       const textarea = wrapper.querySelector("textarea");
       const key = wrapper.dataset.key;
       if (!textarea) return;
-      let change = props.editor.value.change();
+      const change = props.editor.value.change();
       const v = textarea.value.trim();
       if (v) {
         change.setNodeByKey(key, {
@@ -294,7 +293,7 @@ function MathView(props: any) {
   // click handler
   React.useEffect(() => {
     return () => {
-      let saveBtn = document.querySelector(".math-toolbar__save");
+      const saveBtn = document.querySelector(".math-toolbar__save");
       if (saveBtn) {
         // saveBtn.removeEventListener("click", saveHandler);
       }

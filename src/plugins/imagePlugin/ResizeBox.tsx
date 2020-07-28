@@ -5,14 +5,19 @@ import EditorTooltip from "../../toolbar/tooltip";
 import classnames from "classnames";
 import { Block, Inline } from "@zykj/slate";
 
-const ImageMenu = React.forwardRef((props: any, ref) => {
-  console.log(props.value, props.node);
+type ImageMenuProps = {
+  node: any;
+  value: any;
+  editor: any;
+};
+
+const ImageMenu = React.forwardRef((props: ImageMenuProps, ref) => {
   const domRef = React.useRef<HTMLDivElement>(null);
   React.useImperativeHandle(ref, () => domRef.current);
   const { node, value, editor } = props;
 
   const style = node.data.get("style");
-  let position: string = "around";
+  let position = "around";
   if (style && "float" in style) {
     position = style.float;
   }
@@ -68,7 +73,7 @@ const ImageMenu = React.forwardRef((props: any, ref) => {
   const handleSetInline = () => {
     const change = value.change();
     change.removeNodeByKey(node.key);
-    let data = node.data.toJS();
+    const data = node.data.toJS();
     delete data.align;
     change.insertInline(
       Inline.create({
@@ -198,8 +203,8 @@ function ResizeBox(props: any) {
   React.useEffect(() => {
     if (!rootDomRef.current) return;
     const { width, height, left, top } = rootDomRef.current
-      .querySelector(".resize-container img")
-      ?.getBoundingClientRect()!;
+      ?.querySelector(".resize-container img")
+      ?.getBoundingClientRect() ?? { width: 0, height: 0, left: 0, top: 0 };
     const menuDom = menuRef.current;
     if (!menuDom) {
       return;
@@ -214,8 +219,7 @@ function ResizeBox(props: any) {
     } else {
       tmpStyle += `left: ${document.documentElement.scrollLeft + left}px;`;
     }
-    // @ts-ignore
-    menuDom.style = tmpStyle;
+    menuDom.setAttribute("style", tmpStyle);
   });
 
   const wh = React.useRef({ width: 0, height: 0 });
@@ -226,9 +230,9 @@ function ResizeBox(props: any) {
       img.src = props.src;
       img.onload = () => {
         if (rootDomRef.current) {
-          let { width, height } = rootDomRef.current
+          const { width, height } = rootDomRef.current
             .querySelector("img")
-            ?.getBoundingClientRect()!;
+            ?.getBoundingClientRect() ?? { width: 0, height: 0 };
           wh.current = {
             width,
             height,
@@ -249,10 +253,10 @@ function ResizeBox(props: any) {
     const originHeight = height;
     mouse.x =
       ((e.touches && e.touches[0].clientX) || e.clientX || e.pageX) +
-      document!.documentElement.scrollLeft;
+      (document?.documentElement.scrollLeft ?? 0);
     mouse.y =
       ((e.touches && e.touches[0].clientY) || e.clientY || e.pageY) +
-      document!.documentElement.scrollTop;
+      (document?.documentElement.scrollTop ?? 0);
     const cur = target.current;
     if (!cur) return;
     const imageEditor = rootDomRef.current?.querySelector<HTMLSpanElement>(
@@ -324,7 +328,7 @@ function ResizeBox(props: any) {
   }
 
   const Wrapper = props.node.object === "inline" ? "span" : "div";
-  let wrapperStyle: React.CSSProperties =
+  const wrapperStyle: React.CSSProperties =
     props.node.object === "inline"
       ? { display: "inline-block" }
       : { display: "block" };
@@ -332,7 +336,7 @@ function ResizeBox(props: any) {
     wrapperStyle.textAlign = props.node.data.get("align");
   }
 
-  let imageEditorStyle = { ...style };
+  const imageEditorStyle = { ...style };
   if (props.node.data.get("align")) {
     const align = props.node.data.get("align");
     if (align === "right") {

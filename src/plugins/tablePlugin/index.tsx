@@ -32,8 +32,8 @@ const tablePlugin = {
     }
   },
   exporter(node: any, children: any): any {
-    let { style, className, ...otherAttrs } = node.data.toJS();
-    style = getStyleFromData(node);
+    const { className, ...otherAttrs } = node.data.toJS();
+    const style = getStyleFromData(node);
     return (
       <table {...otherAttrs} style={style} className={className}>
         {children}

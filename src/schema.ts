@@ -34,8 +34,8 @@ export default {
               })
             );
             return change;
-          case violations.LAST_CHILD_TYPE_INVALID:
-            let document = change.value.document;
+          case violations.LAST_CHILD_TYPE_INVALID: {
+            const document = change.value.document;
             change.insertNodeByKey(
               document.key,
               document.nodes.size,
@@ -44,6 +44,8 @@ export default {
               })
             );
             return change;
+          }
+
           default:
             return null;
         }

@@ -59,8 +59,8 @@ const imagePlugin: EditorPlugin = {
       };
     }
   },
-  exporter(node: any, children: any) {
-    let { style, ...otherAttrs } = node.data.toJS();
+  exporter(node: any) {
+    const { style, ...otherAttrs } = node.data.toJS();
     if (node.object === "block") {
       return (
         <>
@@ -91,8 +91,7 @@ const imagePlugin: EditorPlugin = {
     if (node.data.get("style")) {
       style = Object.assign(style, node.data.get("style"));
     }
-    // @ts-ignore
-    let image: any;
+
     // @ts-ignore
     const handleClickImg = (e: any) => {
       e.preventDefault();
@@ -101,7 +100,6 @@ const imagePlugin: EditorPlugin = {
         return;
       }
       const nodeKey = e.target.dataset.key;
-      image = document.querySelector(`img[data-key='${node.key}']`);
       if (nodeKey) {
         let change: any = editor.state.value.change();
         const targetNode: any = change.value.document.findDescendant(

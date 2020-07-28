@@ -58,7 +58,7 @@ export default class EasyEditor extends React.Component<IEditorProps, any> {
   convertor: any;
   schemas: any;
 
-  isComposing: boolean = false;
+  isComposing = false;
 
   rafHandle: any;
 
@@ -86,7 +86,7 @@ export default class EasyEditor extends React.Component<IEditorProps, any> {
   }
 
   private initHtmlSerialize(plugins: any[]) {
-    var convertor = new HtmlSerialize();
+    const convertor = new HtmlSerialize();
     plugins.forEach((plugin) => {
       convertor.rules.unshift({
         serialize: (node, children) => {
@@ -126,7 +126,7 @@ export default class EasyEditor extends React.Component<IEditorProps, any> {
     };
     plugins.forEach((plugin) => {
       if (plugin.schema) {
-        let k = m[plugin.object];
+        const k = m[plugin.object];
         if (k) {
           schema[k][plugin.nodeType] = {
             ...(schema[k][plugin.nodeType] ?? {}),
@@ -275,7 +275,7 @@ export default class EasyEditor extends React.Component<IEditorProps, any> {
   };
 
   getValueByHtml = (html: any) => {
-    let b = document.createElement("body");
+    const b = document.createElement("body");
     b.innerHTML = html;
     if (b.textContent?.length) {
       const htmlValue = this.convertor.deserialize(html, { toJSON: true });
@@ -341,7 +341,7 @@ export default class EasyEditor extends React.Component<IEditorProps, any> {
   renderNode = (props: any) => {
     if (this.plugins.length) {
       const nodePlugins = this.plugins.filter((p) => p.type === "node");
-      let r = nodePlugins.find((n) => props.node.type === n.nodeType);
+      const r = nodePlugins.find((n) => props.node.type === n.nodeType);
       if (r) {
         return r.render(this, props);
       }
