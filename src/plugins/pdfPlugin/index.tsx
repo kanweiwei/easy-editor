@@ -3,7 +3,8 @@ import { Document, Page, pdfjs } from "react-pdf";
 import EditorPlugin from "../../interfaces/pluginInterface";
 import getAttr from "../../utils/getAttr";
 import "./style.less";
-var UAParser = require("ua-parser-js");
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const UAParser = require("ua-parser-js");
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 
 function PdfViewer(props: any) {
@@ -47,7 +48,11 @@ function PdfViewer(props: any) {
   );
 }
 
-function PdfWrapper(props: { url: any; name: string; onRemove?: Function }) {
+function PdfWrapper(props: {
+  url: any;
+  name: string;
+  onRemove?: (...args: any[]) => void;
+}) {
   const preCls = "easy-editor-upload";
 
   const [visible, setVisbile] = React.useState<boolean>(false);
@@ -59,7 +64,7 @@ function PdfWrapper(props: { url: any; name: string; onRemove?: Function }) {
   };
   const [parserResult, setParserResult] = React.useState<any>();
   React.useEffect(() => {
-    var parser = new UAParser();
+    const parser = new UAParser();
     setParserResult(parser.getResult());
   }, []);
 
@@ -126,7 +131,7 @@ const pdfPlugin: EditorPlugin = {
     const url = props.node.data.get("url");
     const name = props.node.data.get("name");
 
-    const handleRemove = (url: string) => {
+    const handleRemove = () => {
       const change = editor.state.value.change();
       change.removeNodeByKey(props.node.key);
       editor.onChange(change);

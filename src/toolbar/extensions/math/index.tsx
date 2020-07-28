@@ -3,7 +3,7 @@ import "./style.less";
 
 function MathExtention(props: any) {
   const handleClick = () => {
-    let change = props.change.focus().insertInline({
+    const change = props.change.focus().insertInline({
       object: "inline",
       type: "math-content",
       isVoid: true,

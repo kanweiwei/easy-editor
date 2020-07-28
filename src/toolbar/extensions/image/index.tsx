@@ -39,7 +39,7 @@ class ImageExtension extends React.Component<any> {
             url = window.URL.createObjectURL(file);
           }
           if (url) {
-            let change = this.props.change.focus().insertInline({
+            const change = this.props.change.focus().insertInline({
               object: "inline",
               type: "image",
               isVoid: true,

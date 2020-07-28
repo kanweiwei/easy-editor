@@ -27,7 +27,7 @@ class Vline extends React.Component<any, any> {
     e.stopPropagation();
     this.x =
       ((e.touches && e.touches[0].clientX) || e.clientX || e.pageX) +
-      document!.documentElement.scrollLeft;
+      (document?.documentElement.scrollLeft ?? 0);
     const root: any = findDOMNode(this);
     root.style.borderRightStyle = "dashed";
     this.left = Number(root.style.left.replace("px", ""));
@@ -52,7 +52,7 @@ class Vline extends React.Component<any, any> {
     const mouse: any = {};
     mouse.x =
       ((e.touches && e.touches[0].clientX) || e.clientX || e.pageX) +
-      document!.documentElement.scrollLeft;
+      (document?.documentElement.scrollLeft ?? 0);
     $container.style.left = `${this.left + (mouse.x - this.x)}px`;
   };
 
@@ -233,8 +233,8 @@ class SlateTable extends React.Component<any, any> {
 
   render() {
     const { attributes, children, node } = this.props;
-    let { style, className, ...otherAttrs } = node.data.toJS();
-    style = getStyleFromData(node);
+    const { className, ...otherAttrs } = node.data.toJS();
+    const style = getStyleFromData(node);
     return (
       <div className="slate-sheet-container" {...attributes}>
         {this.renderVlines()}

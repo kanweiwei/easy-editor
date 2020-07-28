@@ -24,7 +24,7 @@ class PdfExtension extends React.Component<any> {
             url = await this.props.beforeUpload(file, url);
           }
           if (url) {
-            let change = this.props.change.focus().insertBlock({
+            const change = this.props.change.focus().insertBlock({
               object: "block",
               type: "pdf",
               isVoid: true,

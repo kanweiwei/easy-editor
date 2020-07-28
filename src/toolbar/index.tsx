@@ -286,7 +286,7 @@ class ToolBar extends React.Component<any, any> {
                 return this.renderAlign(t);
               default: {
                 if ("component" in t) {
-                  let C = t.component;
+                  const C = t.component;
                   const { value, onChange, beforeUpload } = this.props;
                   return (
                     <span key={t.type}>
@@ -309,7 +309,7 @@ class ToolBar extends React.Component<any, any> {
         } else {
           // custom tool
           if ("component" in tool) {
-            let C = tool.component;
+            const C = tool.component;
             const { value, onChange, beforeUpload } = this.props;
             return (
               <span key={tool.type} title={tool.placeholder || ""}>

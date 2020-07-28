@@ -3,6 +3,7 @@ import * as React from "react";
 import getStyleFromData from "./utils/getStyleFromData";
 import { VideoPlayer } from "./plugins/videoPlugin";
 import getExt from "./utils/getExt";
+import omit from "./utils/omit";
 /**
  * nodes
  */
@@ -15,8 +16,8 @@ function ParagraphNode(props: any) {
 }
 
 function SpanNode(props: any) {
-  let { style, className, ...otherAttrs } = props.node.data.toJS();
-  style = getStyleFromData(props.node);
+  const { className, ...otherAttrs } = props.node.data.toJS();
+  const style = getStyleFromData(props.node);
   return (
     <span
       {...props.attributes}
@@ -52,8 +53,8 @@ export default (self: any, props: any): any => {
   const { attributes, children, node } = props;
   switch (node.type) {
     case "div": {
-      let { style, className, ...otherAttrs }: any = node.data.toJS();
-      style = getStyleFromData(node);
+      const { className, ...otherAttrs } = props.node.data.toJS();
+      const style = getStyleFromData(props.node);
       return (
         <div
           {...props.attributes}
@@ -81,8 +82,8 @@ export default (self: any, props: any): any => {
       return <rt>{props.children}</rt>;
 
     case "table-body": {
-      let { style, className, ...otherAttrs } = node.data.toJS();
-      style = getStyleFromData(node);
+      const { className, ...otherAttrs } = props.node.data.toJS();
+      const style = getStyleFromData(props.node);
       return (
         <tbody
           {...attributes}
@@ -95,8 +96,8 @@ export default (self: any, props: any): any => {
       );
     }
     case "table-row": {
-      let { style, className, ...otherAttrs } = node.data.toJS();
-      style = getStyleFromData(node);
+      const { className, ...otherAttrs } = props.node.data.toJS();
+      const style = getStyleFromData(props.node);
       return (
         <tr {...attributes} {...otherAttrs} style={style} className={className}>
           {children}
@@ -104,8 +105,8 @@ export default (self: any, props: any): any => {
       );
     }
     case "table-cell": {
-      let { style, className, ...otherAttrs } = node.data.toJS();
-      style = getStyleFromData(node);
+      const { className, ...otherAttrs } = props.node.data.toJS();
+      const style = getStyleFromData(props.node);
       return (
         <td {...attributes} {...otherAttrs} style={style} className={className}>
           {children}
@@ -113,8 +114,8 @@ export default (self: any, props: any): any => {
       );
     }
     case "embed": {
-      let { style, className, ...otherAttrs } = node.data.toJS();
-      let src = node.data.get("src");
+      const otherAttrs = omit(node.data.toJS(), ["style", "className"]);
+      const src = node.data.get("src");
       const ext = getExt(src);
       return (
         <div {...attributes} {...otherAttrs}>
@@ -133,8 +134,9 @@ export default (self: any, props: any): any => {
       );
     }
     case "object": {
-      let { style, className, ...otherAttrs } = node.data.toJS();
-      let data = node.data.get("data");
+      const otherAttrs = omit(node.data.toJS(), ["style", "className"]);
+      const data = node.data.get("data");
+
       const ext = getExt(data);
       return (
         <div {...attributes} {...otherAttrs}>

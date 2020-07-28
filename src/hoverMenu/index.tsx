@@ -25,7 +25,7 @@ class Menu extends React.Component<any, any> {
 
   onClickBlock = (
     event: any,
-    onClick?: (...args: any[]) => {},
+    onClick?: (...args: any[]) => any,
     options: any = {}
   ) => {
     event.preventDefault();
@@ -67,7 +67,7 @@ class Menu extends React.Component<any, any> {
     type: string,
     icon: string,
     title: string,
-    onClick?: () => {}
+    onClick?: () => any
   ) {
     const onMouseDown = (event: any) =>
       this.onClickBlock(event, onClick, { type });
