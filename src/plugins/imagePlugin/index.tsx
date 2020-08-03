@@ -1,7 +1,7 @@
 import * as React from "react";
 import EditorPlugin from "../../interfaces/pluginInterface";
 import getAttr from "../../utils/getAttr";
-import { DefaultTreeElement } from "parse5";
+import { AST } from "parse5";
 import getStyleFromString from "../../utils/getStyleFromString";
 import ContextMenu from "../../hoverMenu/contextMenu";
 import ResizeBox from "./ResizeBox";
@@ -13,7 +13,7 @@ const imagePlugin: EditorPlugin = {
   schema: {
     isVoid: true,
   },
-  importer(el: DefaultTreeElement, next: Function): any {
+  importer(el: AST.Default.Element, next: Function): any {
     if (el.tagName.toLowerCase() === "img") {
       const tempStyle = getAttr(el.attrs, "style");
       const isformula = getAttr(el.attrs, "data-isformula");

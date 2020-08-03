@@ -1,5 +1,5 @@
 import render from "./render";
-import { DefaultTreeElement } from "parse5";
+import { AST } from "parse5";
 import * as React from "react";
 import getAttr from "../../utils/getAttr";
 import getStyleFromString from "../../utils/getStyleFromString";
@@ -9,7 +9,7 @@ const tablePlugin = {
   type: "node",
   object: "block",
   nodeType: "table",
-  importer(el: DefaultTreeElement, next: Function): any {
+  importer(el: AST.Default.Element, next: Function): any {
     if (el.tagName.toLowerCase() === "table") {
       return {
         object: "block",

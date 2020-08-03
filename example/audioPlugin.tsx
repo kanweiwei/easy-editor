@@ -1,11 +1,11 @@
 import * as React from "react";
-import { DefaultTreeElement } from "parse5";
+import { AST } from "parse5";
 
 const plugin = {
   type: "node", // node, mark
   nodeType: "super-audio",
   object: "inline",
-  importer(el: DefaultTreeElement, next: Function): any {
+  importer(el: AST.Default.Element, next: Function): any {
     if (el.tagName.toLowerCase() === "audio") {
       return {
         object: "inline", // block、inline,
