@@ -52,21 +52,6 @@ interface IEditorProps {
   contentStyle?: React.CSSProperties;
 }
 
-const findRealDoms = (dom: any, realDom: any): any => {
-  if (dom.childNodes && Array.isArray(dom.childNodes)) {
-    if (dom.childNodes.length === 1) {
-      return findRealDoms(dom.childNodes[0], realDom);
-    }
-    if (dom.childNodes.length > 1) {
-      realDom = dom;
-      return realDom;
-    }
-  } else {
-    realDom = dom;
-    return realDom;
-  }
-};
-
 // 定义编辑器
 export default class EasyEditor extends React.Component<IEditorProps, any> {
   plugins: any[];

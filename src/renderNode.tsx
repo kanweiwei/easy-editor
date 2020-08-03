@@ -1,8 +1,8 @@
 import { assign } from "lodash-es";
-import { PlyrComponent } from "plyr-react";
 import * as React from "react";
-import getExt from "./utils/getExt";
 import getStyleFromData from "./utils/getStyleFromData";
+import { VideoPlayer } from "./plugins/videoPlugin";
+import getExt from "./utils/getExt";
 /**
  * nodes
  */
@@ -118,11 +118,16 @@ export default (self: any, props: any): any => {
       const ext = getExt(src);
       return (
         <div {...attributes} {...otherAttrs}>
-          <PlyrComponent
-            sources={{
-              type: "video",
-              sources: [{ src: src, type: `video/${ext}` }],
-            }}
+          <VideoPlayer
+            playbackRates={[1, 1.5, 2]}
+            controls={true}
+            sources={[
+              {
+                src: src,
+                type: `video/${ext}`,
+              },
+            ]}
+            width={500}
           />
         </div>
       );
@@ -130,19 +135,19 @@ export default (self: any, props: any): any => {
     case "object": {
       let { style, className, ...otherAttrs } = node.data.toJS();
       let data = node.data.get("data");
-
       const ext = getExt(data);
       return (
-        <div
-          {...attributes}
-          {...otherAttrs}
-          className="easy-editor__video-wrapper"
-        >
-          <PlyrComponent
-            sources={{
-              type: "video",
-              sources: [{ src: data, type: `video/${ext}` }],
-            }}
+        <div {...attributes} {...otherAttrs}>
+          <VideoPlayer
+            playbackRates={[1, 1.5, 2]}
+            controls={true}
+            sources={[
+              {
+                src: data,
+                type: `video/${ext}`,
+              },
+            ]}
+            width={500}
           />
         </div>
       );

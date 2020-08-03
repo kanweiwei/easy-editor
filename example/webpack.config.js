@@ -3,7 +3,7 @@ const webpack = require("webpack");
 const path = require("path");
 
 module.exports = {
-  entry: "./index.tsx",
+  entry: ["babel-polyfill", "./index.tsx"],
   output: {
     path: path.join(__dirname, "./site"),
     filename: "bundle.js",
@@ -27,7 +27,7 @@ module.exports = {
                 corejs: 3,
                 targets: {
                   browsers:
-                    "last 2 Firefox versions, last 2 Chrome versions, last 2 Edge versions, last 2 Safari versions, Android >= 5",
+                    "last 2 Firefox versions, last 2 Chrome versions, last 2 Edge versions, last 2 Safari versions, Android >= 4",
                 },
               },
             ],
