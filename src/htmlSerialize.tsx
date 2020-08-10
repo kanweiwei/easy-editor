@@ -479,9 +479,8 @@ let rules = [
           default:
             break;
         }
-      } <table {...otherAttrs} style={style} className={className}>
-      {children}
-    </table>    },
+      }
+    },
   },
   {
     serialize(obj: any, children: any): any {
