@@ -1,3 +1,16 @@
+# [0.3.0](https://github.com/kanweiwei/easy-editor/compare/v0.2.4...v0.3.0) (2020-08-04)
+
+
+
+## [0.2.4](https://github.com/kanweiwei/easy-editor/compare/v0.2.3...v0.2.4) (2020-07-27)
+
+
+### Bug Fixes
+
+* remove repeat code ([8d4bf2e](https://github.com/kanweiwei/easy-editor/commit/8d4bf2e98c115612f4bad30684e097e606a079c2))
+
+
+
 ## [0.2.3](https://github.com/kanweiwei/easy-editor/compare/v0.2.2...v0.2.3) (2020-07-10)
 
 

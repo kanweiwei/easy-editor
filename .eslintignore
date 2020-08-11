@@ -1,2 +1,3 @@
 **/*.less
 **/tex-svg.js
+/gulpfile.js

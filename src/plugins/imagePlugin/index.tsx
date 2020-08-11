@@ -12,16 +12,16 @@ const imagePlugin: EditorPlugin = {
   schema: {
     isVoid: true,
   },
-  importer(el: AST.Default.Element, next: Function): any {
+  importer(el: AST.Default.Element, next: (...args: any[]) => any): any {
     if (
       el.tagName.toLocaleLowerCase() === "div" &&
       getAttr(el.attrs, "data-type") === "image-block"
     ) {
-      let imgNode = el.childNodes[0] as AST.Default.Element;
-      let src = getAttr(imgNode.attrs, "src");
-      let styleObj = getStyleFromString(getAttr(imgNode.attrs, "style"));
-      let parentStyleObj = getStyleFromString(getAttr(el.attrs, "style"));
-      let data: any = {
+      const imgNode = el.childNodes[0] as AST.Default.Element;
+      const src = getAttr(imgNode.attrs, "src");
+      const styleObj = getStyleFromString(getAttr(imgNode.attrs, "style"));
+      const parentStyleObj = getStyleFromString(getAttr(el.attrs, "style"));
+      const data: any = {
         src,
         style: styleObj,
       };
@@ -92,7 +92,6 @@ const imagePlugin: EditorPlugin = {
       style = Object.assign(style, node.data.get("style"));
     }
 
-    // @ts-ignore
     const handleClickImg = (e: any) => {
       e.preventDefault();
       e.persist();
@@ -115,45 +114,11 @@ const imagePlugin: EditorPlugin = {
       }
     };
 
-    // @ts-ignore
-    const setFloatRight = (e: any) => {
-      e.preventDefault();
-      let change = editor.state.value.change();
-      change = change.setNodeByKey(node.key, {
-        data: {
-          src: node.data.get("src"),
-          style: {
-            ...node.data.toJS().style,
-            float: "right",
-          },
-        },
-      });
-      change = change.deselect().blur();
-      editor.onChange(change);
-    };
-    // @ts-ignore
-    const setNoFloat = (e: any) => {
-      e.preventDefault();
-      let change = editor.state.value.change();
-      const { float, ...otherAttrs } = node.data.toJS().style;
-      change = change.setNodeByKey(node.key, {
-        data: {
-          src: node.data.get("src"),
-          style: {
-            ...otherAttrs,
-            display: "inline-block",
-          },
-        },
-      });
-      change = change.deselect().blur();
-      editor.onChange(change);
-    };
-
     const changeImg: any = (width: number, height: number) => {
       let change = editor.state.value.change();
       change = change.setNodeByKey(node.key, {
         data: {
-          src: node.data.get("src"),
+          ...node.data.toJS(),
           style: {
             ...node.data.toJS().style,
             display: "inline-block",
@@ -177,16 +142,16 @@ const imagePlugin: EditorPlugin = {
     );
     return (
       <ResizeBox
-        isSelected={
-          isSelected &&
-          editor.state.value.selection.anchorKey ==
-            editor.state.value.selection.focusKey
-        }
         {...{ style }}
         src={src}
         onChange={changeImg}
         {...props}
         editor={editor}
+        isSelected={
+          isSelected &&
+          editor.state.value.selection.anchorKey ==
+            editor.state.value.selection.focusKey
+        }
       >
         {node.data.get("align") ? (
           <div style={{ textAlign: node.data.get("align") }}>{ImageNode}</div>

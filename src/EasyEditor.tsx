@@ -349,6 +349,42 @@ export default class EasyEditor extends React.Component<IEditorProps, any> {
     return renderNode(this, props);
   };
 
+  hanldeCopy = (e: any) => {
+    console.log(e);
+  };
+
+  handleKeyDown = (e: any) => {
+    e.persist();
+    console.log(e);
+    if (e.metaKey && e.key === "c") {
+      // 复制
+      const s = this.state.value.selection;
+      if (s.anchorKey === s.focusKey && s.isFocused) {
+        // 复制图片
+        const d = this.state.value.document;
+        const parent = d.getParent(d.getPath(s.anchorKey));
+        console.log(parent);
+        if (parent && parent.type === "image") {
+          if (window.getSelection) {
+            const selection = window.getSelection();
+            if (!selection) return;
+            const range = document.createRange();
+            const imgElement = document.querySelector(
+              `[data-key="${parent.key}"] img`
+            );
+            if (!imgElement) {
+              return;
+            }
+            range.selectNode(imgElement);
+            selection.removeAllRanges();
+            selection.addRange(range);
+            document.execCommand("copy");
+          }
+        }
+      }
+    }
+  };
+
   renderEditor = () => {
     const { value } = this.state;
     const { readOnly, placeholder, pasteOptions, minHeight = 300 } = this.props;
@@ -366,7 +402,7 @@ export default class EasyEditor extends React.Component<IEditorProps, any> {
         onContextMenu={(e: any) => e.preventDefault()}
         renderMark={renderMark}
         renderNode={this.renderNode}
-        onKeyDown={this.props.onKeyDown}
+        onKeyDown={this.handleKeyDown}
         plugins={this.plugins}
         autoFocus={this.props.autoFocus ?? true}
         schema={this.schemas}

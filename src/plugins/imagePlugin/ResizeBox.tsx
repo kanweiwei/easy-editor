@@ -4,6 +4,7 @@ import "./style.less";
 import EditorTooltip from "../../toolbar/tooltip";
 import classnames from "classnames";
 import { Block, Inline } from "@zykj/slate";
+import { pick, omit } from "lodash-es";
 
 type ImageMenuProps = {
   node: any;
@@ -185,22 +186,32 @@ const ImageMenu = React.forwardRef((props: ImageMenuProps, ref) => {
 });
 
 function ResizeBox(props: any) {
-  const { children, isSelected, style } = props;
+  const { children, isSelected, style, onChange } = props;
   const { float } = style;
+  const align = props.node.data.get("align");
+  const alignRef = React.useRef(align);
+  const floatRef = React.useRef(float);
 
   const rootDomRef = React.useRef<HTMLElement & { align: any }>(null);
 
   const target = React.useRef<HTMLSpanElement | null>(null);
 
-  const updateWH = (options: { width: number; height: number }) => {
-    if (props.onChange) {
-      props.onChange(options.width, options.height);
-    }
-  };
+  const wh = React.useRef({ width: 0, height: 0, left: 0 });
+  const originWh = React.useRef({ width: 0, height: 0, left: 0 });
+
+  const updateWH = React.useCallback(
+    (options: { width: number; height: number }) => {
+      if (onChange) {
+        onChange(options.width, options.height);
+      }
+      originWh.current = { ...wh.current };
+    },
+    [onChange]
+  );
 
   const menuRef = React.useRef<HTMLDivElement>();
 
-  React.useEffect(() => {
+  const updateMenuDom = React.useCallback(() => {
     if (!rootDomRef.current) return;
     const { width, height, left, top } = rootDomRef.current
       ?.querySelector(".resize-container img")
@@ -220,37 +231,124 @@ function ResizeBox(props: any) {
       tmpStyle += `left: ${document.documentElement.scrollLeft + left}px;`;
     }
     menuDom.setAttribute("style", tmpStyle);
-  });
+  }, [float, props.node.data]);
 
-  const wh = React.useRef({ width: 0, height: 0 });
+  const imgRef = React.useRef<HTMLImageElement | null>(null);
 
   React.useEffect(() => {
     if (rootDomRef.current) {
-      const img = new Image();
-      img.src = props.src;
-      img.onload = () => {
+      if (
+        !imgRef.current ||
+        imgRef.current.src !== props.src ||
+        floatRef.current !== float ||
+        alignRef.current !== align
+      ) {
+        imgRef.current = new Image();
+        imgRef.current.src = props.src;
+        imgRef.current.onload = () => {
+          if (rootDomRef.current) {
+            const { width, height, left } = rootDomRef.current
+              .querySelector("img")
+              ?.getBoundingClientRect() ?? { width: 0, height: 0, left: 0 };
+            wh.current = {
+              width,
+              height,
+              left,
+            };
+            originWh.current = {
+              width,
+              height,
+              left,
+            };
+            floatRef.current = float;
+            alignRef.current = align;
+            updateWH(wh.current);
+          }
+        };
+      } else {
         if (rootDomRef.current) {
-          const { width, height } = rootDomRef.current
+          const { width, height, left } = rootDomRef.current
             .querySelector("img")
-            ?.getBoundingClientRect() ?? { width: 0, height: 0 };
+            ?.getBoundingClientRect() ?? { width: 0, height: 0, left: 0 };
           wh.current = {
             width,
             height,
+            left,
           };
-          updateWH(wh.current);
+          originWh.current = {
+            width,
+            height,
+            left,
+          };
+          floatRef.current = float;
+          alignRef.current = align;
         }
-      };
+      }
     }
-  }, []);
+  }, [props.src, updateWH, float, align]);
+
+  // imageEditor.style.right = "0px";
+  let styleLeft = "left";
+  let styleTop = "top";
+  let styleRight = "right";
+  if (float || align) {
+    styleLeft = "marginLeft";
+    styleTop = "marginTop";
+    styleRight = "marginRight";
+  }
+
+  //渲染完，检查调整框和图片的位置是否一致
+  const checkResizeWrapperPosition = React.useCallback(() => {
+    const image = rootDomRef.current?.querySelector("img");
+    const resizeWrapper = rootDomRef.current?.querySelector<HTMLSpanElement>(
+      ".resize-container"
+    );
+    if (!image || !resizeWrapper) return;
+    const imageRect = image.getBoundingClientRect();
+    const resizeWrapperRect = resizeWrapper.getBoundingClientRect();
+    if (
+      imageRect.left !== resizeWrapperRect.left ||
+      imageRect.top !== resizeWrapperRect.top ||
+      imageRect.right !== resizeWrapperRect.right
+    ) {
+      resizeWrapper.style.margin = "0 0 0 0";
+      switch (float || align) {
+        case "left":
+          resizeWrapper.style.left = "0px";
+          resizeWrapper.style.right = "auto";
+          resizeWrapper.style.top = "0px";
+          break;
+        case "right":
+          resizeWrapper.style.left = "auto";
+          resizeWrapper.style.right = "0px";
+          resizeWrapper.style.top = "0px";
+          break;
+        default:
+          resizeWrapper.style.left = "0px";
+          resizeWrapper.style.top = "0px";
+          break;
+      }
+
+      wh.current = pick(imageRect, ["width", "height", "left"]);
+      originWh.current = { ...wh.current };
+    }
+  }, [align, float]);
+
+  React.useEffect(() => {
+    checkResizeWrapperPosition();
+    updateMenuDom();
+  });
 
   const resizing = (e: any) => {
     const $container: any = rootDomRef.current?.querySelector(
       ".resize-container img"
     );
     const mouse: any = {};
-    let { width, height, left } = $container.getBoundingClientRect();
-    const originWidth = width;
-    const originHeight = height;
+    const resizeWrapper = rootDomRef.current?.querySelector<HTMLSpanElement>(
+      ".resize-container"
+    );
+    if (!resizeWrapper) return;
+    let { width, height, left } = originWh.current;
     mouse.x =
       ((e.touches && e.touches[0].clientX) || e.clientX || e.pageX) +
       (document?.documentElement.scrollLeft ?? 0);
@@ -259,51 +357,90 @@ function ResizeBox(props: any) {
       (document?.documentElement.scrollTop ?? 0);
     const cur = target.current;
     if (!cur) return;
+    if (!rootDomRef.current) return;
     const imageEditor = rootDomRef.current?.querySelector<HTMLSpanElement>(
       ".image-editor"
     );
 
     if (!imageEditor) return;
     if (cur.className.indexOf("resize-handle-se") > -1) {
+      // 右下角
       width = mouse.x - left;
-      height = (width / originWidth) * originHeight;
+      height = (width / originWh.current.height) * originWh.current.height;
       imageEditor.style.left = "0px";
       imageEditor.style.right = "auto";
+      if (align === "right") {
+        resizeWrapper.style["margin-right"] =
+          width >= originWh.current.width
+            ? `-${width - originWh.current.width}px`
+            : `${originWh.current.width - width}px`;
+        resizeWrapper.style["styleTop"] =
+          height >= originWh.current.height
+            ? `${height - originWh.current.height}px`
+            : `-${originWh.current.height - height}px`;
+      }
     } else if (cur.className.indexOf("resize-handle-sw") > -1) {
+      // 左下角
       width -= mouse.x - left;
-      height = (width / originWidth) * originHeight;
       left = mouse.x;
-      imageEditor.style.right = "0px";
-      imageEditor.style.left = "auto";
+      height = (width / wh.current.width) * wh.current.height;
+
+      if (align !== "center") {
+        resizeWrapper.style[styleLeft] =
+          width >= originWh.current.width
+            ? `-${width - originWh.current.width}px`
+            : `${originWh.current.width - width}px`;
+      }
     } else if (cur.className.indexOf("resize-handle-nw") > -1) {
-      width -= mouse.x - left;
-      height = (width / originWidth) * originHeight;
-      left = mouse.x;
-      top = mouse.y;
-      imageEditor.style.right = "0px";
-      imageEditor.style.left = "auto";
+      // 左上角
+      width = width - (mouse.x - left);
+      height = (width / wh.current.width) * wh.current.height;
+      if (align !== "center") {
+        resizeWrapper.style[styleLeft] =
+          width >= originWh.current.width
+            ? `-${width - originWh.current.width}px`
+            : `${originWh.current.width - width}px`;
+        resizeWrapper.style[styleTop] =
+          height >= originWh.current.height
+            ? `-${height - originWh.current.height}px`
+            : `${originWh.current.height - height}px`;
+      }
     } else if (cur.className.indexOf("resize-handle-ne") > -1) {
+      // 右上角
       width = mouse.x - left;
-      height = (width / originWidth) * originHeight;
-      top = mouse.y;
-      imageEditor.style.left = "0px";
-      imageEditor.style.right = "auto";
+      height = (width / originWh.current.width) * originWh.current.height;
+      if (align !== "center") {
+        resizeWrapper.style[styleRight] =
+          width >= originWh.current.width
+            ? `-${width - originWh.current.width}px`
+            : `${originWh.current.width - width}px`;
+        resizeWrapper.style[styleTop] =
+          height >= originWh.current.height
+            ? `-${height - originWh.current.height}px`
+            : `${originWh.current.height - height}px`;
+      }
     }
 
     $container.style.width = `${width}px`;
     $container.style.height = `${height}px`;
-    const resizeWrapper = rootDomRef.current?.querySelector<HTMLSpanElement>(
-      ".resize-container"
-    );
+
     if (resizeWrapper) {
       resizeWrapper.style.width = `${width}px`;
       resizeWrapper.style.height = `${height}px`;
     }
     imageEditor.style.width = `${width}px`;
     imageEditor.style.height = `${height}px`;
+    if ((float && float === "right") || align == "right") {
+      left += originWh.current.width - width;
+    }
+    if (align == "center") {
+      left += (originWh.current.width - width) / 2;
+    }
+
     wh.current = {
       width,
       height,
+      left,
     };
   };
 
@@ -336,19 +473,26 @@ function ResizeBox(props: any) {
     wrapperStyle.textAlign = props.node.data.get("align");
   }
 
-  const imageEditorStyle = { ...style };
+  const resizeContainerStyle = { ...style };
+
   if (props.node.data.get("align")) {
     const align = props.node.data.get("align");
     if (align === "right") {
-      imageEditorStyle.right = "0px";
-      imageEditorStyle.left = "auto";
+      resizeContainerStyle.right = "0px";
+      resizeContainerStyle.left = "auto";
     }
     if (align === "center") {
-      imageEditorStyle.left = "50%";
-      imageEditorStyle.right = "auto";
-      imageEditorStyle.transform = "translate(-50%, 0)";
+      resizeContainerStyle.left = "50%";
+      resizeContainerStyle.right = "auto";
+      resizeContainerStyle.transform = "translate(-50%, 0)";
     }
   }
+
+  const imageEditorStyle = omit(resizeContainerStyle, [
+    "transform",
+    "left",
+    "right",
+  ]);
 
   if (isSelected) {
     if (!float) {
@@ -359,18 +503,27 @@ function ResizeBox(props: any) {
           ref={rootDomRef}
         >
           {children}
-          <span className="resize-container" {...{ style: imageEditorStyle }}>
+          <span
+            className="resize-container"
+            {...{ style: resizeContainerStyle }}
+          >
             <span
               className="resize-handle resize-handle-ne active"
               onMouseDown={startResize}
             />
-            <span className="resize-handle resize-handle-nw" />
+            <span
+              className="resize-handle resize-handle-nw active"
+              onMouseDown={startResize}
+            />
 
             <span
               className="resize-handle resize-handle-se active"
               onMouseDown={startResize}
             />
-            <span className="resize-handle resize-handle-sw" />
+            <span
+              className="resize-handle resize-handle-sw active"
+              onMouseDown={startResize}
+            />
             <span className="image-editor" draggable style={imageEditorStyle}>
               <img src={props.src} />
             </span>
@@ -391,13 +544,19 @@ function ResizeBox(props: any) {
         style={{ float }}
       >
         {children}
-        <span className="resize-container" {...{ style: imageEditorStyle }}>
-          <span className="resize-handle resize-handle-ne" />
+        <span className="resize-container" {...{ style: resizeContainerStyle }}>
+          <span
+            className="resize-handle resize-handle-ne active"
+            onMouseDown={startResize}
+          />
           <span
             className="resize-handle resize-handle-nw active"
             onMouseDown={startResize}
           />
-          <span className="resize-handle resize-handle-se" />
+          <span
+            className="resize-handle resize-handle-se active"
+            onMouseDown={startResize}
+          />
           <span
             className="resize-handle resize-handle-sw active"
             onMouseDown={startResize}
