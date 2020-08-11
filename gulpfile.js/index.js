@@ -76,15 +76,15 @@ function babelify(js, modules) {
   return stream
     .pipe(
       through2.obj(function (file, encoding, next) {
-        let fileContent = file.contents.toString();
         file.contents = Buffer.from(
-          fileContent.replace(/(\.less)(['"]{1}\;?)$/gm, ".css$2"),
+          file.contents.toString().replace(/(\.less)(['"]{1}\;?)/gm, ".css$2"),
           "utf-8"
         );
         this.push(file);
         next();
       })
     )
+
     .pipe(gulp.dest(modules === false ? `build/es` : `build/lib`));
 }
 

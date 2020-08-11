@@ -9,8 +9,12 @@ function getStyleFromData(node: any) {
     keys.forEach((key: string) => {
       let tempKey: string = key;
       if (tempKey.indexOf("-")) {
-        const t = tempKey.split("-");
-        for (let i = 1; i < t.length; i++) {
+        const t = tempKey.split("-").filter((n) => n.length);
+        let i = 1;
+        if (tempKey.startsWith("-")) {
+          i = 0;
+        }
+        for (; i < t.length; i++) {
           t[i] = t[i][0].toLocaleUpperCase() + t[i].substring(1);
         }
         tempKey = t.join("");

@@ -1,25 +1,31 @@
 function getStyleFromString(str: string) {
   const style: any = {};
   if (str) {
-    const temp = str
+    const keyValues = str
       .split(";")
       .filter((item: any) => item)
       .map((item: string) => {
-        const a = item.split(":");
+        const [key, value] = item.split(":");
+        let tmpKey = key;
         // vertical-align   -> verticalAlign
-        if (a[0].indexOf("-")) {
-          const t = a[0].split("-");
-          for (let i = 1; i < t.length; i++) {
+        // -webkit-overflow-scrolling -> WebkitOverflowScrolling
+        if (tmpKey.indexOf("-") > -1) {
+          const t = tmpKey.split("-").filter((n) => n.length);
+          let i = 1;
+          if (tmpKey.startsWith("-")) {
+            i = 0;
+          }
+          for (; i < t.length; i++) {
             t[i] = t[i][0].toLocaleUpperCase() + t[i].substring(1);
           }
-          a[0] = t.join("");
+          tmpKey = t.join("");
         }
         return {
-          key: a[0],
-          value: a[1],
+          key: tmpKey,
+          value,
         };
       });
-    temp.forEach((item: any) => {
+    keyValues.forEach((item: any) => {
       style[item.key] = item.value;
     });
   }
