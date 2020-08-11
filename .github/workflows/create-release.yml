@@ -1,12 +1,12 @@
 # This is a basic workflow to help you get started with Actions
 
-name: Create Release
+name: Create Release & Publish Npm
 
 on:
   push:
     # Sequence of patterns matched against refs/tags
     tags:
-      - 'v*' # Push events to matching v*, i.e. v1.0, v20.15.10
+      - "v*" # Push events to matching v*, i.e. v1.0, v20.15.10
 
 jobs:
   build:
@@ -23,9 +23,19 @@ jobs:
         with:
           tag_name: ${{ github.ref }}
           release_name: Release ${{ github.ref }}
-          body: |
-            Changes in this Release
-            - First Change
-            - Second Change
           draft: false
           prerelease: false
+  publish-npm:
+    name: Publish To Npm
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 12
+          registry-url: https://registry.npmjs.org/
+      - run: npm install
+      - run: npm run build
+      - run: cd build && npm publish --otp=${{secrets.NPM_OTP}}
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}

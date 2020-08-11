@@ -5,7 +5,7 @@ name: easy-editor package
 
 on:
   release:
-    types: [published]
+    types: [created]
 
 jobs:
   publish-npm:
