@@ -235,6 +235,15 @@ function ResizeBox(props: any) {
 
   const imgRef = React.useRef<HTMLImageElement | null>(null);
 
+  const getMaxWidth = () => {
+    if (rootDomRef.current) {
+      const editorContentEl = rootDomRef.current.closest("[data-slate-editor]");
+      const maxWidth = editorContentEl?.clientWidth;
+      return maxWidth;
+    }
+    return null;
+  };
+
   React.useEffect(() => {
     if (rootDomRef.current) {
       if (
@@ -247,9 +256,24 @@ function ResizeBox(props: any) {
         imgRef.current.src = props.src;
         imgRef.current.onload = () => {
           if (rootDomRef.current) {
-            const { width, height, left } = rootDomRef.current
+            let { width, height, left } = rootDomRef.current
               .querySelector("img")
               ?.getBoundingClientRect() ?? { width: 0, height: 0, left: 0 };
+            // 编辑器容器大小
+            const maxWidth = getMaxWidth();
+            if (maxWidth && maxWidth < width) {
+              let imgEl = rootDomRef.current.querySelector("img");
+              if (imgEl) {
+                imgEl.style.width = `${maxWidth}px`;
+                imgEl = rootDomRef.current.querySelector(
+                  "img"
+                ) as HTMLImageElement;
+                const rect = imgEl.getBoundingClientRect();
+                width = rect.width;
+                height = rect.height;
+                left = rect.left;
+              }
+            }
             wh.current = {
               width,
               height,
