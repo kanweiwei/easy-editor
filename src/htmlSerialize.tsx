@@ -404,42 +404,42 @@ let rules = [
               <h1 {...otherAttrs} style={style} className={className}>
                 {children}
               </h1>
-            )
+            );
           }
           case "h2": {
             return (
               <h2 {...otherAttrs} style={style} className={className}>
                 {children}
               </h2>
-            )
+            );
           }
           case "h3": {
             return (
               <h3 {...otherAttrs} style={style} className={className}>
                 {children}
               </h3>
-            )
+            );
           }
           case "h4": {
             return (
               <h4 {...otherAttrs} style={style} className={className}>
                 {children}
               </h4>
-            )
+            );
           }
           case "h5": {
             return (
               <h5 {...otherAttrs} style={style} className={className}>
                 {children}
               </h5>
-            )
+            );
           }
           case "h6": {
             return (
               <h6 {...otherAttrs} style={style} className={className}>
                 {children}
               </h6>
-            )
+            );
           }
           default:
             break;
@@ -476,8 +476,21 @@ let rules = [
               </>
             );
           }
-          default:
-            break;
+          default: {
+            const Tag = inlineTags[obj.type];
+            if (Tag) {
+              return (
+                <Tag {...otherAttrs} style={style}>
+                  {children}
+                </Tag>
+              );
+            }
+            return (
+              <obj.type {...otherAttrs} style={style}>
+                {children}
+              </obj.type>
+            );
+          }
         }
       }
     },
