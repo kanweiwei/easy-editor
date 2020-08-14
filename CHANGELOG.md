@@ -1,3 +1,46 @@
+## [0.3.7](https://github.com/kanweiwei/easy-editor/compare/v0.3.6...v0.3.7) (2020-08-14)
+
+
+### Bug Fixes
+
+* add serialize for '<a></a>' ([256f3ff](https://github.com/kanweiwei/easy-editor/commit/256f3fff50aa2f230d91e40bf4642783fad0add3))
+
+
+
+## [0.3.6](https://github.com/kanweiwei/easy-editor/compare/v0.3.5...v0.3.6) (2020-08-13)
+
+
+
+## [0.3.5](https://github.com/kanweiwei/easy-editor/compare/v0.3.4...v0.3.5) (2020-08-11)
+
+
+### Bug Fixes
+
+* image-edit-toobar style ([0f13221](https://github.com/kanweiwei/easy-editor/commit/0f13221f0905bfc7ff3f317784cb8f8c18d37daf))
+
+
+
+## [0.3.4](https://github.com/kanweiwei/easy-editor/compare/v0.3.3...v0.3.4) (2020-08-11)
+
+
+
+## [0.3.3](https://github.com/kanweiwei/easy-editor/compare/v0.3.2...v0.3.3) (2020-08-11)
+
+
+
+## [0.3.2](https://github.com/kanweiwei/easy-editor/compare/v0.3.1...v0.3.2) (2020-08-11)
+
+
+### Features
+
+* eslint ([396f58e](https://github.com/kanweiwei/easy-editor/commit/396f58e2149ccc4cfe31cd7de4489aac0416c9b9))
+
+
+
+## [0.3.1](https://github.com/kanweiwei/easy-editor/compare/v0.3.0...v0.3.1) (2020-08-10)
+
+
+
 # [0.3.0](https://github.com/kanweiwei/easy-editor/compare/v0.2.4...v0.3.0) (2020-08-04)
 
 
