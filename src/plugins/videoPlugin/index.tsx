@@ -20,6 +20,16 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = (options) => {
         {
           ...options,
           width,
+          html5: {
+            hls: {
+              overrideNative: true,
+            },
+            vhs: {
+              overrideNative: true,
+            },
+            nativeAudioTracks: false,
+            nativeVideoTracks: false,
+          },
         },
         handlePlayerReady
       )
