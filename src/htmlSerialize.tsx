@@ -392,6 +392,13 @@ let rules = [
               </object>
             );
           }
+          case "video": {
+            return (
+              <video {...otherAttrs} style={style} className={className}>
+                {children}
+              </video>
+            );
+          }
           case "object": {
             return (
               <object {...otherAttrs} style={style} className={className}>

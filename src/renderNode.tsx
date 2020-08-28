@@ -113,29 +113,11 @@ export default (self: any, props: any): any => {
         </td>
       );
     }
-    case "embed": {
+    case "embed":
+    case "object":
+    case "video": {
       const otherAttrs = omit(node.data.toJS(), ["style", "className"]);
-      const src = node.data.get("src");
-      const ext = getExt(src);
-      return (
-        <div {...attributes} {...otherAttrs}>
-          <VideoPlayer
-            playbackRates={[1, 1.5, 2]}
-            controls={true}
-            sources={[
-              {
-                src: src,
-                type: `video/${ext}`,
-              },
-            ]}
-            width={500}
-          />
-        </div>
-      );
-    }
-    case "object": {
-      const otherAttrs = omit(node.data.toJS(), ["style", "className"]);
-      const data = node.data.get("data");
+      const data = node.data.get("data") || node.data.get("src");
 
       const ext = getExt(data);
       return (
