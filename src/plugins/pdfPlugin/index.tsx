@@ -81,7 +81,7 @@ function PdfWrapper(props: {
         onMouseDown={() =>
           parserResult && parserResult?.os?.name === "Android"
             ? setVisbile(true)
-            : window.open(decodeURIComponent(props.url))
+            : window.open(props.url)
         }
       ></div>
 
@@ -121,8 +121,9 @@ const pdfPlugin: EditorPlugin = {
   },
   exporter(node, children): any {
     const url = node.data.get("url");
+    const name = node.data.get("name");
     return (
-      <div data-type="pdf" data-url={encodeURIComponent(url)}>
+      <div data-type="pdf" data-url={url} data-name={name}>
         {children}
       </div>
     );
