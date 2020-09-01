@@ -81,7 +81,7 @@ function PdfWrapper(props: {
         onMouseDown={() =>
           parserResult && parserResult?.os?.name === "Android"
             ? setVisbile(true)
-            : window.open(props.url)
+            : window.open(decodeURIComponent(props.url))
         }
       ></div>
 
