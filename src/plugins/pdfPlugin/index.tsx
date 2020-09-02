@@ -7,6 +7,12 @@ import "./style.less";
 const UAParser = require("ua-parser-js");
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 
+declare let window: Window & {
+  flutter_inappwebview?: {
+    _callHandler(name: string, id: string, params: string): void;
+  };
+};
+
 function PdfViewer(props: any) {
   const [numPages, setNumPages] = React.useState(0);
   const [pageNumber, setPageNumber] = React.useState(1);
@@ -42,7 +48,10 @@ function PdfViewer(props: any) {
         <div className="close-btn" onMouseDown={props.onClose}></div>
       </div>
       <Document file={props.url} onLoadSuccess={onDocumentLoadSuccess}>
-        <Page pageNumber={pageNumber} />
+        <Page
+          pageNumber={pageNumber}
+          height={window.document.documentElement.clientHeight - 90}
+        />
       </Document>
     </div>
   );
@@ -51,6 +60,7 @@ function PdfViewer(props: any) {
 function PdfWrapper(props: {
   url: any;
   name: string;
+  readOnly?: boolean;
   onRemove?: (...args: any[]) => void;
 }) {
   const preCls = "easy-editor-upload";
@@ -68,21 +78,36 @@ function PdfWrapper(props: {
     setParserResult(parser.getResult());
   }, []);
 
+  const showPdf = () => {
+    // flutter inappwebview
+    if (window.flutter_inappwebview) {
+      window.flutter_inappwebview._callHandler(
+        "showPdf",
+        "showPdf",
+        JSON.stringify([props.url])
+      );
+      return;
+    }
+    if (parserResult && parserResult?.os?.name === "Android") {
+      setVisbile(true);
+    } else {
+      window.open(props.url);
+    }
+  };
+
   return (
     <div className={`${preCls} pdf-wrapper`}>
       <i className="easy-editor-icon ic_pdf"></i>
-      <div className={`${preCls}__name`}>
+      <div className={`${preCls}__name`} onClick={showPdf}>
         <a>{props.name}</a>
       </div>
-      <div className={`${preCls}__clean`} onMouseDown={handleRemove}></div>
+      {props.readOnly ? null : (
+        <div className={`${preCls}__clean`} onMouseDown={handleRemove}></div>
+      )}
       <div
         className={`${preCls}__see`}
         style={{ marginRight: 8, float: "right" }}
-        onMouseDown={() =>
-          parserResult && parserResult?.os?.name === "Android"
-            ? setVisbile(true)
-            : window.open(props.url)
-        }
+        onMouseDown={showPdf}
       ></div>
 
       {visible && (
@@ -90,6 +115,7 @@ function PdfWrapper(props: {
           url={props.url}
           key={"pdf-viewer"}
           onClose={() => setVisbile(false)}
+          readOnly={props.readOnly}
         />
       )}
     </div>
@@ -140,7 +166,12 @@ const pdfPlugin: EditorPlugin = {
 
     return (
       <div {...props.attributes} data-url={url}>
-        <PdfWrapper url={url} name={name} onRemove={handleRemove} />
+        <PdfWrapper
+          url={url}
+          name={name}
+          onRemove={handleRemove}
+          readOnly={editor.props.readOnly}
+        />
       </div>
     );
   },
