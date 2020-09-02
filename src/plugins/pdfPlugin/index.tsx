@@ -7,12 +7,6 @@ import "./style.less";
 const UAParser = require("ua-parser-js");
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 
-declare let window: Window & {
-  flutter_inappwebview?: {
-    _callHandler(name: string, id: string, params: string): void;
-  };
-};
-
 function PdfViewer(props: any) {
   const [numPages, setNumPages] = React.useState(0);
   const [pageNumber, setPageNumber] = React.useState(1);
@@ -79,15 +73,6 @@ function PdfWrapper(props: {
   }, []);
 
   const showPdf = () => {
-    // flutter inappwebview
-    if (window.flutter_inappwebview) {
-      window.flutter_inappwebview._callHandler(
-        "showPdf",
-        "showPdf",
-        JSON.stringify([props.url])
-      );
-      return;
-    }
     if (parserResult && parserResult?.os?.name === "Android") {
       setVisbile(true);
     } else {
