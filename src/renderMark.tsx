@@ -33,6 +33,12 @@ export default (props: any) => {
       return <ItalicMark {...props} />;
     case "dot":
       return <span className="dot">{props.children}</span>;
+    case "fontSize":
+      return (
+        <span style={{ fontSize: props.mark.data.get("value") }}>
+          {props.children}
+        </span>
+      );
     default:
       return null;
   }
