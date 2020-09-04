@@ -8,6 +8,7 @@ import VideoExtension from "./extensions/video";
 import EditorTooltip from "./tooltip";
 import PdfExtension from "./extensions/pdf";
 import MathExtention from "./extensions/math";
+import FontSize from "./extensions/fontSize";
 
 export type CustomControl = {
   object?: "mark" | "align";
@@ -33,6 +34,10 @@ export type Control =
   | CustomControl;
 
 const defaultControls = {
+  fontSize: {
+    type: "fontSize",
+    component: FontSize,
+  },
   bold: {
     object: "mark",
     type: "bold",
@@ -127,7 +132,9 @@ class ToolBar extends React.Component<any, any> {
         return component;
       }
       const C = component;
-      return <C />;
+      return (
+        <C change={this.props.value.change()} update={this.props.onChange} />
+      );
     }
 
     return null;
@@ -268,7 +275,7 @@ class ToolBar extends React.Component<any, any> {
   renderControls = () => {
     const {
       controls = [
-        ["bold", "italic", "u", "sup", "sub"],
+        ["fontSize", "bold", "italic", "u", "sup", "sub"],
         ["left", "center", "right", "justify"],
         ["image", "video", "pdf", "math"],
       ],

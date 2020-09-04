@@ -337,6 +337,32 @@ let rules = [
     },
   },
   {
+    deserialize(el: any, next: any): any {
+      let style = getAttr(el.attrs, "style");
+      let styleData = getStyleFromString(style);
+      let fontSize = styleData.fontSize;
+      if (el.tagName.toLowerCase() === "span" && fontSize) {
+        return {
+          object: "mark",
+          type: "fontSize",
+          data: {
+            value: fontSize,
+          },
+          nodes: next(el.childNodes),
+        };
+      }
+    },
+  },
+  {
+    serialize(obj: any, children: any): any {
+      if (obj.type === "fontSize") {
+        return (
+          <span style={{ fontSize: obj.data.get("value") }}>{children}</span>
+        );
+      }
+    },
+  },
+  {
     serialize(obj: any, children: any): any {
       if (obj.object === "block") {
         let { style, className, ...otherAttrs } = obj.data.toJS();
