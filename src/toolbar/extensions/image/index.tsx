@@ -36,6 +36,7 @@ class ImageExtension extends React.Component<any> {
         if (typeof url == "string") {
           if (this.props.beforeUpload) {
             url = await this.props.beforeUpload(file, url);
+          } else {
             url = window.URL.createObjectURL(file);
           }
           if (url) {
