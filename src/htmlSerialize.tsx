@@ -341,12 +341,23 @@ let rules = [
       let style = getAttr(el.attrs, "style");
       let styleData = getStyleFromString(style);
       let fontSize = styleData.fontSize;
+      let color = styleData.color;
       if (el.tagName.toLowerCase() === "span" && fontSize) {
         return {
           object: "mark",
           type: "fontSize",
           data: {
             value: fontSize,
+          },
+          nodes: next(el.childNodes),
+        };
+      }
+      if (el.tagName.toLowerCase() == "span" && color) {
+        return {
+          object: "mark",
+          type: "fontColor",
+          data: {
+            value: color,
           },
           nodes: next(el.childNodes),
         };
@@ -359,6 +370,9 @@ let rules = [
         return (
           <span style={{ fontSize: obj.data.get("value") }}>{children}</span>
         );
+      }
+      if (obj.type === "fontColor") {
+        return <span style={{ color: obj.data.get("value") }}>{children}</span>;
       }
     },
   },
