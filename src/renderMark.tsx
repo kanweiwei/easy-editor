@@ -39,6 +39,12 @@ export default (props: any) => {
           {props.children}
         </span>
       );
+    case "fontColor":
+      return (
+        <span style={{ color: props.mark.data.get("value") }}>
+          {props.children}
+        </span>
+      );
     default:
       return null;
   }

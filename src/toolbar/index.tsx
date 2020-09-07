@@ -9,6 +9,7 @@ import EditorTooltip from "./tooltip";
 import PdfExtension from "./extensions/pdf";
 import MathExtention from "./extensions/math";
 import FontSize from "./extensions/fontSize";
+import FontColor from "./extensions/fontColor";
 
 export type CustomControl = {
   object?: "mark" | "align";
@@ -18,6 +19,8 @@ export type CustomControl = {
 };
 
 export type Control =
+  | "fontSize"
+  | "fontColor"
   | "bold"
   | "italic"
   | "u"
@@ -37,6 +40,10 @@ const defaultControls = {
   fontSize: {
     type: "fontSize",
     component: FontSize,
+  },
+  fontColor: {
+    type: "fontColor",
+    component: FontColor,
   },
   bold: {
     object: "mark",
@@ -275,7 +282,7 @@ class ToolBar extends React.Component<any, any> {
   renderControls = () => {
     const {
       controls = [
-        ["fontSize", "bold", "italic", "u", "sup", "sub"],
+        ["fontSize", "fontColor", "bold", "italic", "u", "sup", "sub"],
         ["left", "center", "right", "justify"],
         ["image", "video", "pdf", "math"],
       ],
