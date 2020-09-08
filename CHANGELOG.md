@@ -1,3 +1,67 @@
+# [0.4.0](https://github.com/kanweiwei/easy-editor/compare/v0.3.13...v0.4.0) (2020-09-07)
+
+
+### Bug Fixes
+
+* image url ([851e8e9](https://github.com/kanweiwei/easy-editor/commit/851e8e9d5a3291c63bdafbadcca672c343cdb36c))
+
+
+### Features
+
+* support adjust font color ([05a4179](https://github.com/kanweiwei/easy-editor/commit/05a417950efc2fbebf18e2c173b9fc9737aaba42))
+* support adjust font size ([9b91b50](https://github.com/kanweiwei/easy-editor/commit/9b91b50b9a6efda784c7401c6256031d0ec0b0c6))
+
+
+
+## [0.3.13](https://github.com/kanweiwei/easy-editor/compare/v0.3.12...v0.3.13) (2020-09-02)
+
+
+
+## [0.3.12](https://github.com/kanweiwei/easy-editor/compare/v0.3.11...v0.3.12) (2020-09-02)
+
+
+### Bug Fixes
+
+* fix style when pdf is readOnly; adjust pdf height of pdfView ([7a56bb8](https://github.com/kanweiwei/easy-editor/commit/7a56bb871e66508ba75e5055de4189c8183aeee2))
+
+
+
+## [0.3.11](https://github.com/kanweiwei/easy-editor/compare/v0.3.10...v0.3.11) (2020-09-01)
+
+
+### Bug Fixes
+
+* pdf name ([e17202d](https://github.com/kanweiwei/easy-editor/commit/e17202d41894b1649d94232b76e4cfd2c4d63334))
+
+
+
+## [0.3.10](https://github.com/kanweiwei/easy-editor/compare/v0.3.9...v0.3.10) (2020-09-01)
+
+
+### Bug Fixes
+
+* pdf url ([9ddfc83](https://github.com/kanweiwei/easy-editor/commit/9ddfc8344ba64173478cfe5e4cd100effc269344))
+
+
+
+## [0.3.9](https://github.com/kanweiwei/easy-editor/compare/v0.3.8...v0.3.9) (2020-08-28)
+
+
+### Features
+
+* add video renderNode ([262d186](https://github.com/kanweiwei/easy-editor/commit/262d186f0855499877cd08d90bf061108b1da3e6))
+
+
+
+## [0.3.8](https://github.com/kanweiwei/easy-editor/compare/v0.3.7...v0.3.8) (2020-08-24)
+
+
+### Bug Fixes
+
+* fix playback issue ([80201bf](https://github.com/kanweiwei/easy-editor/commit/80201bf3ec9675cec76ebf77b647386380a05f93))
+
+
+
 ## [0.3.7](https://github.com/kanweiwei/easy-editor/compare/v0.3.6...v0.3.7) (2020-08-14)
 
 

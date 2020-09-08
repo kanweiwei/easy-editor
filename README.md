@@ -62,6 +62,8 @@ ReactDom.render(<Editor />, document.getElementById("root"));
 For convenience, some tools have been built in the toolbar.
 tool| instructions|
 -|:-:|
+fontSize| 字号|
+fontColor| 字体颜色|
 bold| 加粗|
 italic| 斜体|
 u| 下划线|
