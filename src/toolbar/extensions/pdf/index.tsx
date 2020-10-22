@@ -52,6 +52,7 @@ class PdfExtension extends React.Component<any> {
         <span className="tool-insert-pdf" />
         <input
           type="file"
+          accept="application/pdf"
           style={{ width: 0, height: 0, opacity: 0, position: "absolute" }}
           ref={this.inputRef}
           onChange={this.handleChange}
