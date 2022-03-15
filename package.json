@@ -28,7 +28,7 @@
     "classnames": "2.2.6",
     "immutable": "4.0.0-rc.12",
     "jsdom": "16.2.2",
-    "lodash-es": "4.17.15",
+    "lodash-es": "4.17.21",
     "mathjax": "3",
     "parse5": "4.0.0",
     "raf": "3.4.1",
