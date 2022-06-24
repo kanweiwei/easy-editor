@@ -27,7 +27,7 @@
     "canvg": "3.0.6",
     "classnames": "2.2.6",
     "immutable": "4.0.0-rc.12",
-    "jsdom": "16.2.2",
+    "jsdom": "16.5.0",
     "lodash-es": "4.17.15",
     "mathjax": "3",
     "parse5": "4.0.0",
